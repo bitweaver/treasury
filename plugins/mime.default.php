@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.1 2006/07/11 13:43:56 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.2 2006/07/11 15:10:33 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.1 $
+ * @version:     $Revision: 1.2 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -20,7 +20,7 @@ global $gTreasurySystem;
 // This is the name of the plugin - max char length is 16
 // As a naming convention, the treasury mime handler definition should start with:
 // TREASURY_MIME_
-define( 'TREASURY_MIME_GUID_DEFAULT', 'treasury_default' );
+define( 'TREASURY_MIME_GUID_DEFAULT', 'mime_default' );
 
 $pluginParams = array (
 	// Set of functions and what they are called in this paricular plugin
@@ -31,7 +31,8 @@ $pluginParams = array (
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
-	'description'        => 'Default Mime Handler',
+	'title'              => 'Default Mime Handler',
+	'description'        => 'This mime handler can handle any file type, creates thumbnails when possible and will make the file available as an attachment.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_item_inc.tpl',
 	// This should be the same for all mime plugins

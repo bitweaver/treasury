@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.1 2006/07/11 13:43:55 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.2 2006/07/11 15:10:32 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.1 $
+ * @version:      $Revision: 1.2 $
  * @created:      Monday Jul 03, 2006   11:06:47 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -11,7 +11,7 @@
  **/
 require_once( LIBERTY_PKG_PATH.'LibertySystem.php' );
 
-define( 'TREASURY_DEFAULT_MIME_HANDLER', 'treasury_default' );
+define( 'TREASURY_DEFAULT_MIME_HANDLER', 'mime_default' );
 define( 'TREASURY_MIME', 'mime_handler' );
 
 /**
