@@ -1,0 +1,11 @@
+<div class="floaticon">{bithelp}</div>
+
+<div class="edit treasury">
+	<div class="header">
+		<h1>{tr}Edit Gallery Hierarchy{/tr}</h1>
+	</div>
+
+	<div class="body">
+		{include file="bitpackage:liberty/edit_structure_inc.tpl" no_delete=TRUE}
+	</div><!-- end .body -->
+</div><!-- end .edit -->
