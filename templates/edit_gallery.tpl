@@ -42,9 +42,9 @@
 			</div>
 
 			<div class="row">
-				{formlabel label="Private Gallery" for="treasury-private_gallery"}
+				{formlabel label="Private Gallery" for="treasury-is_private"}
 				{forminput}
-				<input type="checkbox" size="5" id="treasury-private_gallery" name="treasury[private_gallery]" value="y" {if $galInfo.private_gallery}checked="checked" {/if}/>
+				<input type="checkbox" size="5" id="treasury-is_private" name="treasury[is_private]" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
 					{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
 				{/forminput}
 			</div>

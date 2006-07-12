@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.1 2006/07/11 13:43:54 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.2 2006/07/12 12:21:15 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.1 $
+ * @version:      $Revision: 1.2 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -272,7 +272,7 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		// ---------- Gallery Store
-		$pParamHash['gallery_store']['is_private'] = empty( $pParamHash['private_gallery'] ) ? 'n' : 'y';
+		$pParamHash['gallery_store']['is_private'] = empty( $pParamHash['is_private'] ) ? 'n' : 'y';
 
 		// ---------- Content store
 		// check for name issues, truncate length if too long
