@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.1 2006/07/11 13:43:55 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.2 2006/07/15 22:11:16 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.1 $
+ * @version:      $Revision: 1.2 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -164,9 +164,8 @@ class TreasuryItem extends TreasuryBase {
 	}
 
 	/**
-	 * Get all galleryies this item is part of
+	 * Get all galleries this item is part of
 	 * 
-	 * @param numeric $pContentId Content id of the item we want the galleries for
 	 * @access public
 	 * @return array of gallery content ids
 	 */
