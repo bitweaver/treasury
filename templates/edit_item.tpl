@@ -14,7 +14,7 @@
 			<div class="row">
 				{formlabel label="File title" for=title}
 				{forminput}
-					<input type="text" id="title" value="{$gContent->mInfo.title}" name="treasury[title]" />
+					<input type="text" size="40" id="title" value="{$gContent->mInfo.title}" name="treasury[title]" />
 				{/forminput}
 			</div>
 
@@ -34,14 +34,6 @@
 			</div>
 
 			<div class="row">
-				{formlabel label="Reset Icon" for="reset_thumbnails"}
-				{forminput}
-					<input type="checkbox" id="reset_thumbnails" name="reset_thumbnails" value="1" />
-					{formhelp note="Check this if you want to reset the file icon to its original state."}
-				{/forminput}
-			</div>
-
-			<div class="row">
 				{formlabel label="Add File(s) to these Galleries"}
 				{forminput}
 					{foreach from=$galleryList item=gallery}
@@ -52,6 +44,9 @@
 
 			<div class="row submit">
 				<input type="submit" name="update_file" value="{tr}Apply Settings{/tr}" />
+				<br />
+				<input type="submit" name="reset_thumbnails" value="Reset Thumbnails" />
+				<input type="submit" name="delete_thumbnails" value="Delete Thumbnails" />
 			</div>
 		{/form}
 

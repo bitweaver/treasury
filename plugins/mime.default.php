@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.2 2006/07/11 15:10:33 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.3 2006/07/18 21:16:51 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.2 $
+ * @version:     $Revision: 1.3 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -140,14 +140,14 @@ function treasury_default_load( &$pFileHash ) {
 			WHERE la.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ) ) ) {
 			$canThumbFunc = liberty_get_function( 'can_thumbnail' );
-			if ( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' ) ) {
+			if( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' ) ) {
 				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
 				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
 				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
-			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
-				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
+//				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 			} else {
 				$mime_thumbnail = $gLibertySystem->getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;

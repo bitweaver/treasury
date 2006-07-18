@@ -7,11 +7,9 @@ require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
 
-if( $gContent->loadPermissions() ) {
-	$gContent->hasUserPermission( 'p_treasury_view_gallery', TRUE, tra( 'You do not have the required permissions to view this gallery' ) );
-} else {
-	$gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
-}
+// replace any user permissions with custom ones if we have set them
+$gContent->updateUserPermissions();
+$gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
 	$gBitSystem->verifyPermission( 'p_treasury_edit_gallery' );

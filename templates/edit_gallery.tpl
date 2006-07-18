@@ -41,6 +41,7 @@
 				{/forminput}
 			</div>
 
+			{* not yet implemented - xing
 			<div class="row">
 				{formlabel label="Private Gallery" for="treasury-is_private"}
 				{forminput}
@@ -48,6 +49,7 @@
 					{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
 				{/forminput}
 			</div>
+			*}
 
 			{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}
 				{if $galInfo.thumbnail_url}

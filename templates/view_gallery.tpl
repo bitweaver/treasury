@@ -78,8 +78,13 @@
 							{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
 								<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$item.content_id}">{biticon ipackage=liberty iname=download iexplain="Download File"}</a>
 							{/if}
-							<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage=liberty iname=view iexplain="View File"}</a>
-							{if $gBitUser->hasPermission( 'p_treasury_upload_item' )}
+							{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage=liberty iname=view iexplain="View File"}</a>
+							{/if}
+							{*if $gBitUser->isAdmin()}
+								{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
+							{/if*}
+							{if $gBitUser->hasPermission( 'p_treasury_edit_item' )}
 								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage=liberty iname=edit iexplain="Edit File"}</a>
 								<a href="{$smarty.const.TREASURY_PKG_URL}view_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage=liberty iname=delete iexplain="Remove File"}</a>
 							{/if}

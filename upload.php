@@ -7,11 +7,9 @@ require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
 
-if( $gContent->loadPermissions() ) {
-	$gContent->hasUserPermission( 'p_treasury_upload_item', TRUE, tra( 'You do not have the required permissions to upload files into this gallery.' ) );
-} else {
-	$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
-}
+// replace any user permissions with custom ones if we have set them
+$gContent->updateUserPermissions();
+$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
 
 require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
 

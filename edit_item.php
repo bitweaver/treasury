@@ -11,18 +11,21 @@ if( !empty( $_REQUEST['refresh'] ) ) {
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
 }
 
+// now deal with the uploaded icon
+if( !empty( $_REQUEST['reset_thumbnails'] ) || !empty( $_REQUEST['delete_thumbnails'] ) ) {
+	$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small' );
+	$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
+	$fileHash['source_file'] = $gContent->mInfo['source_file'];
+	$fileHash['type'] = $gContent->mInfo['mime_type'];
+	liberty_clear_thumbnails( $fileHash );
+}
+
+if( !empty( $_REQUEST['reset_thumbnails'] ) ) {
+	liberty_generate_thumbnails( $fileHash );
+}
+
 if( !empty( $_REQUEST['update_file'] ) ) {
 	if( $gContent->store( $_REQUEST['treasury'] ) ) {
-		// now deal with the uploaded icon
-		if( !empty( $_REQUEST['reset_thumbnails'] ) ) {
-			$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small' );
-			$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
-			$fileHash['source_file'] = $gContent->mInfo['source_file'];
-			$fileHash['type'] = $gContent->mInfo['mime_type'];
-			liberty_clear_thumbnails( $fileHash );
-			liberty_generate_thumbnails( $fileHash );
-		}
-
 		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
 				$fileHash = $_FILES['icon'];
@@ -60,5 +63,5 @@ if( @is_array( $galleryList ) ) {
 $gBitSmarty->assign( 'galleryList', $galleryList );
 
 $gBitSmarty->assign( 'feedback', ( !empty( $feedback ) ? $feedback : NULL ) );
-$gBitSystem->display( "bitpackage:treasury/edit_item.tpl", tra( "View File" ) );
+$gBitSystem->display( "bitpackage:treasury/edit_item.tpl", tra( "Edit File" ) );
 ?>

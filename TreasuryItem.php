@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.3 2006/07/18 14:18:00 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.4 2006/07/18 21:16:50 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.3 $
+ * @version:      $Revision: 1.4 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -83,10 +83,10 @@ class TreasuryItem extends TreasuryBase {
 					$galleryContentIds = $this->getGalleriesFromItemContentId();
 					if( @is_array( $galleryContentIds ) ) {
 						$gallery = new TreasuryGallery();
-						foreach( $galleryContentIds as $gallery_content_id ) {
-							$gallery->mContentId = $gallery_content_id;
+						foreach( $galleryContentIds as $gid ) {
+							$gallery->mContentId = $gid;
 							$gallery->load();
-							$this->mInfo['galleries'][$gallery_content_id] = $gallery->mInfo;
+							$this->mInfo['galleries'][$gid] = $gallery->mInfo;
 						}
 					}
 				}
@@ -299,8 +299,8 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		// make sure we have the correct permissions to upload to this gallery
-		foreach( $galleryContentIds as $gid ) {
-			$gallery = new TreasuryGallery( $gid );
+		foreach( $pStoreHash['galleryContentIds'] as $gid ) {
+			$gallery = new TreasuryGallery( NULL, $gid );
 			if( $gallery->loadPermissions() ) {
 				if( $gallery->hasUserPermission( 'p_treasury_upload_item' ) ) {
 					$pStoreHash['map_store']['galleryContentIds'][] = $gid;
@@ -308,6 +308,10 @@ class TreasuryItem extends TreasuryBase {
 			} else {
 				$pStoreHash['map_store']['galleryContentIds'][] = $gid;
 			}
+		}
+
+		if( empty( $pStoreHash['map_store']['galleryContentIds'] ) ) {
+			$this->mErrors['store'] = tra( 'No gallery available to insert uploaded files into. Please check the permissions of the gallery.' );
 		}
 
 		// ---------- Content store
@@ -339,6 +343,31 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		return( count( $this->mErrors ) == 0 );
+	}
+
+	function hasGalleryPermissions( $pPermName, $pFatalIfFalse = FALSE, $pFatalMessage = NULL ) {
+		global $gBitSystem, $gBitUser;
+		$ret = FALSE;
+		if( $this->isValid() && !empty( $pPermName ) ) {
+			// get all gallery content ids
+			$galleryContentIds = $this->getGalleriesFromItemContentId();
+			if( @is_array( $galleryContentIds ) ) {
+				$gallery = new TreasuryGallery();
+				foreach( $galleryContentIds as $gid ) {
+					// reduce load: we don't need to fully load the gallery to load the permissions
+					$gallery->mContentId = $gid;
+					if( $gallery->hasUserPermission( $pPermName ) ) {
+						// we only need one gallery that allows us to download the file
+						return TRUE;
+					}
+				}
+			}
+		}
+
+		if( !$ret && $pFatalIfFalse ) {
+			$gBitSystem->fatalPermission( $pPermName, $pFatalMessage );
+		}
+		return $ret;
 	}
 
 	/**
