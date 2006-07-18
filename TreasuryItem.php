@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.2 2006/07/15 22:11:16 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.3 2006/07/18 14:18:00 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.2 $
+ * @version:      $Revision: 1.3 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -31,7 +31,7 @@ class TreasuryItem extends TreasuryBase {
 		$this->registerContentType(
 			TREASURYITEM_CONTENT_TYPE_GUID, array(
 				'content_type_guid'   => TREASURYITEM_CONTENT_TYPE_GUID,
-				'content_description' => 'Treasury File',
+				'content_description' => 'Uploaded File',
 				'handler_class'       => 'TreasuryItem',
 				'handler_package'     => 'treasury',
 				'handler_file'        => 'TreasuryItem.php',
@@ -297,7 +297,18 @@ class TreasuryItem extends TreasuryBase {
 		if( empty( $pStoreHash['galleryContentIds'] ) ) {
 			$pStoreHash['galleryContentIds'][] = $this->getDefaultGalleryId();
 		}
-		$pStoreHash['map_store']['galleryContentIds'] = $pStoreHash['galleryContentIds'];
+
+		// make sure we have the correct permissions to upload to this gallery
+		foreach( $galleryContentIds as $gid ) {
+			$gallery = new TreasuryGallery( $gid );
+			if( $gallery->loadPermissions() ) {
+				if( $gallery->hasUserPermission( 'p_treasury_upload_item' ) ) {
+					$pStoreHash['map_store']['galleryContentIds'][] = $gid;
+				}
+			} else {
+				$pStoreHash['map_store']['galleryContentIds'][] = $gid;
+			}
+		}
 
 		// ---------- Content store
 		// let's add a default title
@@ -407,7 +418,7 @@ class TreasuryItem extends TreasuryBase {
 			// let the plugin do its thing
 			$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
 			if( $expunge_function( $this->mInfo ) ) {
-				// remove the remainging entries in liberty tables
+				// remove the remaining entries in liberty tables
 				if( LibertyContent::expunge() ) {
 					$this->mDb->CompleteTrans();
 				} else {
@@ -429,8 +440,8 @@ class TreasuryItem extends TreasuryBase {
 	 * @return void
 	 */
 	function expungeItemMap() {
-		if( @BitBase::verifyId( $pItemContenId ) ) {
-			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."treasury_map` WHERE `item_content_id`=?", array( $pItemContenId ) );
+		if( $this->isValid() ) {
+			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."treasury_map` WHERE `item_content_id`=?", array( $this->mContentId ) );
 		}
 	}
 }

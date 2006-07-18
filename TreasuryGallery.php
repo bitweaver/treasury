@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.2 2006/07/12 12:21:15 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.3 2006/07/18 14:18:00 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.2 $
+ * @version:      $Revision: 1.3 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -30,7 +30,7 @@ class TreasuryGallery extends TreasuryBase {
 		TreasuryBase::TreasuryBase();
 		$this->registerContentType( TREASURYGALLERY_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => TREASURYGALLERY_CONTENT_TYPE_GUID,
-			'content_description' => 'Treasury Gallery',
+			'content_description' => 'File Gallery',
 			'handler_class' => 'TreasuryGallery',
 			'handler_package' => 'treasury',
 			'handler_file' => 'TreasuryGallery.php',
@@ -76,16 +76,6 @@ class TreasuryGallery extends TreasuryBase {
 				$this->mInfo['display_url']   = $this->getDisplayUrl();
 				$this->mInfo['thumbnail_url'] = $this->getGalleryThumbUrl();
 			}
-
-/*
-			// if the content for the treasury is requested, get it
-			if( $pExtras ) {
-				$this->mInfo['path']          = $this->getTreasuryPath();
-				$this->mInfo['display_path']  = $this->getDisplayPath( $this->mInfo['path'] );
-				$this->mInfo['members']       = $this->getMemberList();
-				$this->mInfo['members_count'] = count( $this->mInfo['members'] );
-			}
-*/
 		}
 		return( count( $this->mInfo ) );
 	}
@@ -126,7 +116,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @return List of galleries
 	 **/
 	function getList( &$pListHash ) {
-		global $gBitSystem, $gBitUser;
+		global $gBitSystem;
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();

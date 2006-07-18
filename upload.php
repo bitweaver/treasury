@@ -2,11 +2,17 @@
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );
-$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
+
+if( $gContent->loadPermissions() ) {
+	$gContent->hasUserPermission( 'p_treasury_upload_item', TRUE, tra( 'You do not have the required permissions to upload files into this gallery.' ) );
+} else {
+	$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
+}
+
 require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
 
 // turn the max_file_size value into megabytes
@@ -36,19 +42,20 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 	$storeHash = !empty( $_REQUEST['treasury'] ) ? $_REQUEST['treasury'] : array();
 
 	// store each file individually
+	$treasuryItem = new TreasuryItem();
 	foreach( $_FILES as $upload ) {
 		if( !empty( $upload['tmp_name'] ) ) {
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;
-			$treasuryItem = new TreasuryItem();
 			if( !$treasuryItem->store( $storeHash ) ) {
 				$feedback['error'] = $treasuryItem->mErrors;
 			}
 		}
 	}
 
-	if( empty( $feedback['errors'] ) ) {
+	if( empty( $feedback['error'] ) ) {
 		header( 'Location: '.TREASURY_PKG_URL );
+die;
 	}
 }
 
