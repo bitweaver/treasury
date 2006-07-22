@@ -13,17 +13,19 @@
 				<input type="hidden" name="content_id" value="{$galInfo.content_id}" />
 				<input type="hidden" name="action" value="{$smarty.request.action}" />
 
-				<div class="row">
-					{formlabel label="Parent" for="treasury-parent"}
-					{forminput}
-						{if $galInfo.content_id}
-							{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$galInfo.parent_id disabled=disabled}
-						{else}
-							{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$gContent->mStructureId}
-						{/if}
-						{formhelp note="Pick where you would like to create a new sub-category. To change the hierarchy of the categories, please visit the change structure page."}
-					{/forminput}
-				</div>
+				{if !$galInfo.structure_id || $galInfo.structure_id != $galInfo.root_structure_id}
+					<div class="row">
+						{formlabel label="Parent" for="treasury-parent"}
+						{forminput}
+							{if $galInfo.content_id}
+								{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$galInfo.parent_id disabled=disabled}
+							{else}
+								{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$gContent->mStructureId}
+							{/if}
+							{formhelp note="Pick where you would like to create a new sub-category. To change the hierarchy of the categories, please visit the change structure page."}
+						{/forminput}
+					</div>
+				{/if}
 			{/if}
 
 			<div class="row">
