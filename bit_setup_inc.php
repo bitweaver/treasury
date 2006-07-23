@@ -1,11 +1,11 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.1 $
+ * @version  $Revision: 1.2 $
  * @package  Treasury
  * @subpackage functions
  */
-global $gBitSystem, $gBitUser;
+global $gBitSystem, $gBitUser, $gBitSmarty;
 
 $registerHash = array(
 	'package_name' => 'treasury',
