@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.4 2006/07/18 21:16:50 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.5 2006/07/29 17:42:48 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.4 $
+ * @version:      $Revision: 1.5 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -344,14 +344,14 @@ class TreasuryGallery extends TreasuryBase {
 				// Delete items in galleries
 				foreach( $itemContentIds as $iid ) {
 					if( $pForceDeleteItems ) {
-						// Remove items even if they exist in other galleries
+						// Remove item even if it exist on other galleries
 						$count = 1;
 					} else {
-						// Don't remove items if they exist in other galleries
+						// Only delete item if it doesn't exist on other galleries
 						$count = $this->mDb->getOne( "SELECT COUNT( `item_content_id` ) FROM `".BIT_DB_PREFIX."treasury_map` WHERE `item_content_id`=?", array( $iid ) );
 					}
 
-					// Only delete items if they don't exist on other galleries
+					// Only delete item if it doesn't exist on other galleries
 					if( $count == 1 ) {
 						$itemObject->mContentId = $iid;
 						$itemObject->load();
@@ -359,6 +359,11 @@ class TreasuryGallery extends TreasuryBase {
 							$this->mErrors['expunge'][] = $itemObject->mErrors;
 						}
 					}
+				}
+
+				// Next, we remove any icons if they exist
+				if( $thumbdir = $this->getGalleryThumbBaseUrl() ) {
+					@unlink_r( BIT_ROOT_PATH.$thumbdir );
 				}
 
 				// Now that all the items are gone, we can start nuking gallery entries
@@ -369,11 +374,6 @@ class TreasuryGallery extends TreasuryBase {
 				// Remove gallery entry
 				$sql = "DELETE FROM `".BIT_DB_PREFIX."treasury_gallery` WHERE `content_id`=?";
 				$rs = $this->mDb->query( $sql, array( $gid ) );
-
-				// Next, we remove any icons if they exist
-				if( $thumbdir = $this->getGalleryThumbBaseUrl() ) {
-					@unlink_r( BIT_ROOT_PATH.$thumbdir );
-				}
 
 				// Let liberty remove all the content entries for this gallery
 				if( !LibertyContent::expunge() ) {

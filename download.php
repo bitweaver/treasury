@@ -11,9 +11,6 @@ require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 $gContent->updateUserPermissions();
 $gContent->hasGalleryPermissions( 'p_treasury_download_item', TRUE );
 //$gBitSystem->fatalPermission( 'p_treasury_edit_gallery' );
-vd('end');
-
-die;
 
 // TODO: make sure this works reliably - not sure what is better:
 //       - add hit after download is complete

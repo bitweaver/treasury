@@ -36,13 +36,14 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
-	// transfer the form data to a store hash
-	$storeHash = !empty( $_REQUEST['treasury'] ) ? $_REQUEST['treasury'] : array();
-
-	// store each file individually
-	$treasuryItem = new TreasuryItem();
 	foreach( $_FILES as $upload ) {
 		if( !empty( $upload['tmp_name'] ) ) {
+			// store each file individually
+			$treasuryItem = new TreasuryItem();
+
+			// transfer the form data to a store hash
+			$storeHash = !empty( $_REQUEST['treasury'] ) ? $_REQUEST['treasury'] : array();
+
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;
 			if( !$treasuryItem->store( $storeHash ) ) {

@@ -3,7 +3,6 @@
 	<div class="floaticon">
 		{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$subtree[ix].content_id}
 		{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}
-		{* not fully implemented yet - xing
 		{if $gBitUser->isAdmin()}
 			{if $gContent->mPerms}
 				{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions_set" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
@@ -11,7 +10,6 @@
 				{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
 			{/if}
 		{/if}
-		*}
 		{smartlink ititle="Insert Gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=insert}
 		{smartlink ititle="Remove Gallery" ibiticon="liberty/delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
 	</div>

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.3 2006/07/18 21:16:51 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.4 2006/07/29 17:42:48 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.3 $
+ * @version:     $Revision: 1.4 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -132,7 +132,7 @@ function treasury_default_store( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_default_load( &$pFileHash ) {
-	global $gBitSystem, $gLibertySystem;
+	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] ) ) {
 		$query = "SELECT *
@@ -149,7 +149,7 @@ function treasury_default_load( &$pFileHash ) {
 //				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 //				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 			} else {
-				$mime_thumbnail = $gLibertySystem->getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
+				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
@@ -208,7 +208,7 @@ function treasury_default_download( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_default_expunge( &$pParamHash ) {
-	global $gBitSystem, $gLibertySystem;
+	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pParamHash['content_id'] ) ) {
 		$ret = TRUE;

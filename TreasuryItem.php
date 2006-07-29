@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.4 2006/07/18 21:16:50 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.5 2006/07/29 17:42:48 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.4 $
+ * @version:      $Revision: 1.5 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -198,7 +198,7 @@ class TreasuryItem extends TreasuryBase {
 			// short hand
 			$this->mDb->StartTrans();
 			// if this is an update, we bypass the plugin stuff - no changes there
-			if( $this->isValid() ) {
+			if( !empty( $pStoreHash['item_store']['content_id'] ) ) {
 				// ########## Update
 				if( LibertyContent::store( $pStoreHash ) ) {
 					// remove all entries in the treasury map
@@ -220,7 +220,13 @@ class TreasuryItem extends TreasuryBase {
 				$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
 				// verify the uploaded file using the plugin
 				if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
+//		vd('-------------------before');
+//		vd($pStoreHash);
+//		vd('-------------------');
 					if( LibertyContent::store( $pStoreHash ) ) {
+//		vd('-------------------after');
+//		vd($pStoreHash);
+//		vd('-------------------');
 						// ---------- Item store
 						// we can now insert the data into the item table
 						$pStoreHash['item_store']['plugin_guid'] = $guid;
@@ -249,11 +255,16 @@ class TreasuryItem extends TreasuryBase {
 					$this->mErrors = $pStoreHash['upload_store']['errors'];
 				}
 			}
-			// we need to unset the content_id number if we are in a loop otherwise LibertyContent::store gets confused
-			$pStoreHash['item_store']['content_id'] = $pStoreHash['content_id'] = NULL;
 
 			$this->mDb->CompleteTrans();
 		}
+
+		// reset everything in case we're in a loop
+		unset( $pStoreHash['content_store'] );
+		unset( $pStoreHash['upload_store'] );
+		unset( $pStoreHash['map_store'] );
+		unset( $pStoreHash['item_store'] );
+		unset( $pStoreHash['content_id'] );
 
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -426,9 +437,8 @@ class TreasuryItem extends TreasuryBase {
 	}
 
 	/**
-	 * Expunge data associated with an uploaded file, optionally remove file itself as well
+	 * Expunge data associated with an uploaded file
 	 * 
-	 * @param numeric $pContentId Content ID of the item we want to remove
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
