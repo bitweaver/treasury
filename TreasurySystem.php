@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.2 2006/07/11 15:10:32 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.3 2006/07/31 07:46:57 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.2 $
+ * @version:      $Revision: 1.3 $
  * @created:      Monday Jul 03, 2006   11:06:47 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -30,8 +30,8 @@ class TreasurySystem extends LibertySystem {
 	 * @return void
 	 */
 	function TreasurySystem() {
-		// set the plugin table that we can use LibertySystem functions
-		$this->mPluginsTable = 'treasury_plugins';
+		// Set the package using LibertySystem
+		$this->mSystem = TREASURY_PKG_NAME;
 
 		LibertySystem::LibertySystem( FALSE );
 	}

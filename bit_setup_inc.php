@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.2 $
+ * @version  $Revision: 1.3 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -20,7 +20,7 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 	require_once( TREASURY_PKG_PATH.'TreasurySystem.php' );
 	global $gTreasurySystem;
 	$gTreasurySystem = new TreasurySystem();
-	$gTreasurySystem->scanPlugins( TREASURY_PKG_PATH.'plugins/' );
+	$gTreasurySystem->loadActivePlugins();
 	$gBitSmarty->assign( 'gTreasurySystem', $gTreasurySystem );
 	//vd($gTreasurySystem);
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.5 2006/07/29 17:42:48 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.6 2006/07/31 07:46:57 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.5 $
+ * @version:      $Revision: 1.6 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -71,7 +71,7 @@ class TreasuryItem extends TreasuryBase {
 				$join $where $order";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-				if( !$load_function( $aux ) ) {
+				if( empty( $load_function ) || !$load_function( $aux ) ) {
 					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 				}
 				$this->mInfo                 = $aux;
@@ -140,7 +140,7 @@ class TreasuryItem extends TreasuryBase {
 		while( $aux = $result->fetchRow() ) {
 			$aux['title'] = $this->getTitle( $aux );
 			$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-			if( !$load_function( $aux ) ) {
+			if( empty( $load_function ) || !$load_function( $aux ) ) {
 				$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 			}
 			$aux['display_url']  = TREASURY_PKG_URL.'view_item.php?content_id='.$aux['content_id'];
@@ -220,13 +220,7 @@ class TreasuryItem extends TreasuryBase {
 				$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
 				// verify the uploaded file using the plugin
 				if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
-//		vd('-------------------before');
-//		vd($pStoreHash);
-//		vd('-------------------');
 					if( LibertyContent::store( $pStoreHash ) ) {
-//		vd('-------------------after');
-//		vd($pStoreHash);
-//		vd('-------------------');
 						// ---------- Item store
 						// we can now insert the data into the item table
 						$pStoreHash['item_store']['plugin_guid'] = $guid;
@@ -247,7 +241,7 @@ class TreasuryItem extends TreasuryBase {
 						//       - thumbnail creation - icon.jpg (48x48), avatar.jpg (100x100), small.jpg (400x300)
 						//       - storing file data in liberty_attachments and liberty_files (if you want to use liberty)
 						$store_function = $gTreasurySystem->getPluginFunction( $guid, 'store_function' );
-						if( !$store_function( $pStoreHash['upload_store'] ) ) {
+						if( empty( $store_function ) || !$store_function( $pStoreHash['upload_store'] ) ) {
 							$this->mErrors = $pStoreHash['upload_store']['errors'];
 						}
 					}
@@ -456,7 +450,7 @@ class TreasuryItem extends TreasuryBase {
 
 			// let the plugin do its thing
 			$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
-			if( $expunge_function( $this->mInfo ) ) {
+			if( !empty( $expunge_function ) && $expunge_function( $this->mInfo ) ) {
 				// remove the remaining entries in liberty tables
 				if( LibertyContent::expunge() ) {
 					$this->mDb->CompleteTrans();
