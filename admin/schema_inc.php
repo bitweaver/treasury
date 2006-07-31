@@ -9,19 +9,11 @@ $tables = array(
 			, CONSTRAINT `treasury_gallery_structure_ref` FOREIGN KEY (`structure_id`) REFERENCES `".BIT_DB_PREFIX."liberty_structures`( `structure_id` )'
 	",
 
-	'treasury_plugins' => "
-		plugin_guid C(16) PRIMARY,
-		plugin_type C(16) NOTNULL,
-		plugin_description C(250),
-		is_active C(1) NOTNULL DEFAULT 'y'
-	",
-
 	'treasury_item' => "
 		content_id I4 NOTNULL,
 		plugin_guid C(16) NOTNULL
 		CONSTRAINT '
 			, CONSTRAINT `treasury_item_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
-			, CONSTRAINT `treasury_plugin_ref` FOREIGN KEY (`plugin_guid`) REFERENCES `".BIT_DB_PREFIX."treasury_plugins`( `plugin_guid` )'
 	",
 
 	'treasury_map' => "
