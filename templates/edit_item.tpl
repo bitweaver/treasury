@@ -26,10 +26,15 @@
 			</div>
 
 			<div class="row">
-				{formlabel label="Custom Icon" for="icon"}
+				{formlabel label="Thumbnail Maintenance" for="icon"}
 				{forminput}
 					<input type="file" id="icon" name="icon" />
 					{formhelp note="Upload an image that represents this file. The image will be scaled automatically."}
+
+					<br />
+					<input type="submit" name="reset_thumbnails" value="{tr}Recreate original Thumbnail{/tr}" />
+					<br />
+					<input type="submit" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
 				{/forminput}
 			</div>
 
@@ -44,11 +49,11 @@
 
 			<div class="row submit">
 				<input type="submit" name="update_file" value="{tr}Apply Settings{/tr}" />
-				<br />
-				<input type="submit" name="reset_thumbnails" value="Reset Thumbnails" />
-				<input type="submit" name="delete_thumbnails" value="Delete Thumbnails" />
 			</div>
 		{/form}
+
+		<br />
+		<a href="{$gContent->mInfo.display_url}">Return to file</a>
 
 		<h2>{tr}Preview{/tr}</h2>
 

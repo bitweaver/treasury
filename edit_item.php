@@ -18,10 +18,12 @@ if( !empty( $_REQUEST['reset_thumbnails'] ) || !empty( $_REQUEST['delete_thumbna
 	$fileHash['source_file'] = $gContent->mInfo['source_file'];
 	$fileHash['type'] = $gContent->mInfo['mime_type'];
 	liberty_clear_thumbnails( $fileHash );
-}
 
-if( !empty( $_REQUEST['reset_thumbnails'] ) ) {
-	liberty_generate_thumbnails( $fileHash );
+	if( !empty( $_REQUEST['reset_thumbnails'] ) ) {
+		liberty_generate_thumbnails( $fileHash );
+	}
+
+	$gContent->load();
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
