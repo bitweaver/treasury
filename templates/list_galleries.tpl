@@ -15,7 +15,7 @@
 								{smartlink ititle="Insert Sub-gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" content_id=$gallery.content_id action=insert}
 							{/if}
 							{if $gBitUser->hasPermission( 'p_treasury_upload_item' )}
-								{smartlink ititle="Edit" ibiticon="liberty/upload" ifile="upload.php" content_id=$gallery.content_id}
+								{smartlink ititle="Uplaod Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gallery.content_id}
 							{/if}
 						</div>
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_title' )}
