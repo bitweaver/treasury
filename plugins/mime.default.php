@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.7 2006/08/29 20:44:38 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.8 2006/08/29 23:15:01 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.7 $
+ * @version:     $Revision: 1.8 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -44,11 +44,11 @@ $pluginParams = array (
 	// hierarchy of extracted files
 	// Allow for additional processing options - passed in during verify and store
 	//'processing_options' => '<label><input type="checkbox" name="treasury[plugin][process_archives]" value="true" /> '.tra( 'Process Archives' ).'</label>',
-	'mimetypes'          => array(
-		// This mime type is just an example. This plugin is called by default since it can handle any mime type decently.
-		// If you want to change the default mime handler, change the constant setting in TreasurySystem.php
-		'application/binary'
-	),
+
+	// Here you can use a perl regular expression to pick out file extensions you want to handle
+	// e.g.: Some image types: '#^image/(jpe?g|gif|png)#i'
+	// This plugin will be picked if nothing matches.
+	//'mimetypes'          => '/.*/',
 );
 
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_DEFAULT, $pluginParams );

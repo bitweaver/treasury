@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.3 2006/07/31 07:46:57 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.4 2006/08/29 23:15:01 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.3 $
+ * @version:      $Revision: 1.4 $
  * @created:      Monday Jul 03, 2006   11:06:47 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -53,7 +53,7 @@ class TreasurySystem extends LibertySystem {
 		}
 
 		foreach( $this->mPlugins as $handler => $plugin ) {
-			if( @in_array( $pFileHash['type'], $plugin['mimetypes'] ) ) {
+			if( !empty( $plugin['mimetypes'] ) && preg_match( $plugin['mimetypes'], $pFileHash['type'] ) ) {
 				$ret = $handler;
 			}
 		}
