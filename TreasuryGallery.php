@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.7 2006/08/19 13:13:15 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.8 2006/08/29 20:29:38 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.7 $
+ * @version:      $Revision: 1.8 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -51,19 +51,25 @@ class TreasuryGallery extends TreasuryBase {
 	function load( $pExtras = FALSE ) {
 		if( @BitBase::verifyId( $this->mContentId ) || @BitBase::verifyId( $this->mStructureId ) ) {
 			global $gBitSystem;
+
 			$lookupColumn = ( @BitBase::verifyId( $this->mContentId ) ? 'lc.`content_id`' : 'ls.`structure_id`' );
 			$lookupId = ( @BitBase::verifyId( $this->mContentId ) ? $this->mContentId : $this->mStructureId );
+
+			$bindVars[] = $lookupId;
+			$selectSql = $joinSql = $whereSql = '';
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
 			$query = "SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
 				lc.`title`, lc.`format_guid`, lc.`data`, lc.`user_id`, lc.`content_type_guid`,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name
+				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 				FROM `".BIT_DB_PREFIX."treasury_gallery` trg
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
-				WHERE $lookupColumn = ?";
-			$result = $this->mDb->query( $query, array( $lookupId ) );
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
+					LEFT JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` ) $joinSql
+				WHERE $lookupColumn = ? $whereSql";
+			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $row = $result->fetchRow() ) {
 				$this->mInfo                  = $row;
@@ -75,6 +81,12 @@ class TreasuryGallery extends TreasuryBase {
 				$this->mInfo['editor']        = ( isset( $row['modifier_real_name'] ) ? $row['modifier_real_name'] : $row['modifier_user'] );
 				$this->mInfo['display_url']   = $this->getDisplayUrl();
 				$this->mInfo['thumbnail_url'] = $this->getGalleryThumbUrl();
+
+				// get extra information if required
+				if( $pExtras ) {
+					$this->mInfo['gallery_path']         = $this->getGalleryPath();
+					$this->mInfo['gallery_display_path'] = $this->getDisplayPath( $this->mInfo['gallery_path'] );
+				}
 			}
 		}
 		return( count( $this->mInfo ) );

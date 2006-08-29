@@ -1,10 +1,10 @@
 {strip}
 <div class="display treasury">
+	{include file="bitpackage:treasury/gallery_nav_inc.tpl"}
+
 	<div class="header">
 		<h1>{tr}Download File{/tr}</h1>
 	</div>
-
-	{$galleryPath}
 
 	<div class="body">
 		{if $gBitUser->hasPermission( 'p_treasury_edit_item' )}

@@ -27,6 +27,10 @@ if( !empty( $_REQUEST['reset_thumbnails'] ) || !empty( $_REQUEST['delete_thumbna
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
+	if( !empty( $_FILES['file']['tmp_name'] ) ) {
+		$_REQUEST['treasury']['upload'] = $_FILES['file'];
+	}
+
 	if( $gContent->store( $_REQUEST['treasury'] ) ) {
 		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {

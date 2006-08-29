@@ -12,7 +12,7 @@
 		<div class="row">
 			{formlabel label="Description" for=""}
 			{forminput}
-				{$gContent->mInfo.data|escape}
+				{$gContent->mInfo.data|escape|nl2br}
 			{/forminput}
 		</div>
 	{/if}

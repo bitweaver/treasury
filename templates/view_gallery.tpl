@@ -1,5 +1,7 @@
 {strip}
-<div class="edit treasury">
+<div class="display treasury">
+	{include file="bitpackage:treasury/gallery_nav_inc.tpl" galleryDisplayPath=$gContent->mInfo.gallery_display_path}
+
 	<div class="header">
 		<h1>{tr}File Gallery{/tr}</h1>
 	</div>

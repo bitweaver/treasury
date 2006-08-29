@@ -26,6 +26,14 @@
 			</div>
 
 			<div class="row">
+				{formlabel label="Replace File" for="fileupload"}
+				{forminput}
+					<input type="file" name="file" id="fileupload" />
+					{formhelp note="Upload a new file to replaces the current one."}
+				{/forminput}
+			</div>
+
+			<div class="row">
 				{formlabel label="Thumbnail Maintenance" for="icon"}
 				{forminput}
 					<input type="file" id="icon" name="icon" />
@@ -39,7 +47,7 @@
 			</div>
 
 			<div class="row">
-				{formlabel label="Add File(s) to these Galleries"}
+				{formlabel label="Add File to these Galleries"}
 				{forminput}
 					{foreach from=$galleryList item=gallery}
 						{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" noicons=1 checkbox=1}

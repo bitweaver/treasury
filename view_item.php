@@ -40,15 +40,15 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 }
 
 if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
-	$galleryPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $_REQUEST['structure_id'] ) );
-	$gBitSmarty->assign( 'galleryPath', $galleryPath );
+	$galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $_REQUEST['structure_id'] ) );
+	$gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
 } else {
 	// if we don't have a structure id to go by, we just get one
 	$galleryContentIds = $gContent->getGalleriesFromItemContentId( $gContent->mContentId );
 	if( @BitBase::verifyId( $galleryContentIds[0] ) ) {
 		$gallery = new TreasuryGallery( $galleryContentIds[0] );
-		$galleryPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gallery->mStructureId ) );
-		$gBitSmarty->assign( 'galleryPath', $galleryPath );
+		$galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gallery->mStructureId ) );
+		$gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
 	}
 }
 

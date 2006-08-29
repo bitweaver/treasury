@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.6 2006/07/31 07:46:57 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.7 2006/08/29 20:29:38 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.6 $
+ * @version:      $Revision: 1.7 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -64,10 +64,10 @@ class TreasuryItem extends TreasuryBase {
 					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
 					INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				$join $where $order";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
@@ -201,7 +201,7 @@ class TreasuryItem extends TreasuryBase {
 			if( !empty( $pStoreHash['item_store']['content_id'] ) ) {
 				// ########## Update
 				if( LibertyContent::store( $pStoreHash ) ) {
-					// remove all entries in the treasury map
+					// remove all related entries in the treasury map
 					$this->expungeItemMap();
 
 					// ---------- Map store
@@ -211,6 +211,18 @@ class TreasuryItem extends TreasuryBase {
 							'item_content_id' => $pStoreHash['item_store']['content_id'],
 						);
 						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
+					}
+
+					// Call the appropriate plugin to deal with the upload
+					if( !empty( $pStoreHash['upload_store']['upload'] ) ) {
+						$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store'] );
+						$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
+						if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
+							$update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' );
+							if( empty( $update_function ) || !$update_function( $pStoreHash['upload_store'] ) ) {
+								$this->mErrors = $pStoreHash['upload_store']['errors'];
+							}
+						}
 					}
 				}
 			} else {
@@ -286,13 +298,16 @@ class TreasuryItem extends TreasuryBase {
 			}
 		}
 
-		// Make sure the upload went well. If not, we break off this mellarky here.
-		if( empty( $pStoreHash['upload_store']['upload']['tmp_name'] ) || !is_file( $pStoreHash['upload_store']['upload']['tmp_name'] ) ) {
-			// Mke sure we know what to update if we want to update a file
-			if( $this->isValid() ) {
-				$pStoreHash['content_store']['content_id'] = $pStoreHash['item_store']['content_id'] = $this->mContentId;
-			}
+		// Make sure we know what to update
+		if( $this->isValid() ) {
+			$pStoreHash['upload_store']['content_id']      =
+				$pStoreHash['content_store']['content_id'] =
+				$pStoreHash['item_store']['content_id']    = $this->mContentId;
+		} elseif( empty( $pStoreHash['upload_store']['upload']['tmp_name'] ) || !is_file( $pStoreHash['upload_store']['upload']['tmp_name'] ) ) {
+			// Make sure the upload went well. If not, we break off this mellarky here.
+			$this->mErrors['upload'] = tra( 'Uploading this file has destroyed this website - possibly even the entire internet.' );
 		}
+
 
 		// ---------- Item store
 		// the item data is collected during the TreasuryItem::store() process
@@ -343,7 +358,7 @@ class TreasuryItem extends TreasuryBase {
 		} elseif( empty( $pStoreHash['edit'] ) ) {
 			unset( $pStoreHash['edit'] );
 		} else {
-			$pStoreHash['edit'] = $pStoreHash['edit'];
+			$pStoreHash['content_store']['data'] = $pStoreHash['edit'];
 			//$pStoreHash['edit'] = substr( $pStoreHash['edit'], 0, 500 );
 		}
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.5 2006/08/07 08:31:25 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.6 2006/08/29 20:29:39 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.5 $
+ * @version:     $Revision: 1.6 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -25,8 +25,9 @@ define( 'TREASURY_MIME_GUID_DEFAULT', 'mime_default' );
 $pluginParams = array (
 	// Set of functions and what they are called in this paricular plugin
 	// Use the GUID as your namespace
-	'store_function'     => 'treasury_default_store',
 	'verify_function'    => 'treasury_default_verify',
+	'store_function'     => 'treasury_default_store',
+	'update_function'     => 'treasury_default_update',
 	'load_function'      => 'treasury_default_load',
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
@@ -53,7 +54,7 @@ $pluginParams = array (
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_DEFAULT, $pluginParams );
 
 /**
- * Sanitise data before it's stored
+ * Sanitise and validate data before it's stored
  * 
  * @param array $pStoreRow Hash of data that needs to be stored
  * @param array $pStoreRow['upload'] Hash passed in by $_FILES upload
@@ -63,8 +64,26 @@ $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_DEFAULT, $pluginParams );
 function treasury_default_verify( &$pStoreRow ) {
 	global $gBitSystem, $gBitUser;
 	$ret = FALSE;
-	// make sure the file is valid
-	if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
+
+	// content_id is only set when we are updating the file
+	if( @BitBase::verifyId( $pStoreRow['content_id'] ) ) {
+		// Generic values needed by the storing mechanism
+		$pStoreRow['user_id'] = $gBitUser->mUserId;
+		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
+
+		// Store all uploaded files in the users storage area
+		// TODO: allow users to create personal galleries
+		$fileInfo = $gBitSystem->mDb->getRow( "
+			SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
+			FROM `".BIT_DB_PREFIX."liberty_attachments` la
+				INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( la.`foreign_id`=lf.`file_id` )
+			WHERE `content_id`=?", array( $pStoreRow['content_id'] ) );
+		$pStoreRow = array_merge( $pStoreRow, $fileInfo );
+		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
+
+		$ret = TRUE;
+
+	} elseif( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
 		// try to generate thumbnails for the upload
 		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
 		$pStoreRow['upload']['thumbnail'] = TRUE;
@@ -79,20 +98,41 @@ function treasury_default_verify( &$pStoreRow ) {
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
 		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
 
-		// TODO: allow users to create personal galleries - need to adjust 
-		// path as well
+		// Store all uploaded files in the users storage area
+		// TODO: allow users to create personal galleries
 		$pStoreRow['attachment_id'] = $gBitSystem->mDb->GenID( 'liberty_attachments_id_seq' );
-		if( !empty( $pStoreRow['private_gallery'] ) ) {
-			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
-		} else {
-			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'] );
-		}
+		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 
 		$ret = TRUE;
+
 	} else {
 		$pStoreRow['errors']['upload'] = tra( 'There was a problem with the uploaded file.' );
 	}
+
 	return $ret;
+}
+
+/**
+ * Update the data in the database
+ * 
+ * @param array $pStoreRow File data needed to store details in the database - sanitised and generated in the verify function
+ * @access public
+ * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
+ */
+function treasury_default_update( &$pStoreRow ) {
+	global $gBitSystem;
+	$ret = FALSE;
+	// No changes in the database are needed - we only need to update the uploaded files
+	// First we remove the old file
+	@unlink( $pStoreRow['storage_path'] );
+
+	// Now we process the uploaded file
+	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
+		$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
+		$gBitSystem->mDb->query( $sql, array( $storagePath, $pStoreRow['file_id'] ) );
+	}
+
+	return TRUE;
 }
 
 /**
@@ -101,7 +141,6 @@ function treasury_default_verify( &$pStoreRow ) {
  * @param array $pStoreRow File data needed to store details in the database - sanitised and generated in the verify function
  * @access public
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
- * TODO: Custom thumbnail upload - should be important with videos and the like.
  */
 function treasury_default_store( &$pStoreRow ) {
 	global $gBitSystem;
