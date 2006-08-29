@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.6 2006/08/29 20:29:39 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.7 2006/08/29 20:44:38 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.6 $
+ * @version:     $Revision: 1.7 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -19,7 +19,7 @@ global $gTreasurySystem;
 
 // This is the name of the plugin - max char length is 16
 // As a naming convention, the treasury mime handler definition should start with:
-// TREASURY_MIME_
+// TREASURY_MIME_GUID_
 define( 'TREASURY_MIME_GUID_DEFAULT', 'mime_default' );
 
 $pluginParams = array (
@@ -27,7 +27,7 @@ $pluginParams = array (
 	// Use the GUID as your namespace
 	'verify_function'    => 'treasury_default_verify',
 	'store_function'     => 'treasury_default_store',
-	'update_function'     => 'treasury_default_update',
+	'update_function'    => 'treasury_default_update',
 	'load_function'      => 'treasury_default_load',
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
