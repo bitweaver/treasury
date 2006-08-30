@@ -22,9 +22,11 @@
 	</div>
 
 	<div class="body">
-		{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php" noicons=true}
+		{if count($subtree) gt 1}
+			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php" noicons=true}
 
-		<hr />
+			<hr />
+		{/if}
 
 		{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
 			<a href="{$gContent->mInfo.display_url}">

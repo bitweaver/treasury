@@ -29,7 +29,7 @@
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_desc' )}
 							<p>{$gallery.data}</p>
 						{/if}
-						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_structure' )}
+						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_structure' ) and count($gallery.subtree) gt 1}
 							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" noicons=1}
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_created' )}
@@ -38,7 +38,7 @@
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_creator' )}
 							<br />{tr}by{/tr}: {displayname hash=$gallery}
 						{/if}
-						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_hits' )}
+						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_hits' ) and $gallery.hits}
 							<br />{tr}Number of Times accessed{/tr}: {$gallery.hits}
 						{/if}
 						<div class="clear"></div>
