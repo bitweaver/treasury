@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.8 2006/08/29 23:15:01 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.9 2006/08/30 16:23:20 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.8 $
+ * @version:     $Revision: 1.9 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -48,7 +48,7 @@ $pluginParams = array (
 	// Here you can use a perl regular expression to pick out file extensions you want to handle
 	// e.g.: Some image types: '#^image/(jpe?g|gif|png)#i'
 	// This plugin will be picked if nothing matches.
-	//'mimetypes'          => '/.*/',
+	//'mimetypes'          => array( '/.*/' ),
 );
 
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_DEFAULT, $pluginParams );

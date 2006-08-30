@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.8 2006/08/29 20:29:38 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.9 2006/08/30 16:23:20 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.8 $
+ * @version:      $Revision: 1.9 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -87,6 +87,7 @@ class TreasuryGallery extends TreasuryBase {
 					$this->mInfo['gallery_path']         = $this->getGalleryPath();
 					$this->mInfo['gallery_display_path'] = $this->getDisplayPath( $this->mInfo['gallery_path'] );
 				}
+				$this->loadPreferences();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -291,16 +292,15 @@ class TreasuryGallery extends TreasuryBase {
 
 		// sort out the description
 		if( $this->isValid() && !empty( $this->mInfo['data'] ) && empty( $pParamHash['edit'] ) ) {
-			$pParamHash['edit'] = '';
+			$pParamHash['content_store']['data'] = '';
 		} elseif( empty( $pParamHash['edit'] ) ) {
 			unset( $pParamHash['edit'] );
 		} else {
-			$pParamHash['edit'] = substr( $pParamHash['edit'], 0, 250 );
+			$pParamHash['content_store']['data'] = substr( $pParamHash['edit'], 0, 250 );
 		}
 
 		// Individual gallery preference store - dealt with by LibertyContent::store();
-		// not in use just now
-		//$pParamHash['preferences_store'] = !empty( $pParamHash['preferences'] ) ? $pParamHash['preferences'] : NULL;
+		$pParamHash['preferences_store'] = !empty( $pParamHash['preferences'] ) ? $pParamHash['preferences'] : NULL;
 
 		// structure store
 		if( @BitBase::verifyId( $pParamHash['root_structure_id'] ) ) {

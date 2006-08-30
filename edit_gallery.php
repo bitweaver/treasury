@@ -27,7 +27,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
 
 if( !empty( $_REQUEST['treasury_store'] ) ) {
 	$_REQUEST['treasury']['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
-	$galleryStore = new TreasuryGallery( !empty( $_REQUEST['content_id'] ) ? $_REQUEST['content_id'] : NULL );
+	$galleryStore = new TreasuryGallery( !empty( $_REQUEST['structure_id'] ) ? $_REQUEST['structure_id'] : NULL, !empty( $_REQUEST['content_id'] ) ? $_REQUEST['content_id'] : NULL );
 	$galleryStore->load();
 	if( $galleryStore->store( $_REQUEST['treasury'] ) ) {
 		// process image upload
@@ -53,6 +53,14 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 		$feedback['error'] = $galleryStore->mErrors;
 	}
 }
+
+$imageSizes = array(
+	'0'      => tra( 'Disable this feature' ),
+	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),
+	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
+	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
+);
+$gBitSmarty->assign( 'imageSizes', $imageSizes );
 
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 

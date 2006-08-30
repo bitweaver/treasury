@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.4 2006/08/29 23:15:01 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.5 2006/08/30 16:23:20 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.4 $
+ * @version:      $Revision: 1.5 $
  * @created:      Monday Jul 03, 2006   11:06:47 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -43,22 +43,26 @@ class TreasurySystem extends LibertySystem {
 	 * @param string $pFileHash['tmp_name'] (required if no mimetype) Full path to file that needs to be dealt with
 	 * @access public
 	 * @return handler plugin guid
+	 * TODO: Currently this will return the first found handler - might want to have a sort order?
 	 **/
 	function lookupMimeHandler( &$pFileHash ) {
 		global $gBitSystem;
-		$ret = TREASURY_DEFAULT_MIME_HANDLER;
 
 		if( !empty( $pFileHash['name'] ) && empty( $pFileHash['type'] ) ) {
 			$pFileHash['type'] = $gBitSystem->lookupMimeType( $pFileHash['name'] );
 		}
 
 		foreach( $this->mPlugins as $handler => $plugin ) {
-			if( !empty( $plugin['mimetypes'] ) && preg_match( $plugin['mimetypes'], $pFileHash['type'] ) ) {
-				$ret = $handler;
+			if( !empty( $plugin['mimetypes'] ) && is_array( $plugin['mimetypes'] ) ) {
+				foreach( $plugin['mimetypes'] as $pattern ) {
+					if( preg_match( $pattern, $pFileHash['type'] ) ) {
+						return $handler;
+					}
+				}
 			}
 		}
 
-		return $ret;
+		return TREASURY_DEFAULT_MIME_HANDLER;
 	}
 
 	/**

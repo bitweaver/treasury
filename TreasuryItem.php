@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.7 2006/08/29 20:29:38 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.8 2006/08/30 16:23:20 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.7 $
+ * @version:      $Revision: 1.8 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -215,7 +215,7 @@ class TreasuryItem extends TreasuryBase {
 
 					// Call the appropriate plugin to deal with the upload
 					if( !empty( $pStoreHash['upload_store']['upload'] ) ) {
-						$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store'] );
+						$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
 						$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
 						if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
 							$update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' );
@@ -228,7 +228,7 @@ class TreasuryItem extends TreasuryBase {
 			} else {
 				// ########## Insert
 				// call the appropriate plugin to deal with the upload
-				$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store'] );
+				$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
 				$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
 				// verify the uploaded file using the plugin
 				if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {

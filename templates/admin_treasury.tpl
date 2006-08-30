@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.1 2006/07/11 13:43:56 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.2 2006/08/30 16:23:21 squareing Exp $ *}
 {strip}
 {form}
 	<input type="hidden" name="page" value="{$page}" />
@@ -20,13 +20,6 @@
 	{/legend}
 
 	{legend legend="Gallery Listing"}
-		<div class="row">
-			{formlabel label="List Thumbnail Size"}
-			{forminput}
-				{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_list_thumb" selected=$gBitSystem->getConfig('treasury_gallery_list_thumb')}
-			{/forminput}
-		</div>
-
 		{foreach from=$galleryListing key=feature item=output}
 			<div class="row">
 				{formlabel label=`$output.label` for=$feature}

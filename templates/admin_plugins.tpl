@@ -21,7 +21,7 @@
 						<td>
 							<h3>{$plugin.title|escape}</h3>
 							<label for="{$guid}">
-								{$plugin.plugin_description|escape}
+								{$plugin.description|escape}
 							</label>
 						</td>
 						<td>{$guid}</td>

@@ -3,15 +3,28 @@
 	{include file="bitpackage:treasury/gallery_nav_inc.tpl" galleryDisplayPath=$gContent->mInfo.gallery_display_path}
 
 	<div class="header">
-		<h1>{tr}File Gallery{/tr}</h1>
+		<div class="floaticon">
+			{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gContent->mContentId}
+			{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+			{if $gBitUser->isAdmin()}
+				{if $gContent->mPerms}
+					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions_set" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+				{else}
+					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+				{/if}
+			{/if}
+			{smartlink ititle="Insert Gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
+			{smartlink ititle="Remove Gallery" ibiticon="liberty/delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+		</div>
+
+		<h1>{$gContent->getTitle()}</h1>
+		<h2>{$gContent->mInfo.data|escape}</h2>
 	</div>
 
 	<div class="body">
-		{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
+		{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php" noicons=true}
 
 		<hr />
-
-		<h2>{$gContent->getTitle()}</h2>
 
 		{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
 			<a href="{$gContent->mInfo.display_url}">
@@ -19,13 +32,11 @@
 			</a>
 		{/if}
 
-		<p>{$gContent->mInfo.data|escape}</p>
-
 		{if $gContent->mItems}
 			<table class="data">
 				<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
 				<tr>
-					{if $gBitSystem->isFeatureActive( 'treasury_item_list_thumb' )}
+					{if $gContent->getPreference('gallery_thumb_size')}
 						<th style="width:10%"></th>
 					{/if}
 					<th style="width:50%">
@@ -44,8 +55,8 @@
 
 				{foreach from=$gContent->mItems item=item}
 					<tr>
-						{if $gBitSystem->isFeatureActive( 'treasury_item_list_thumb' )}
-							{assign var=thumbsize value=$gBitSystem->getConfig('treasury_item_list_thumb')}
+						{if $gContent->getPreference('gallery_thumb_size')}
+							{assign var=thumbsize value=$gContent->getPreference('gallery_thumb_size')}
 							<td style="text-align:center;">
 								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">
 									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />

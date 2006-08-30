@@ -70,7 +70,7 @@
 								{formlabel label="File Processing Options" for=""}
 								{forminput}
 									{foreach from=$gTreasurySystem->mPlugins item=plugin}
-										{$plugin.processing_options}<br />
+										{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
 									{/foreach}
 								{/forminput}
 							</div>

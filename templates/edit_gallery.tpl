@@ -47,11 +47,19 @@
 			<div class="row">
 				{formlabel label="Private Gallery" for="treasury-is_private"}
 				{forminput}
-				<input type="checkbox" size="5" id="treasury-is_private" name="treasury[is_private]" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
+				<input type="checkbox" id="treasury-is_private" name="treasury[is_private]" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
 					{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
 				{/forminput}
 			</div>
 			*}
+
+			<div class="row">
+				{formlabel label="Thumbnail Size" for="gallery_thumb_size"}
+				{forminput}
+					{html_options values=$imageSizes options=$imageSizes name="treasury[preferences][gallery_thumb_size]" id="gallery_thumb_size" selected=$gContent->getPreference('gallery_thumb_size')}
+					{formhelp note="Pick the size of file icons."}
+				{/forminput}
+			</div>
 
 			{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}
 				{if $galInfo.thumbnail_url}
