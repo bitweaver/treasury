@@ -1,5 +1,5 @@
 {strip}
-{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' ) && !$noicons}
+{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' ) && $editicons}
 	<div class="floaticon">
 		{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$subtree[ix].content_id}
 		{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}

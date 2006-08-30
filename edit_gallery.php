@@ -54,6 +54,8 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 	}
 }
 
+$gContent->invokeServices( 'content_edit_function' );
+
 $imageSizes = array(
 	'0'      => tra( 'Disable this feature' ),
 	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),

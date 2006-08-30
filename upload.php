@@ -64,6 +64,8 @@ if( $gBitSystem->isPackageActive( 'gigaupload' ) ) {
 	$gBitSmarty->assign( 'loadMultiFile', TRUE );
 }
 
+$gContent->invokeServices( 'content_edit_function' );
+
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 
 $gBitSystem->display( 'bitpackage:treasury/upload.tpl', tra( 'Upload File' ) );

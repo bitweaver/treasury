@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.9 2006/08/30 16:23:20 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.10 2006/08/30 18:40:39 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.9 $
+ * @version:      $Revision: 1.10 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -133,36 +133,37 @@ class TreasuryGallery extends TreasuryBase {
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
-		$where = $order = $join = '';
+		$selectSql = $joinSql = $orderSql = $whereSql = '';
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if( @BitBase::verifyId( $pListHash['root_structure_id'] ) ) {
-			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
-			$where .= " ls.`root_structure_id`=? ";
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= " ls.`root_structure_id`=? ";
 			$bindVars[] = $pListHash['root_structure_id'];
 		}
 
 		if( !empty( $pListHash['load_only_root'] ) ) {
-			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
-			$where .= " ls.`structure_id`=ls.`root_structure_id` ";
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= " ls.`structure_id`=ls.`root_structure_id` ";
 		}
 
 		if( !empty( $pListHash['find'] ) ) {
-			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
-			$where .= " UPPER( lc.`title` ) LIKE ? ";
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= " UPPER( lc.`title` ) LIKE ? ";
 			$bindVars[] = '%'.strtoupper( $pListHash['find'] ).'%';
 		}
 
 		if ( isset( $pListHash['parent_id'] ) ) {
-			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
-			$where .= ' ls.`parent_id` = ? ';
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= ' ls.`parent_id` = ? ';
 			$bindVars[] = $pListHash['parent_id'];
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
-			$order .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
+			$orderSql .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
 		} else {
 			// default sort mode makes list look nice
-			$order .= " ORDER BY ls.`root_structure_id`, ls.`structure_id` ASC";
+			$orderSql .= " ORDER BY ls.`root_structure_id`, ls.`structure_id` ASC";
 		}
 
 		$query = "SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
@@ -175,7 +176,7 @@ class TreasuryGallery extends TreasuryBase {
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
-			$join $where $order";
+			$joinSql $whereSql $orderSql";
 
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 
@@ -197,7 +198,7 @@ class TreasuryGallery extends TreasuryBase {
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
-			$join $where";
+			$joinSql $whereSql";
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
 
 		LibertyContent::postGetList( $pListHash );

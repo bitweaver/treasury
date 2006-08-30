@@ -1,4 +1,6 @@
 {strip}
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
+
 <div class="display treasury">
 	{include file="bitpackage:treasury/gallery_nav_inc.tpl" galleryDisplayPath=$gContent->mInfo.gallery_display_path}
 
@@ -23,7 +25,7 @@
 
 	<div class="body">
 		{if count($subtree) gt 1}
-			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php" noicons=true}
+			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
 
 			<hr />
 		{/if}
@@ -117,4 +119,6 @@
 		{pagination}
 	</div><!-- end .body -->
 </div><!-- end .treasury -->
+
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
 {/strip}

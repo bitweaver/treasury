@@ -1,4 +1,6 @@
 {strip}
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
+
 <div class="display treasury">
 	{include file="bitpackage:treasury/gallery_nav_inc.tpl"}
 
@@ -20,4 +22,6 @@
 		{include file=$gTreasurySystem->mPlugins.$guid.view_tpl}
 	</div><!-- end .body -->
 </div><!-- end .treasury -->
+
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
 {/strip}

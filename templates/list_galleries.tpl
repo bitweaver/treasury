@@ -30,7 +30,7 @@
 							<p>{$gallery.data}</p>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_structure' ) and count($gallery.subtree) gt 1}
-							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" noicons=1}
+							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php"}
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_created' )}
 							<br />{tr}Created{/tr}: {$gallery.created|bit_long_datetime}

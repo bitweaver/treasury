@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.8 2006/08/30 16:23:20 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.9 2006/08/30 18:40:39 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.8 $
+ * @version:      $Revision: 1.9 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -53,11 +53,12 @@ class TreasuryItem extends TreasuryBase {
 		if( @BitBase::verifyId( $this->mContentId ) ) {
 			global $gTreasurySystem;
 
-			$ret = $bindVars = array();
-			$where = $order = $join = '';
+			$ret = array();
 
-			$where = " WHERE tri.`content_id` = ? ";
+			$selectSql = $joinSql = $orderSql = '';
+			$whereSql = " WHERE tri.`content_id` = ? ";
 			$bindVars[] = $this->mContentId;
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$ret = array();
 			$query = "SELECT tri.`plugin_guid`, tct.`content_description`, uu.`login`, uu.`real_name`, la.`attachment_id`,
@@ -68,7 +69,7 @@ class TreasuryItem extends TreasuryBase {
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
-				$join $where $order";
+				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
 				if( empty( $load_function ) || !$load_function( $aux ) ) {
@@ -106,24 +107,25 @@ class TreasuryItem extends TreasuryBase {
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
-		$where = $order = $join = '';
+		$selectSql = $joinSql = $orderSql = $whereSql = "";
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if( @BitBase::verifyId( $pListHash['gallery_content_id'] ) ) {
-			$where = " WHERE trm.`gallery_content_id` = ? ";
+			$whereSql = " WHERE trm.`gallery_content_id` = ? ";
 			$bindVars[] = $pListHash['gallery_content_id'];
 		}
 
 		if( !empty( $pListHash['title'] ) && is_string( $pListHash['title'] ) ) {
-			$where .= empty( $where ) ? ' WHERE ' : ' AND ';
-			$where .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
-			$join = ", `".BIT_DB_PREFIX."liberty_content` lc";
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
+			$joinSql = ", `".BIT_DB_PREFIX."liberty_content` lc";
 			$bindVars[] = strtoupper( $pListHash['title'] );
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
-			$order .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
+			$orderSql .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
 		} else {
-			$order .= " ORDER BY trm.`item_position` ASC ";
+			$orderSql .= " ORDER BY trm.`item_position` ASC ";
 		}
 
 		$ret = array();
@@ -135,7 +137,7 @@ class TreasuryItem extends TreasuryBase {
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
-			$join $where $order";
+			$joinSql $whereSql $orderSql";
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 		while( $aux = $result->fetchRow() ) {
 			$aux['title'] = $this->getTitle( $aux );
@@ -155,7 +157,7 @@ class TreasuryItem extends TreasuryBase {
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
-			$join $where";
+			$joinSql $whereSql";
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
 		LibertyContent::postGetList( $pListHash );
 

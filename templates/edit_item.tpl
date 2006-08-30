@@ -50,10 +50,12 @@
 				{formlabel label="Add File to these Galleries"}
 				{forminput}
 					{foreach from=$galleryList item=gallery}
-						{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" noicons=1 checkbox=1}
+						{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
 					{/foreach}
 				{/forminput}
 			</div>
+
+			{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 
 			<div class="row submit">
 				<input type="submit" name="update_file" value="{tr}Apply Settings{/tr}" />
