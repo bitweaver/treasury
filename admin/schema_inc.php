@@ -54,7 +54,6 @@ $gBitInstaller->registerSchemaIndexes( TREASURY_PKG_NAME, $indices );
 // Default Preferences
 $gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
 	// default gallery listing
-	array( TREASURY_PKG_NAME, 'treasury_gallery_list_thumb',     'small' ),
 	array( TREASURY_PKG_NAME, 'treasury_gallery_list_title',     'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_gallery_list_desc',      'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_gallery_list_created',   'y' ),
@@ -62,34 +61,33 @@ $gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
 	array( TREASURY_PKG_NAME, 'treasury_gallery_list_hits',      'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_gallery_list_structure', 'y' ),
 	// default item listing
-	array( TREASURY_PKG_NAME, 'treasury_item_list_thumb',   'icon' ),
-	//array( TREASURY_PKG_NAME, 'treasury_item_list_name',    'y' ),
-	//array( TREASURY_PKG_NAME, 'treasury_item_list_desc',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_list_size',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_list_date',    'y' ),
-	//array( TREASURY_PKG_NAME, 'treasury_item_list_creator', 'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_list_hits',    'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_list_thumb',        'icon' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_list_size',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_list_date',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_list_hits',         'y' ),
 	// default item view
-	array( TREASURY_PKG_NAME, 'treasury_item_view_thumb',   'small' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_name',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_desc',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_size',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_date',    'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_creator', 'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_hits',    'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_thumb',        'small' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_name',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_desc',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_size',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_date',         'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_creator',      'y' ),
+	array( TREASURY_PKG_NAME, 'treasury_item_view_hits',         'y' ),
 ) );
 
 // Default UserPermissions
 $gBitInstaller->registerUserPermissions( TREASURY_PKG_NAME, array(
 	// gallery permissions
-	array( 'p_treasury_view_gallery',   'Can view file galleries', 'basic', TREASURY_PKG_NAME ),
-	array( 'p_treasury_create_gallery', 'Can create and delete file galleries', 'editors', TREASURY_PKG_NAME ),
-	array( 'p_treasury_edit_gallery',   'Can edit existing file galleries', 'editors', TREASURY_PKG_NAME ),
-	// file permissions
-	array( 'p_treasury_download_item',  'Can download files', 'basic', TREASURY_PKG_NAME ),
+	array( 'p_treasury_view_gallery',   'Can view file galleries',                      'basic',       TREASURY_PKG_NAME ),
+	array( 'p_treasury_create_gallery', 'Can create file galleries',                    'editors',     TREASURY_PKG_NAME ),
+	array( 'p_treasury_edit_gallery',   'Can edit existing file galleries',             'editors',     TREASURY_PKG_NAME ),
+	// item permissions
+	array( 'p_treasury_view_item',      'Can view a downloadable file',                  'basic',      TREASURY_PKG_NAME ),
+	array( 'p_treasury_download_item',  'Can download files',                            'basic',      TREASURY_PKG_NAME ),
 	array( 'p_treasury_upload_item',    'Can upload files into existing file galleries', 'registered', TREASURY_PKG_NAME ),
-	array( 'p_treasury_edit_item',      'Can edit already uploaded files', 'editors', TREASURY_PKG_NAME ),
+	//array( 'p_treasury_edit_item',      'Can edit already uploaded files',               'editors',    TREASURY_PKG_NAME ),
+	//array( 'p_treasury_delete_item',    'Can delete files other than his own',           'editors',    TREASURY_PKG_NAME ),
 	// admin permission
-	//array( 'p_treasury_admin', 'Can admin file galleries', 'admin', TREASURY_PKG_NAME ),
+	//array( 'p_treasury_admin',          'Can admin file galleries',                      'admin',      TREASURY_PKG_NAME ),
 ) );
 ?>

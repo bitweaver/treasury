@@ -9,7 +9,11 @@ $extras = TRUE;
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
-	$gBitSystem->verifyPermission( 'p_treasury_edit_item' );
+	if( !$gContent->isOwner() && !$gBitUser->isAdmin() ) {
+		$gBitSmarty->assign( 'msg', tra( "You do not own this file." ) );
+		$gBitSystem->display( "error.tpl" );
+		die;
+	}
 
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		if( !empty( $_REQUEST['confirm'] ) ) {

@@ -2,10 +2,15 @@
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );
-$gBitSystem->verifyPermission( 'p_treasury_edit_item' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
+
+if( !$gContent->isOwner() && !$gBitUser->isAdmin() ) {
+	$gBitSmarty->assign( 'msg', tra( "You do not own this file." ) );
+	$gBitSystem->display( "error.tpl" );
+	die;
+}
 
 if( !empty( $_REQUEST['refresh'] ) ) {
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );

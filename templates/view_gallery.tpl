@@ -6,8 +6,15 @@
 
 	<div class="header">
 		<div class="floaticon">
-			{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gContent->mContentId}
-			{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+			{if $gBitUser->hasPermission('p_treasury_upload_item')}
+				{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gContent->mContentId}
+			{/if}
+			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_edit_gallery')}
+				{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+			{/if}
+			{if $gBitUser->hasPermission('p_treasury_create_gallery')}
+				{smartlink ititle="Insert Gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
+			{/if}
 			{if $gBitUser->isAdmin()}
 				{if $gContent->mPerms}
 					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions_set" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
@@ -15,8 +22,9 @@
 					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
 				{/if}
 			{/if}
-			{smartlink ititle="Insert Gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
-			{smartlink ititle="Remove Gallery" ibiticon="liberty/delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
+				{smartlink ititle="Remove Gallery" ibiticon="liberty/delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+			{/if}
 		</div>
 
 		<h1>{$gContent->getTitle()}</h1>
@@ -62,12 +70,16 @@
 						{if $gContent->getPreference('gallery_thumb_size')}
 							{assign var=thumbsize value=$gContent->getPreference('gallery_thumb_size')}
 							<td style="text-align:center;">
-								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">
-									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
-									{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
-										<br />{$item.filename}
-									{/if}
-								</a>
+								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+									<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">
+								{/if}
+								<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
+									<br />{$item.filename}
+								{/if}
+								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+									</a>
+								{/if}
 							</td>
 						{/if}
 						<td>
@@ -98,13 +110,13 @@
 							{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage=liberty iname=view iexplain="View File"}</a>
 							{/if}
-							{*if $gBitUser->isAdmin()}
-								{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
-							{/if*}
-							{if $gBitUser->hasPermission( 'p_treasury_edit_item' )}
+							{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
 								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage=liberty iname=edit iexplain="Edit File"}</a>
 								<a href="{$smarty.const.TREASURY_PKG_URL}view_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage=liberty iname=delete iexplain="Remove File"}</a>
 							{/if}
+							{*if $gBitUser->isAdmin()}
+								{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
+							{/if*}
 						</td>
 					</tr>
 				{/foreach}

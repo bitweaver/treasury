@@ -68,4 +68,14 @@
 		{formhelp note="To include this file in a wiki page, blog post, article &hellip;, use the above text."}
 	{/forminput}
 </div>
+
+{if $gContent->mInfo.screenshots}
+	<h2>{tr}Screenshots{/tr}</h2>
+	<div style="text-align:center;">
+		{foreach from=$gContent->mInfo.screenshots item=sshot}
+			<img src="{$sshot}" title="{tr}Screenshot{/tr}" alt="{tr}Screenshot{/tr}" /> &nbsp;
+		{/foreach}
+	</div>
+{/if}
+
 {/strip}
