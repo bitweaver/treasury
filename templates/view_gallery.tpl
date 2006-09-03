@@ -7,23 +7,23 @@
 	<div class="header">
 		<div class="floaticon">
 			{if $gBitUser->hasPermission('p_treasury_upload_item')}
-				{smartlink ititle="Upload Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gContent->mContentId}
+				{smartlink ititle="Upload Files" ibiticon="icons/applications-internet" ifile="upload.php" content_id=$gContent->mContentId}
 			{/if}
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_edit_gallery')}
-				{smartlink ititle="Edit Gallery" ibiticon="liberty/edit" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+				{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
 			{/if}
 			{if $gBitUser->hasPermission('p_treasury_create_gallery')}
-				{smartlink ititle="Insert Gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
+				{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
 			{/if}
 			{if $gBitUser->isAdmin()}
 				{if $gContent->mPerms}
-					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions_set" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
 				{else}
-					{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
 				{/if}
 			{/if}
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
-				{smartlink ititle="Remove Gallery" ibiticon="liberty/delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+				{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
 			{/if}
 		</div>
 
@@ -105,17 +105,17 @@
 						{/if}
 						<td class="actionicon">
 							{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
-								<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$item.content_id}">{biticon ipackage=liberty iname=download iexplain="Download File"}</a>
+								<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$item.content_id}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
 							{/if}
 							{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage=liberty iname=view iexplain="View File"}</a>
+								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
 							{/if}
 							{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
-								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage=liberty iname=edit iexplain="Edit File"}</a>
-								<a href="{$smarty.const.TREASURY_PKG_URL}view_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage=liberty iname=delete iexplain="Remove File"}</a>
+								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
+								<a href="{$smarty.const.TREASURY_PKG_URL}view_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
 							{/if}
 							{*if $gBitUser->isAdmin()}
-								{smartlink ititle="Assign Permissions" ibiticon="liberty/permissions" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
+								{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
 							{/if*}
 						</td>
 					</tr>

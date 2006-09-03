@@ -11,11 +11,11 @@
 					<li class="item {cycle values='odd,even'}">
 						<div class="floaticon">
 							{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' )}
-								{smartlink ititle="Edit" ibiticon="liberty/edit" ifile="edit_gallery.php" content_id=$gallery.content_id action=edit}
-								{smartlink ititle="Insert Sub-gallery" ibiticon="liberty/insert" ifile="edit_gallery.php" content_id=$gallery.content_id action=insert}
+								{smartlink ititle="Edit" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" content_id=$gallery.content_id action=edit}
+								{smartlink ititle="Insert Sub-gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" content_id=$gallery.content_id action=insert}
 							{/if}
 							{if $gBitUser->hasPermission( 'p_treasury_upload_item' )}
-								{smartlink ititle="Uplaod Files" ibiticon="liberty/upload" ifile="upload.php" content_id=$gallery.content_id}
+								{smartlink ititle="Uplaod Files" ibiticon="icons/applications-internet" ifile="upload.php" content_id=$gallery.content_id}
 							{/if}
 						</div>
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_title' )}

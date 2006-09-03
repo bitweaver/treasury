@@ -16,7 +16,7 @@
 			{legend legend="Upload Files"}
 				{formfeedback note=$quotaMessage}
 
-				<p class="warning">{biticon ipackage=liberty iname=warning iexplain=Warning iforce=icon} The maximum file size you can upload is {$uploadMax} Megabytes</p>
+				<p class="warning">{biticon ipackage="icons" iname="dialog-warning" iexplain=Warning iforce=icon} The maximum file size you can upload is {$uploadMax} Megabytes</p>
 				{formfeedback hash=$feedback}
 
 				<input type="hidden" name="treasury_store" value="true" />
