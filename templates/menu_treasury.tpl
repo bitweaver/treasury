@@ -3,7 +3,7 @@
 	{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' )}
 		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery.php">{biticon ipackage="icons" iname="document-new" iexplain="Create Gallery" iforce="icon"} {tr}Create Gallery{/tr}</a></li>
 		{if $gContent->mStructureId}
-		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery_structure.php?structure_id={$gContent->mStructureId}">{biticon ipackage="icons" iname="document-new" iexplain="Organise Gallery Hierarchy" iforce="icon"} {tr}Change Structure{/tr}</a></li>
+			<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery_structure.php?structure_id={$gContent->mStructureId}">{biticon ipackage="icons" iname="document-new" iexplain="Organise Gallery Hierarchy" iforce="icon"} {tr}Change Structure{/tr}</a></li>
 		{/if}
 	{/if}
 
