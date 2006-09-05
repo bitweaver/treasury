@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.1 2006/07/11 13:43:56 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.2 2006/09/05 10:43:10 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -40,6 +40,11 @@ $galleryListing = array(
 $gBitSmarty->assign( 'galleryListing', $galleryListing );
 
 $itemListing = array(
+	'treasury_item_list_thumb_custom' => array(
+		'label' => 'Allow thumbsize override',
+		'note' => 'Allow gallery creator to specify their preferred icon size.',
+		'type' => 'checkbox',
+	),
 	'treasury_item_list_name' => array(
 		'label' => 'Filename',
 		'note' => 'Display the actual filename of the file.',
@@ -112,6 +117,7 @@ $imageSizes = array(
 	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),
 	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
 	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
+	'medium' => tra( 'Medium ( 400 x 300 pixels )' ),
 );
 $gBitSmarty->assign( 'imageSizes', $imageSizes );
 

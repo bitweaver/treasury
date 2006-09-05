@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.9 2006/08/30 16:23:20 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.10 2006/09/05 10:43:10 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.9 $
+ * @version:     $Revision: 1.10 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -92,7 +92,7 @@ function treasury_default_verify( &$pStoreRow ) {
 		// keep in mind we only create a few sizes here. storage.bitfile.php 
 		// assumes we have all sizes present. we need to update that to 
 		// generate thumbs on demand
-		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small' );
+		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 
 		// Generic values needed by the storing mechanism
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
@@ -121,18 +121,20 @@ function treasury_default_verify( &$pStoreRow ) {
  */
 function treasury_default_update( &$pStoreRow ) {
 	global $gBitSystem;
-	$ret = FALSE;
 	// No changes in the database are needed - we only need to update the uploaded files
-	// First we remove the old file
-	@unlink( $pStoreRow['storage_path'] );
+	$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
+	if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
+		// First we remove the old file
+		@unlink( BIT_ROOT_PATH.$storage_path );
 
-	// Now we process the uploaded file
-	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-		$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
-		$gBitSystem->mDb->query( $sql, array( $storagePath, $pStoreRow['file_id'] ) );
+		// Now we process the uploaded file
+		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'] ) );
+		}
+
+		return TRUE;
 	}
-
-	return TRUE;
 }
 
 /**
@@ -186,15 +188,21 @@ function treasury_default_load( &$pFileHash ) {
 				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
 				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
 				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
+				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
+				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
 //			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
 //				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 //				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 //				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['medium'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['large']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 			} else {
 				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
+				$pFileHash['thumbnail_url']['medium'] = $mime_thumbnail;
+				$pFileHash['thumbnail_url']['large']  = $mime_thumbnail;
 			}
 			$pFileHash['filename']         = substr( $row['storage_path'], strrpos( $row['storage_path'], '/' ) + 1 );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];

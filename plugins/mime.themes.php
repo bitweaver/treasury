@@ -1,19 +1,13 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.1 2006/08/31 10:13:41 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.2 2006/09/05 10:43:10 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.1 $
+ * @version:     $Revision: 1.2 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
  **/
-
-// TODO: since plugins can do just about anything here, we might need the 
-// option to create specific tables during install. if required we can scan for 
-// files called:
-// table.plugin_guid.php
-// where plugins can insert their own tables
 
 global $gTreasurySystem;
 
@@ -118,7 +112,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 		// keep in mind we only create a few sizes here. storage.bitfile.php 
 		// assumes we have all sizes present. we need to update that to 
 		// generate thumbs on demand
-		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small' );
+		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 
 		// Generic values needed by the storing mechanism
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
@@ -147,18 +141,33 @@ function treasury_theme_verify( &$pStoreRow ) {
  */
 function treasury_theme_update( &$pStoreRow ) {
 	global $gBitSystem;
-	$ret = FALSE;
 	// No changes in the database are needed - we only need to update the uploaded files
-	// First we remove the old file
-	@unlink( $pStoreRow['storage_path'] );
+	$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
+	if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
+		// First we remove the old file
+		@unlink( BIT_ROOT_PATH.$storage_path );
 
-	// Now we process the uploaded file
-	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-		$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
-		$gBitSystem->mDb->query( $sql, array( $storagePath, $pStoreRow['file_id'] ) );
+		// Now we process the uploaded file
+		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'] ) );
+		}
+
+		// if we have screenshots we better do something with them
+		if( !empty( $pStoreRow['screenshots'] ) ) {
+			foreach( $pStoreRow['screenshots'] as $key => $sshot ) {
+				$resizeFunc = liberty_get_function( 'resize' );
+				$sshot['source_file']       = $sshot['tmp_name'];
+				$sshot['dest_base_name']    = $sshot['name'];
+				$sshot['dest_path']         = $pStoreRow['upload']['dest_path'];
+				$sshot['max_width']         = 400;
+				$sshot['max_height']        = 300;
+				$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
+			}
+		}
+
+		return TRUE;
 	}
-
-	return TRUE;
 }
 
 /**
@@ -235,15 +244,21 @@ function treasury_theme_load( &$pFileHash ) {
 				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
 				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
 				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
+				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
+				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
 //			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
 //				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 //				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 //				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['medium'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
+//				$pFileHash['thumbnail_url']['large']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 			} else {
 				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
+				$pFileHash['thumbnail_url']['medium'] = $mime_thumbnail;
+				$pFileHash['thumbnail_url']['large']  = $mime_thumbnail;
 			}
 			$pFileHash['filename']         = substr( $row['storage_path'], strrpos( $row['storage_path'], '/' ) + 1 );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];

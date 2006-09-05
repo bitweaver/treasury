@@ -29,7 +29,7 @@
 				{formlabel label="Replace File" for="fileupload"}
 				{forminput}
 					<input type="file" name="file" id="fileupload" />
-					{formhelp note="Upload a new file to replaces the current one."}
+					{formhelp note="Upload a new file to replace the current one."}
 				{/forminput}
 			</div>
 
@@ -58,7 +58,7 @@
 			{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 
 			<div class="row submit">
-				<input type="submit" name="update_file" value="{tr}Apply Settings{/tr}" />
+				<input type="submit" name="update_file" value="{tr}Update File{/tr}" />
 			</div>
 		{/form}
 

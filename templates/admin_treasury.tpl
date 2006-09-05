@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.2 2006/08/30 16:23:21 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.3 2006/09/05 10:43:10 squareing Exp $ *}
 {strip}
 {form}
 	<input type="hidden" name="page" value="{$page}" />
@@ -20,6 +20,14 @@
 	{/legend}
 
 	{legend legend="Gallery Listing"}
+		<div class="row">
+			{formlabel label="Gallery Thumbnail Size"}
+			{forminput}
+				{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_list_thumb" selected=$gBitSystem->getConfig('treasury_gallery_list_thumb')}
+				{formhelp help="This is the size of the gallery image if one is uploaded."}
+			{/forminput}
+		</div>
+
 		{foreach from=$galleryListing key=feature item=output}
 			<div class="row">
 				{formlabel label=`$output.label` for=$feature}
@@ -36,6 +44,7 @@
 			{formlabel label="Item List Thumbnail Size"}
 			{forminput}
 				{html_options values=$imageSizes options=$imageSizes name="treasury_item_list_thumb" selected=$gBitSystem->getConfig('treasury_item_list_thumb')}
+				{formhelp help="The size of icons displayed in the item list."}
 			{/forminput}
 		</div>
 
@@ -55,6 +64,7 @@
 			{formlabel label="Item List Thumbnail Size"}
 			{forminput}
 				{html_options values=$imageSizes options=$imageSizes name="treasury_item_view_thumb" selected=$gBitSystem->getConfig('treasury_item_view_thumb')}
+				{formhelp help="Size of the image displyed when viewing an item."}
 			{/forminput}
 		</div>
 

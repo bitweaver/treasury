@@ -11,6 +11,8 @@ require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
 if( !empty( $gContent->mStructureId ) ) {
 	// prepare everything for structure loading
 	$_REQUEST['structure_id'] = $gContent->mStructureId;
+
+	// this interferes with the deletion
 	$verifyStructurePermission = 'p_treasury_edit_gallery';
 	include_once( LIBERTY_PKG_PATH.'edit_structure_inc.php' );
 
@@ -32,11 +34,11 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 	if( $galleryStore->store( $_REQUEST['treasury'] ) ) {
 		// process image upload
 		if( $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) ) {
-			// now deal with the uploaded icon
+			// now deal with the uploaded image
 			if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 				if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
 					$fileHash = $_FILES['icon'];
-					$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small' );
+					$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 					$fileHash['dest_path'] = $galleryStore->getGalleryThumbBaseUrl();
 					$fileHash['source_file'] = $fileHash['tmp_name'];
 					liberty_clear_thumbnails( $fileHash );
@@ -51,6 +53,38 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 		header( 'Location: '.$galleryStore->getDisplayUrl() );
 	} else {
 		$feedback['error'] = $galleryStore->mErrors;
+	}
+}
+
+if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || !empty( $_REQUEST['confirm'] ) ) {
+	$gBitSystem->verifyPermission( 'p_treasury_edit_gallery' );
+
+	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
+		if( $_REQUEST['action'] == 'remove_gallery' && !empty( $_REQUEST['confirm'] ) ) {
+			if( $gContent->expunge( !empty( $_REQUEST['force_item_delete'] ) ) ) {
+				header( "Location: ".TREASURY_PKG_URL );
+				die;
+			} else {
+				$feedback['errors'] = $gContent->mErrors;
+			}
+		}
+
+		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
+		$formHash['remove_gallery'] = TRUE;
+		$formHash['content_id'] = $_REQUEST['content_id'];
+		$formHash['action'] = 'remove_gallery';
+		$formHash['input'] = array(
+			'<label><input name="force_item_delete" value="" type="radio" checked="checked" /> '.tra( "Delete only files that don't appear in other galleries." ).'</label>',
+			'<label><input name="force_item_delete" value="true" type="radio" /> '.tra( "Permanently delete all contents, even if they appear in other galleries." ).'</label>',
+		);
+		$msgHash = array(
+			'label' => 'Remove File Gallery',
+			'confirm_item' => $gContent->mInfo['title'].'<br />'.tra( 'and any subgalleries' ),
+			'warning' => 'This will remove the gallery, any syb-galleries and all associated files.',
+		);
+		$gBitSystem->confirmDialog( $formHash, $msgHash );
+	} else {
+		$feedback['error'] = tra( 'No valid gallery content id given.' );
 	}
 }
 

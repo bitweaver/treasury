@@ -17,13 +17,13 @@
 			{/if}
 			{if $gBitUser->isAdmin()}
 				{if $gContent->mPerms}
-					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
 				{else}
-					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$subtree[ix].content_id}
+					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
 				{/if}
 			{/if}
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
-				{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+				{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
 			{/if}
 		</div>
 
@@ -48,7 +48,7 @@
 			<table class="data">
 				<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
 				<tr>
-					{if $gContent->getPreference('gallery_thumb_size')}
+					{if $gContent->getPreference('item_list_thumb_size')}
 						<th style="width:10%"></th>
 					{/if}
 					<th style="width:50%">
@@ -67,8 +67,8 @@
 
 				{foreach from=$gContent->mItems item=item}
 					<tr>
-						{if $gContent->getPreference('gallery_thumb_size')}
-							{assign var=thumbsize value=$gContent->getPreference('gallery_thumb_size')}
+						{if $gContent->getPreference('item_list_thumb_size')}
+							{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 							<td style="text-align:center;">
 								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 									<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">

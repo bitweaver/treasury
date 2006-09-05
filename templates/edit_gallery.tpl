@@ -56,13 +56,17 @@
 						</div>
 						*}
 
-						<div class="row">
-							{formlabel label="Thumbnail Size" for="gallery_thumb_size"}
-							{forminput}
-								{html_options values=$imageSizes options=$imageSizes name="treasury[preferences][gallery_thumb_size]" id="gallery_thumb_size" selected=$gContent->getPreference('gallery_thumb_size')}
-								{formhelp note="Pick the size of file icons."}
-							{/forminput}
-						</div>
+						{if $gBitSystem->isFeatureActive( 'treasury_item_list_thumb_custom' )}
+							<div class="row">
+								{formlabel label="Thumbnail Size" for="item_list_thumb_size"}
+								{forminput}
+									{html_options values=$imageSizes options=$imageSizes name="treasury[preferences][item_list_thumb_size]" id="item_list_thumb_size" selected=$gContent->getPreference('item_list_thumb_size')|default:$gBitSystem->getConfig('treasury_item_list_thumb')}
+									{formhelp note="Pick the size of preview icon in the file list."}
+								{/forminput}
+							</div>
+						{else}
+							<input type="hidden" name="treasury[preferences][item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_gallery_list_thumb')}" />
+						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}
 							{if $galInfo.thumbnail_url}

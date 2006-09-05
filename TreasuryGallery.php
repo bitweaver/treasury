@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.10 2006/08/30 18:40:39 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.11 2006/09/05 10:43:06 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.10 $
+ * @version:      $Revision: 1.11 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -381,6 +381,10 @@ class TreasuryGallery extends TreasuryBase {
 				}
 
 				// Now that all the items are gone, we can start nuking gallery entries
+				// remove gallery preferences
+				$query = "DELETE FROM `".BIT_DB_PREFIX."liberty_content_prefs` WHERE `content_id`=?";
+				$result = $this->mDb->query( $query, array( $this->mContentId ) );
+
 				// Remove map entries
 				$sql = "DELETE FROM `".BIT_DB_PREFIX."treasury_map` WHERE `gallery_content_id`=?";
 				$rs = $this->mDb->query( $sql, array( $gid ) );
@@ -393,6 +397,9 @@ class TreasuryGallery extends TreasuryBase {
 				if( !LibertyContent::expunge() ) {
 					$errors = TRUE;
 				}
+
+				// Finally nuke the structure in liberty_structures
+				$struct->s_remove_page( $this->mStructureId, FALSE );
 			}
 
 			if( empty( $errors ) ) {

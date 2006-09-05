@@ -2,7 +2,8 @@
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}
 	<div class="row" style="text-align:center;">
 		<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$gContent->mContentId}">
-			<img src="{$gContent->mInfo.thumbnail_url.small}{$refresh}" alt="{$gContent->getTitle()}" title="{$gContent->getTitle()}" />
+			{assign var=size value=$gBitSystem->getConfig('treasury_item_view_thumb')}
+			<img src="{$gContent->mInfo.thumbnail_url.$size}{$refresh}" alt="{$gContent->getTitle()}" title="{$gContent->getTitle()}" />
 			<br />{$gContent->getTitle()|escape}
 		</a>
 	</div>

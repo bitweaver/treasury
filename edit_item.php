@@ -40,7 +40,7 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
 				$fileHash = $_FILES['icon'];
-				$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small' );
+				$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 				$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
 				$fileHash['source_file'] = $fileHash['tmp_name'];
 				liberty_clear_thumbnails( $fileHash );
