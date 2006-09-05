@@ -1,4 +1,4 @@
 <ul>
-	<li>{smartlink ititle="Treasury Settings" ipackage="kernel" ifile="admin/index.php" page="treasury"}</li>
-	<li>{smartlink ititle="Treasury Plugins" ipackage="treasury" ifile="admin/admin_plugins.php"}</li>
+	<li><a class="item" href="{$smarty.const.KERNEL_PKG_URL}admin/index.php?page=treasury">{tr}Treasury Settings{/tr}</a></li>
+	<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}admin/admin_plugins.php">{tr}Treasury Settings{/tr}</a></li>
 </ul>
