@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.2 2006/09/05 10:43:10 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.3 2006/09/06 09:06:09 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.2 $
+ * @version:     $Revision: 1.3 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -61,24 +61,25 @@ function treasury_theme_verify( &$pStoreRow ) {
 	if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
 		// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
 		if( !empty( $pStoreRow['plugin']['is_theme'] ) ) {
-			$ext_path = liberty_process_archive( $pStoreRow['upload'] );
-			if( $preview = treasury_theme_extract_preview( $ext_path ) ) {
-				$pStoreRow['thumb']['name']     = basename( $preview );
-				$pStoreRow['thumb']['tmp_name'] = $preview;
-				$pStoreRow['thumb']['type']     = $gBitSystem->lookupMimeType( $preview );
-				$pStoreRow['thumb']['error']    = 0;
-			}
+			if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
+				if( $preview = treasury_theme_extract_preview( $pStoreRow['ext_path'] ) ) {
+					$pStoreRow['thumb']['name']     = basename( $preview );
+					$pStoreRow['thumb']['tmp_name'] = $preview;
+					$pStoreRow['thumb']['type']     = $gBitSystem->lookupMimeType( $preview );
+					$pStoreRow['thumb']['error']    = 0;
+				}
 
-			// check to see if we have screenshots - limit them to 3 screenshots / theme
-			if( $sshots = treasury_theme_extract_screenshots( $ext_path ) ) {
-				$i = 0;
-				foreach( $sshots as $key => $sshot ) {
-					if( $i < 3 ) {
-						$pStoreRow['screenshots']['screenshot'.$key]['name']     = 'screenshot'.$key;
-						$pStoreRow['screenshots']['screenshot'.$key]['tmp_name'] = $sshot;
-						$pStoreRow['screenshots']['screenshot'.$key]['type']     = $gBitSystem->lookupMimeType( $sshot );
-						$pStoreRow['screenshots']['screenshot'.$key]['error']    = 0;
-						$i++;
+				// check to see if we have screenshots - limit them to 3 screenshots / theme
+				if( $sshots = treasury_theme_extract_screenshots( $pStoreRow['ext_path'] ) ) {
+					$i = 0;
+					foreach( $sshots as $key => $sshot ) {
+						if( $i < 3 ) {
+							$pStoreRow['screenshots']['screenshot'.$key]['name']     = 'screenshot'.$key;
+							$pStoreRow['screenshots']['screenshot'.$key]['tmp_name'] = $sshot;
+							$pStoreRow['screenshots']['screenshot'.$key]['type']     = $gBitSystem->lookupMimeType( $sshot );
+							$pStoreRow['screenshots']['screenshot'.$key]['error']    = 0;
+							$i++;
+						}
 					}
 				}
 			}
@@ -166,6 +167,11 @@ function treasury_theme_update( &$pStoreRow ) {
 			}
 		}
 
+		// now that all is done, we can remove temporarily extracted files
+		if( !empty( $pStoreRow['ext_path'] ) ) {
+			unlink_r( $pStoreRow['ext_path'] );
+		}
+
 		return TRUE;
 	}
 }
@@ -215,6 +221,11 @@ function treasury_theme_store( &$pStoreRow ) {
 				$sshot['max_height']        = 300;
 				$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
 			}
+		}
+
+		// now that all is done, we can remove temporarily extracted files
+		if( !empty( $pStoreRow['ext_path'] ) ) {
+			unlink_r( $pStoreRow['ext_path'] );
 		}
 
 		$ret = TRUE;
