@@ -28,7 +28,6 @@
 		</div>
 
 		<h1>{$gContent->getTitle()}</h1>
-		<h2>{$gContent->mInfo.data|escape}</h2>
 	</div>
 
 	<div class="body">
@@ -38,11 +37,15 @@
 			<hr />
 		{/if}
 
-		{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
-			<a href="{$gContent->mInfo.display_url}">
-				<img class="thumb" src="{$gContent->mInfo.thumbnail_url}" alt="{$gContent->mInfo.title|escape}" title="{$gContent->mInfo.title|escape}" />
-			</a>
-		{/if}
+		<p class="description">
+			{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
+				<a href="{$gContent->mInfo.display_url}">
+					<img class="thumb" src="{$gContent->mInfo.thumbnail_url}{$refresh}" alt="{$gContent->mInfo.title|escape}" title="{$gContent->mInfo.title|escape}" />
+				</a>
+			{/if}
+			<br />
+			{$gContent->mInfo.data|escape|nl2br}
+		</p>
 
 		{if $gContent->mItems}
 			<table class="data">

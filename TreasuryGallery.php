@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.11 2006/09/05 10:43:06 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.12 2006/09/07 10:15:17 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.11 $
+ * @version:      $Revision: 1.12 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -188,7 +188,7 @@ class TreasuryGallery extends TreasuryBase {
 			$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
 			$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 			$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-			$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'] );
+			$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
 			$ret[$aux['content_id']]   = $aux;
 		}
 
@@ -491,7 +491,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @access public
 	 * @return Path to thumbnail, FALSE on failure
 	 */
-	function getGalleryThumbUrl( $pContentId = NULL ) {
+	function getGalleryThumbUrl( $pContentId = NULL, $pSize = NULL ) {
 		global $gBitSystem;
 		$ret = FALSE;
 		if( !@BitBase::verifyId( $pContentId ) && $this->isValid() ) {
@@ -499,7 +499,10 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		if( @BitBase::verifyId( $pContentId ) && $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) ) {
-			$ret = $this->getGalleryThumbBaseUrl( $pContentId ).$gBitSystem->getConfig( 'treasury_gallery_list_thumb' ).'.jpg';
+			if( empty( $pSize ) ) {
+				$pSize = $gBitSystem->getConfig( 'treasury_gallery_list_thumb' );
+			}
+			$ret = $this->getGalleryThumbBaseUrl( $pContentId ).$pSize.'.jpg';
 			if( !is_file( BIT_ROOT_PATH.$ret ) ) {
 				$ret = FALSE;
 			}

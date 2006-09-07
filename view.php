@@ -13,6 +13,11 @@ $feedback = array();
 $gContent->updateUserPermissions();
 $gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
 
+// used to display the newly updated version of an image
+if( !empty( $_REQUEST['refresh'] ) ) {
+	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
+}
+
 // services
 $displayHash = array( 'perm_name' => 'p_treasury_gallery_view' );
 $gContent->invokeServices( 'content_display_function', $displayHash );

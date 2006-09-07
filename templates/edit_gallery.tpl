@@ -58,7 +58,7 @@
 
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_thumb_custom' )}
 							<div class="row">
-								{formlabel label="Thumbnail Size" for="item_list_thumb_size"}
+								{formlabel label="File Thumbnail Size" for="item_list_thumb_size"}
 								{forminput}
 									{html_options values=$imageSizes options=$imageSizes name="treasury[preferences][item_list_thumb_size]" id="item_list_thumb_size" selected=$gContent->getPreference('item_list_thumb_size')|default:$gBitSystem->getConfig('treasury_item_list_thumb')}
 									{formhelp note="Pick the size of preview icon in the file list."}
@@ -77,6 +77,8 @@
 										{formhelp note=""}
 									{/forminput}
 								</div>
+
+								{formfeedback warning="Uploading a new image will replace the one displayed above."}
 							{/if}
 
 							<div class="row">
