@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.3 2006/09/06 09:06:09 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.4 2006/09/07 15:51:31 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.3 $
+ * @version:     $Revision: 1.4 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -37,7 +37,11 @@ $pluginParams = array (
 	// TODO: allow archive processing and create galleries according to 
 	// hierarchy of extracted files
 	// Allow for additional processing options - passed in during verify and store
-	'processing_options' => '<label><input type="checkbox" name="treasury[plugin][is_theme]" value="true" /> '.tra( 'Check this box if you are uploading a bitweaver theme. Please view <a href="/wiki/ThemeUploads">ThemeUploads</a> for details.' ).'</label>',
+	'processing_options' => 
+		'<label>
+			<input type="checkbox" name="treasury[plugin][is_style]" value="true" /> '.
+			tra( 'Check this box if you are uploading a bitweaver theme. Please view <a href="/wiki/Style+Uploads">Style Uploads</a> for details.' ).
+		'</label>',
 	// this should pick up all common archives
 	'mimetypes'          => array(
 		'#application/[a-z\-]*(rar|zip|tar|tgz|stuffit)[a-z\-]*#i',
@@ -60,7 +64,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 	// make sure the file is valid
 	if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
 		// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
-		if( !empty( $pStoreRow['plugin']['is_theme'] ) ) {
+		if( !empty( $pStoreRow['plugin']['is_style'] ) ) {
 			if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
 				if( $preview = treasury_theme_extract_preview( $pStoreRow['ext_path'] ) ) {
 					$pStoreRow['thumb']['name']     = basename( $preview );
@@ -82,6 +86,18 @@ function treasury_theme_verify( &$pStoreRow ) {
 						}
 					}
 				}
+
+				// if this is an icon theme, we should end up with a number of icons
+				$pStoreRow['icons'] = treasury_theme_extract_icons( $pStoreRow['ext_path'] );
+
+				/*
+				if( $pStoreRow['icons'] = treasury_theme_extract_icons( $pStoreRow['ext_path'] ) ) {
+					foreach( $icons as $key => $icon ) {
+						$pStoreRow['icons']['icon'.$key]['name']     = basename( $icon );
+						$pStoreRow['icons']['icon'.$key]['tmp_name'] = $icon;
+					}
+				}
+				 */
 			}
 		}
 	}
@@ -223,6 +239,14 @@ function treasury_theme_store( &$pStoreRow ) {
 			}
 		}
 
+		// if we have icons, we should place them somewhere that we can display them
+		if( !empty( $pStoreRow['icons'] ) ) {
+			mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large' );
+			foreach( $pStoreRow['icons'] as $icon ) {
+				rename( $icon, BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large/'.basename( $icon ) );
+			}
+		}
+
 		// now that all is done, we can remove temporarily extracted files
 		if( !empty( $pStoreRow['ext_path'] ) ) {
 			unlink_r( $pStoreRow['ext_path'] );
@@ -282,6 +306,15 @@ function treasury_theme_load( &$pFileHash ) {
 				for( $i = 0; $i < count( $sshots ); $i++ ) {
 					$pFileHash['screenshots'][] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/'.basename( $sshots[$i] );
 				}
+			}
+
+			if( $icons = treasury_theme_extract_icons( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
+				$count = count( $icons );
+				// get a maximum of 50 icons
+				for( $i = 0; $i < 50; $i++ ) {
+					$pFileHash['icons'][basename( $icons[$i] )] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large/'.basename( $icons[$i] );
+				}
+				ksort( $pFileHash['icons'] );
 			}
 
 			$ret = TRUE;
@@ -368,7 +401,7 @@ function treasury_theme_extract_preview( $pPath ) {
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
 			if( $file != '.' && $file != '..' ) {
-				if( basename( $pPath ) == "style_info" && is_file( $pPath.'/'.$file ) && preg_match( "/^preview\.(png|gif|jpe?g)/", $file ) ) {
+				if( basename( $pPath ) == "style_info" && is_file( $pPath.'/'.$file ) && preg_match( "/^preview\.(png|gif|jpe?g)$/", $file ) ) {
 					$ret = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
 					treasury_theme_extract_preview( $pPath.'/'.$file );
@@ -392,10 +425,34 @@ function treasury_theme_extract_screenshots( $pPath ) {
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
 			if( $file != '.' && $file != '..' ) {
-				if( preg_match( "/^screenshot\d*.(png|gif|jpe?g)/i", $file ) ) {
+				if( preg_match( "/^screenshot\d*.(png|gif|jpe?g)$/i", $file ) ) {
 					$ret[] = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
 					treasury_theme_extract_screenshots( $pPath.'/'.$file );
+				}
+			}
+		}
+	}
+	closedir( $dh );
+	return( !empty( $ret ) ? $ret : FALSE );
+}
+
+/**
+ * Extract icons found in the theme archive
+ * 
+ * @param array $pPath Path to extracted archive
+ * @access public
+ * @return Path to preview image on success, FALSE on failure
+ */
+function treasury_theme_extract_icons( $pPath ) {
+	static $ret;
+	if( $dh = opendir( $pPath ) ) {
+		while( FALSE !== ( $file = readdir( $dh ) ) ) {
+			if( preg_match( "/^[^\.]/", $file ) ) {
+				if( basename( $pPath ) == "large" && preg_match( "/\.(png|gif|jpe?g)$/i", $file ) ) {
+					$ret[] = $pPath.'/'.$file;
+				} elseif( is_dir( $pPath.'/'.$file ) ) {
+					treasury_theme_extract_icons( $pPath.'/'.$file );
 				}
 			}
 		}

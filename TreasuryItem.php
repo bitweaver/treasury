@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.9 2006/08/30 18:40:39 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.10 2006/09/07 15:51:31 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.9 $
+ * @version:      $Revision: 1.10 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -175,8 +175,8 @@ class TreasuryItem extends TreasuryBase {
 		if( $this->isValid() ) {
 			$query = "SELECT ls.`content_id`
 				FROM `".BIT_DB_PREFIX."treasury_map` trm
-				INNER JOIN `".BIT_DB_PREFIX."treasury_gallery` trg ON ( trg.`content_id` = trm.`gallery_content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( trg.`structure_id` = ls.`structure_id` )
+					INNER JOIN `".BIT_DB_PREFIX."treasury_gallery` trg ON ( trg.`content_id` = trm.`gallery_content_id` )
+					INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( trg.`structure_id` = ls.`structure_id` )
 				WHERE trm.`item_content_id`=?";
 			$ret = $this->mDb->getCol( $query, array( $this->mContentId ) );
 		}

@@ -69,6 +69,17 @@
 	{/forminput}
 </div>
 
+{if $gContent->mInfo.icons}
+	<h2>{tr}Selected Icons{/tr}</h2>
+	<ul style="list-style:none; margin:0; padding:0;">
+		{foreach from=$gContent->mInfo.icons key=name item=icon}
+			<li style="list-style:none; float:left; display:inline; margin:0 0 10px 10px; text-align:center">
+				<img src="{$icon}" title="{$name}" alt="{$name}" />
+			</li>
+		{/foreach}
+	</ul>
+{/if}
+
 {if $gContent->mInfo.screenshots}
 	<h2>{tr}Screenshots{/tr}</h2>
 	<div style="text-align:center;">
@@ -77,5 +88,4 @@
 		{/foreach}
 	</div>
 {/if}
-
 {/strip}
