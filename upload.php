@@ -53,7 +53,7 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 	}
 
 	if( empty( $feedback['error'] ) ) {
-		header( 'Location: '.TREASURY_PKG_URL );
+		header( 'Location: '.TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ) );
 die;
 	}
 }

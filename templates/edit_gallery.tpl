@@ -65,7 +65,7 @@
 								{/forminput}
 							</div>
 						{else}
-							<input type="hidden" name="treasury[preferences][item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_gallery_list_thumb')}" />
+							<input type="hidden" name="treasury[preferences][item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_item_list_thumb')}" />
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}
