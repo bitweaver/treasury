@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.2 2006/09/07 08:17:35 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.3 2006/09/07 11:46:08 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.2 $
+ * @version:      $Revision: 1.3 $
  * @created:      Monday Jul 03, 2006   11:01:55 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -84,21 +84,34 @@ class TreasuryBase extends LibertyAttachable {
 	 */
 	function getDefaultGalleryId( $pNewName = NULL ) {
 		global $gBitUser, $gContent;
+		// as default gallery, we pick the first one created by this user
 		$gal = new TreasuryGallery();
-		// as default gallery, we pick the first one created
 		$getHash = array( 'user_id' => $gBitUser->mUserId, 'max_records' => 1, 'sort_mode' => 'created_asc' );
-		$upList = $gal->getList( $getHash );
-		if( @BitBase::verifyId( key( $upList ) ) ) {
-			$ret = key( $upList );
-		} else {
+		$upGal = $gal->getList( $getHash );
+
+		if( @BitBase::verifyId( key( $upGal ) ) ) {
+			$ret = key( $upGal );
+		} elseif( $gBitUser->hasPermission( 'p_treasury_create_gallery' ) ) {
+			// Since the user can create a new gallery, we simply create a new one
 			if( empty( $pNewName ) ) {
-				$pNewName = "File Gallery";
+				$pNewName = $gBitUser->getDisplayName()."'s File Gallery";
 			}
 			$galleryHash = array( 'title' => $pNewName );
 			if( $gal->store( $galleryHash ) ) {
 				$ret = $gal->mContentId;
 			}
+		} else {
+			// if we reach this section, we'll simply pick the first gallery we can find and dump all files in there
+			$getHash = array( 'max_records' => 1, 'sort_mode' => 'created_asc' );
+			$upGal = $gal->getList( $getHash );
+			if( @BitBase::verifyId( key( $upGal ) ) ) {
+				$ret = key( $upGal );
+			} else {
+				// we need to report that there is absolutely no way we can place the gallery anywhere
+				$this->mErrors['no_default'] = tra( 'We could not find a viable gallery where we can store your upload' );
+			}
 		}
+
 		if( !$gContent->isValid() ) {
 			$gContent = new TreasuryGallery( $ret );
 		}
