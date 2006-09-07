@@ -19,6 +19,13 @@
 	{/if}
 {/if}
 
+<div class="row">
+	{formlabel label="Note" for=""}
+	{forminput}
+		Please visit the <a href="/wiki/Style+Uploads">Style Uploads</a> page to get information on how to download the styles and install them.
+	{/forminput}
+</div>
+
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_name' )}
 	<div class="row">
 		{formlabel label="File name" for=""}
