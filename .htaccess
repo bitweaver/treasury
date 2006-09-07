@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine  on
+	RewriteBase	/treasury/
+	RewriteCond	%{SCRIPT_FILENAME}  -f [OR]
+	RewriteCond	%{SCRIPT_FILENAME}/view.php    -f
+	RewriteRule	^(.*)$            - [L]
+
+	RewriteRule ^(.*)$  view.php?content_id=$1  [L]
+</IfModule>
