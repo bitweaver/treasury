@@ -62,6 +62,15 @@
 	</div>
 {/if}
 
+{if $gBitSystem->isFeatureActive( 'treasury_item_view_hits' )}
+	<div class="row">
+		{formlabel label="Downloads" for=""}
+		{forminput}
+			{$gContent->mInfo.hits|default:"{tr}none{/tr}"}
+		{/forminput}
+	</div>
+{/if}
+
 <div class="row">
 	{formlabel label="Wiki attachment" for=""}
 	{forminput}
@@ -69,4 +78,5 @@
 		{formhelp note="To include this file in a wiki page, blog post, article &hellip;, use the above text."}
 	{/forminput}
 </div>
+
 {/strip}

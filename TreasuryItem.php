@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.10 2006/09/07 15:51:31 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.11 2006/09/07 21:38:52 bitweaver Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.10 $
+ * @version:      $Revision: 1.11 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -62,12 +62,13 @@ class TreasuryItem extends TreasuryBase {
 
 			$ret = array();
 			$query = "SELECT tri.`plugin_guid`, tct.`content_description`, uu.`login`, uu.`real_name`, la.`attachment_id`,
-					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`
+					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`, lch.`hits`
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
 					INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
@@ -130,13 +131,14 @@ class TreasuryItem extends TreasuryBase {
 
 		$ret = array();
 		$query = "SELECT tri.`plugin_guid`, tct.`content_description`, uu.`login`, uu.`real_name`, la.`attachment_id`,
-				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`
+				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`, lch.`hits`
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 			$joinSql $whereSql $orderSql";
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 		while( $aux = $result->fetchRow() ) {

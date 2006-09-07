@@ -63,7 +63,12 @@
 						</th>
 					{/if}
 					{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
-						<th style="width:20%">{tr}Size{/tr}</th>
+						<th style="width:10%">{tr}Size{/tr}</th>
+					{/if}
+					{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+						<th style="width:10%">
+							{smartlink ititle=Downloads isort="lch.hits" list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
+						</th>
 					{/if}
 					<th style="width:20%">{tr}Actions{/tr}</th>
 				</tr>
@@ -104,6 +109,11 @@
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
 							<td style="text-align:right;">
 								{$item.file_size|kbsize}
+							</td>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+							<td style="text-align:right;">
+								{$item.hits|default:"{tr}none{/tr}"}
 							</td>
 						{/if}
 						<td class="actionicon">
