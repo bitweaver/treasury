@@ -108,6 +108,8 @@ if( @is_array( $galleryList ) ) {
 }
 $gBitSmarty->assign( 'galleryList', $galleryList );
 
+$gContent->invokeServices( 'content_edit_function' );
+
 $gBitSmarty->assign( 'feedback', ( !empty( $feedback ) ? $feedback : NULL ) );
 $gBitSystem->display( "bitpackage:treasury/edit_item.tpl", tra( "Edit File" ) );
 ?>
