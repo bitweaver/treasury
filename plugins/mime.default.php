@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.10 2006/09/05 10:43:10 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.11 2006/09/09 19:36:13 bitweaver Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.10 $
+ * @version:     $Revision: 1.11 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -229,18 +229,18 @@ function treasury_default_load( &$pFileHash ) {
 function treasury_default_download( &$pFileHash ) {
 	$ret = FALSE;
 
-	header( "Accept-Ranges: bytes" );
-	// this will get the browser to open the download dialogue - even when the 
-	// browser could deal with the content type - not perfect, but works
-	//header( "Content-Type: application/force-download" );
-	header( "Content-type: ".$pFileHash['mime_type'] );
-	header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
-	header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
-	header( "Content-Length: ".$pFileHash['file_size'] );
-	header( "Content-Transfer-Encoding: binary" );
-
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] ) ) {
+		header( "Accept-Ranges: bytes" );
+		// this will get the browser to open the download dialogue - even when the 
+		// browser could deal with the content type - not perfect, but works
+		//header( "Content-Type: application/force-download" );
+		header( "Content-type: ".$pFileHash['mime_type'] );
+		header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
+		header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
+		header( "Content-Length: ".$pFileHash['file_size'] );
+		header( "Content-Transfer-Encoding: binary" );
+
 		readfile( $pFileHash['source_file'] );
 		$ret = TRUE;
 	} else {
