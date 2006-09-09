@@ -6,6 +6,7 @@
 
 	<div class="header">
 		<div class="floaticon">
+			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 			{if $gBitUser->hasPermission('p_treasury_upload_item')}
 				{smartlink ititle="Upload Files" ibiticon="icons/applications-internet" ifile="upload.php" content_id=$gContent->mContentId}
 			{/if}
@@ -31,6 +32,7 @@
 	</div>
 
 	<div class="body">
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 		{if count($subtree) gt 1}
 			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
 
@@ -79,7 +81,7 @@
 							{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 							<td style="text-align:center;">
 								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-									<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">
+									<a href="{$item.display_url|escape}">
 								{/if}
 								<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
@@ -91,7 +93,7 @@
 							</td>
 						{/if}
 						<td>
-							<h3><a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{$item.title}</a></h3>
+							<h3><a href="{$item.display_url}">{$item.title}</a></h3>
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
 								<p>{$item.data}</p>
 							{/if}
@@ -118,10 +120,10 @@
 						{/if}
 						<td class="actionicon">
 							{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
-								<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$item.content_id}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
+								<a href="{$item.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
 							{/if}
 							{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-								<a href="{$item.display_url}&amp;structure_id={$gContent->mStructureId}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
+								<a href="{$item.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
 							{/if}
 							{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
 								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.13 2006/09/07 11:46:08 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.14 2006/09/09 10:31:33 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.13 $
+ * @version:      $Revision: 1.14 $
  * @created:      Monday Jul 03, 2006   11:53:42 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -108,7 +108,7 @@ class TreasuryGallery extends TreasuryBase {
 			if( empty( $pListHash['gallery_content_id'] ) ) {
 				$pListHash['gallery_content_id'] = $this->mContentId;
 			}
-			$this->mItems = $treasuryItem->getList( $pListHash );
+			$this->mItems = $treasuryItem->getList( $pListHash, $this->mStructureId );
 			$ret = TRUE;
 		}
 		return $ret;
@@ -456,9 +456,8 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		if( @BitBase::verifyId( $pContentId ) ) {
-			$rewrite_tag = $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ? 'view/' : '';
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-				$ret = TREASURY_PKG_URL.$rewrite_tag.$pContentId;
+				$ret = TREASURY_PKG_URL.'gallery/'.$pContentId;
 			} else {
 				$ret = TREASURY_PKG_URL.'view.php?content_id='.$pContentId;
 			}

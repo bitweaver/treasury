@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.11 2006/09/07 21:38:52 bitweaver Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.12 2006/09/09 10:31:33 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.11 $
+ * @version:      $Revision: 1.12 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -78,7 +78,8 @@ class TreasuryItem extends TreasuryBase {
 				}
 				$this->mInfo                 = $aux;
 				$this->mInfo['title']        = $this->getTitle( $aux );
-				$this->mInfo['display_url']  = TREASURY_PKG_URL.'view_item.php?content_id='.$aux['content_id'];
+				$this->mInfo['display_url']  = $this->getDisplayUrl();
+				$this->mInfo['download_url'] = $this->getDownloadUrl();
 
 				// get the gallery information
 				if( $pExtras ) {
@@ -103,7 +104,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
-	function getList( &$pListHash ) {
+	function getList( &$pListHash, $pStructureId = NULL ) {
 		global $gTreasurySystem;
 		LibertyContent::prepGetList( $pListHash );
 
@@ -147,8 +148,9 @@ class TreasuryItem extends TreasuryBase {
 			if( empty( $load_function ) || !$load_function( $aux ) ) {
 				$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 			}
-			$aux['display_url']  = TREASURY_PKG_URL.'view_item.php?content_id='.$aux['content_id'];
-			$aux['display_link'] = '<a href="'.$aux['display_url'].'">'.$aux['title'].'</a>';
+			$aux['display_url']  = $this->getDisplayUrl( $aux['content_id'], $aux, $pStructureId );
+			$aux['display_link'] = $this->getDisplayLink( $aux['title'], $aux, $pStructureId );
+			$aux['download_url'] = $this->getDownloadUrl( $aux['content_id'] );
 			$ret[] = $aux;
 		}
 
@@ -401,7 +403,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @param array $pMixed Hash of data used to create link
 	 * @return Full HTML link to file
 	 **/
-	function getDisplayLink( $pTitle=NULL, $pMixed=NULL ) {
+	function getDisplayLink( $pTitle=NULL, $pMixed=NULL, $pStructureId=NULL ) {
 		global $gBitSystem;
 		if( empty( $pTitle ) && !empty( $this ) ) {
 			$pTitle = $this->getTitle();
@@ -414,7 +416,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = $pTitle;
 		if( !empty( $pTitle ) && !empty( $pMixed ) ) {
 			if( $gBitSystem->isPackageActive( 'treasury' ) ) {
-				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryItem::getDisplayUrl( $pMixed['content_id'] ).'">'.htmlspecialchars( $pTitle ).'</a>';
+				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryItem::getDisplayUrl( $pMixed['content_id'], $pMixed, $pStructureId ).'">'.htmlspecialchars( $pTitle ).'</a>';
 			}
 		}
 		return $ret;
@@ -428,7 +430,33 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 * @return URL
 	 */
-	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+	function getDownloadUrl( $pContentId=NULL ) {
+		global $gBitSystem;
+		$ret = NULL;
+		// try to get the correct content_id from anywhere possible
+		if( !@BitBase::verifyId( $pContentId ) && $this->isValid() ) {
+			$pContentId = $this->mContentId;
+		}
+
+		if( @BitBase::verifyId( $pContentId ) ) {
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+				$ret = TREASURY_PKG_URL.'download/'.$pContentId;
+			} else {
+				$ret = TREASURY_PKG_URL.'download.php?content_id='.$pContentId;
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * Generate URL to view this item in detail
+	 * 
+	 * @param numeric $pContentId Content id of the item we want to create the url for
+	 * @param array $pMixed Mixed hash of information
+	 * @access public
+	 * @return URL
+	 */
+	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL, $pStructureId=NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		// try to get the correct content_id from anywhere possible
@@ -439,11 +467,10 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		if( @BitBase::verifyId( $pContentId ) ) {
-			$rewrite_tag = $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ? 'view/' : '';
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-				$ret = TREASURY_PKG_URL.$rewrite_tag.$pContentId;
+				$ret = TREASURY_PKG_URL.'file/'.$pContentId.( !empty( $pStructureId ) ? "/$pStructureId" : "" );
 			} else {
-				$ret = TREASURY_PKG_URL.'view_item.php?content_id='.$pContentId;
+				$ret = TREASURY_PKG_URL.'view_item.php?content_id='.$pContentId.( !empty( $pStructureId ) ? "&structure_id=$pStructureId" : "" );
 			}
 		}
 		return $ret;

@@ -1,7 +1,7 @@
 {strip}
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}
 	<div class="row" style="text-align:center;">
-		<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$gContent->mContentId}">
+		<a href="{$gContent->mInfo.download_url}">
 			<img src="{$gContent->mInfo.thumbnail_url.small}{$refresh}" alt="{$gContent->getTitle()}" title="{$gContent->getTitle()}" />
 			<br />{$gContent->getTitle()|escape}
 		</a>
@@ -30,7 +30,7 @@
 	<div class="row">
 		{formlabel label="File name" for=""}
 		{forminput}
-			<a href="{$smarty.const.TREASURY_PKG_URL}download.php?content_id={$gContent->mContentId}">{$gContent->mInfo.filename|escape}</a>
+			<a href="{$gContent->mInfo.download_url}">{$gContent->mInfo.filename|escape}</a>
 			&nbsp; <small>({$gContent->mInfo.mime_type})</small>
 		{/forminput}
 	</div>

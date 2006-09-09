@@ -7,6 +7,7 @@
 	<div class="header">
 		{if $gContent->isOwner() || $gBitUser->isAdmin()}
 			<div class="floaticon">
+				{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 				{smartlink ifile="edit_item.php" ibiticon="icons/accessories-text-editor" ititle="Edit File" content_id=$gContent->mContentId action=edit}
 				{smartlink ifile="view_item.php" ibiticon="icons/edit-delete" ititle="Remove File" content_id=$gContent->mContentId action=remove}
 			</div>
@@ -16,6 +17,7 @@
 	</div>
 
 	<div class="body">
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 		{assign var=guid value=$gContent->mInfo.plugin_guid}
 		{include file=$gTreasurySystem->mPlugins.$guid.view_tpl}
 	</div><!-- end .body -->
