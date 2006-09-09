@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.12 2006/09/09 10:31:33 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.13 2006/09/09 10:49:59 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.12 $
+ * @version:      $Revision: 1.13 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -61,8 +61,14 @@ class TreasuryItem extends TreasuryBase {
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$ret = array();
-			$query = "SELECT tri.`plugin_guid`, tct.`content_description`, uu.`login`, uu.`real_name`, la.`attachment_id`,
-					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`, lch.`hits`
+			$query = "
+				SELECT
+					tri.`plugin_guid`,
+					tct.`content_description`,
+					uu.`login`, uu.`real_name`, la.`attachment_id`,
+					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+					lch.`hits`
+					$selectSql
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
 					INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
