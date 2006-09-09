@@ -94,6 +94,7 @@
 			</li>
 		{/foreach}
 	</ul>
+	<div class="clear"></div>
 {/if}
 
 {if $gContent->mInfo.screenshots}
