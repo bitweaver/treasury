@@ -50,8 +50,7 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 			}
 		}
 
-		$urlparam = ( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) ? '?' : '&';
-		header( 'Location: '.$galleryStore->getDisplayUrl().$urlparam."refresh=1" );
+		header( 'Location: '.$galleryStore->getDisplayUrl()."&refresh=1" );
 	} else {
 		$feedback['error'] = $galleryStore->mErrors;
 	}
