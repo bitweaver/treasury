@@ -21,8 +21,7 @@ $download_function = $gTreasurySystem->getPluginFunction( $gContent->mInfo['plug
 if( $download_function( $gContent->mInfo ) ) {
 	// add hit if download was successful
 	$gContent->addHit();
+} else {
+	$gBitSystem->fatalError( $gContent->mInfo['errors'] );
 }
-
-// make sure script stops here.
-die;
 ?>

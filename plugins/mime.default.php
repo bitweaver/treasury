@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.15 2006/09/10 15:37:35 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.16 2006/09/10 20:12:11 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.15 $
+ * @version:     $Revision: 1.16 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -236,7 +236,7 @@ function treasury_default_download( &$pFileHash ) {
 	}
 
 	// Check to see if the file actually exists
-	if( is_readable( $pFileHash['source_file'] ) ) {
+	if( !is_readable( $pFileHash['source_file'] ) ) {
 		header( "Cache Control: " );
 		header( "Accept-Ranges: bytes" );
 		// this will get the browser to open the download dialogue - even when the 
@@ -253,7 +253,6 @@ function treasury_default_download( &$pFileHash ) {
 		$ret = TRUE;
 	} else {
 		$pFileHash['errors'] = tra( 'No matching file found.' );
-		header( "HTTP/1.1 404 Not Found" );
 	}
 	return $ret;
 }
