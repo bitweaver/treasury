@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.14 2006/09/10 09:20:55 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.15 2006/09/10 15:37:35 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.14 $
+ * @version:     $Revision: 1.15 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -245,7 +245,7 @@ function treasury_default_download( &$pFileHash ) {
 		header( "Content-type: ".$pFileHash['mime_type'] );
 		header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
 		header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
-		header( "Content-Length: ".$pFileHash['file_size'] );
+		header( "Content-Length: ".filesize( $pFileHash['source_file'] ) );
 		header( "Content-Transfer-Encoding: binary" );
 		header( "Connection: close" );
 
