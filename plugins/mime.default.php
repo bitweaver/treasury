@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.12 2006/09/09 22:22:48 bitweaver Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.13 2006/09/10 05:59:59 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.12 $
+ * @version:     $Revision: 1.13 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -129,8 +129,8 @@ function treasury_default_update( &$pStoreRow ) {
 
 		// Now we process the uploaded file
 		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'] ) );
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `file_size` = ? WHERE `file_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['size'], $pStoreRow['file_id'] ) );
 		}
 
 		return TRUE;

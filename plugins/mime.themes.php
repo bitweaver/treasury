@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.6 2006/09/09 22:22:48 bitweaver Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.7 2006/09/10 05:59:59 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.6 $
+ * @version:     $Revision: 1.7 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -66,7 +66,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 		// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
 		if( !empty( $pStoreRow['plugin']['is_style'] ) ) {
 			if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
-				if( $preview = treasury_theme_extract_preview( $pStoreRow['ext_path'] ) ) {
+				if( $preview = treasury_theme_get_preview( $pStoreRow['ext_path'] ) ) {
 					$pStoreRow['thumb']['name']     = basename( $preview );
 					$pStoreRow['thumb']['tmp_name'] = $preview;
 					$pStoreRow['thumb']['type']     = $gBitSystem->lookupMimeType( $preview );
@@ -74,7 +74,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 				}
 
 				// check to see if we have screenshots - limit them to 3 screenshots / theme
-				if( $sshots = treasury_theme_extract_screenshots( $pStoreRow['ext_path'] ) ) {
+				if( $sshots = treasury_theme_get_screenshots( $pStoreRow['ext_path'] ) ) {
 					$i = 0;
 					foreach( $sshots as $key => $sshot ) {
 						if( $i < 3 ) {
@@ -88,16 +88,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 				}
 
 				// if this is an icon theme, we should end up with a number of icons
-				$pStoreRow['icons'] = treasury_theme_extract_icons( $pStoreRow['ext_path'] );
-
-				/*
-				if( $pStoreRow['icons'] = treasury_theme_extract_icons( $pStoreRow['ext_path'] ) ) {
-					foreach( $icons as $key => $icon ) {
-						$pStoreRow['icons']['icon'.$key]['name']     = basename( $icon );
-						$pStoreRow['icons']['icon'.$key]['tmp_name'] = $icon;
-					}
-				}
-				 */
+				$pStoreRow['icons'] = treasury_theme_get_icons( $pStoreRow['ext_path'] );
 			}
 		}
 	}
@@ -108,8 +99,7 @@ function treasury_theme_verify( &$pStoreRow ) {
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
 		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
 
-		// Store all uploaded files in the users storage area
-		// TODO: allow users to create personal galleries
+		// get the necessary file information from the database
 		$fileInfo = $gBitSystem->mDb->getRow( "
 			SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
 			FROM `".BIT_DB_PREFIX."liberty_attachments` la
@@ -124,12 +114,6 @@ function treasury_theme_verify( &$pStoreRow ) {
 		// try to generate thumbnails for the upload
 		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
 		$pStoreRow['upload']['thumbnail'] = TRUE;
-
-		// specify thumbnail sizes
-		// keep in mind we only create a few sizes here. storage.bitfile.php 
-		// assumes we have all sizes present. we need to update that to 
-		// generate thumbs on demand
-		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 
 		// Generic values needed by the storing mechanism
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
@@ -158,7 +142,8 @@ function treasury_theme_verify( &$pStoreRow ) {
  */
 function treasury_theme_update( &$pStoreRow ) {
 	global $gBitSystem;
-	// No changes in the database are needed - we only need to update the uploaded files
+
+	// get the data we need to deal with
 	$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
 	if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
 		// First we remove the old file
@@ -166,27 +151,16 @@ function treasury_theme_update( &$pStoreRow ) {
 
 		// Now we process the uploaded file
 		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ? WHERE `file_id` = ?";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'] ) );
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `mime_type` = ?, `file_size` = ?, `user_id` = ? WHERE `file_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
 		}
 
-		// if we have screenshots we better do something with them
-		if( !empty( $pStoreRow['screenshots'] ) ) {
-			foreach( $pStoreRow['screenshots'] as $key => $sshot ) {
-				$resizeFunc = liberty_get_function( 'resize' );
-				$sshot['source_file']       = $sshot['tmp_name'];
-				$sshot['dest_base_name']    = $sshot['name'];
-				$sshot['dest_path']         = $pStoreRow['upload']['dest_path'];
-				$sshot['max_width']         = 400;
-				$sshot['max_height']        = 300;
-				$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
-			}
+		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `user_id` = ? WHERE `foreign_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
 		}
 
-		// now that all is done, we can remove temporarily extracted files
-		if( !empty( $pStoreRow['ext_path'] ) ) {
-			unlink_r( $pStoreRow['ext_path'] );
-		}
+		treasury_theme_process_extracted_files( $pStoreRow );
 
 		return TRUE;
 	}
@@ -217,40 +191,7 @@ function treasury_theme_store( &$pStoreRow ) {
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
 		}
 
-		// if this is a theme, we need to convert the preview image into thumbnails
-		if( !empty( $pStoreRow['thumb'] ) ) {
-			$pStoreRow['thumb']['source_file']    = $pStoreRow['thumb']['tmp_name'];
-			$pStoreRow['thumb']['dest_path']      = $pStoreRow['upload']['dest_path'];
-			$pStoreRow['thumb']['dest_base_name'] = $pStoreRow['thumb']['name'];
-			$pStoreRow['thumb']['thumbsizes']     = $pStoreRow['upload']['thumbsizes'];
-			liberty_generate_thumbnails( $pStoreRow['thumb'] );
-		}
-
-		// if we have screenshots we better do something with them
-		if( !empty( $pStoreRow['screenshots'] ) ) {
-			foreach( $pStoreRow['screenshots'] as $key => $sshot ) {
-				$resizeFunc = liberty_get_function( 'resize' );
-				$sshot['source_file']       = $sshot['tmp_name'];
-				$sshot['dest_base_name']    = $sshot['name'];
-				$sshot['dest_path']         = $pStoreRow['upload']['dest_path'];
-				$sshot['max_width']         = 400;
-				$sshot['max_height']        = 300;
-				$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
-			}
-		}
-
-		// if we have icons, we should place them somewhere that we can display them
-		if( !empty( $pStoreRow['icons'] ) ) {
-			mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large' );
-			foreach( $pStoreRow['icons'] as $icon ) {
-				rename( $icon, BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large/'.basename( $icon ) );
-			}
-		}
-
-		// now that all is done, we can remove temporarily extracted files
-		if( !empty( $pStoreRow['ext_path'] ) ) {
-			unlink_r( $pStoreRow['ext_path'] );
-		}
+		treasury_theme_process_extracted_files( $pStoreRow );
 
 		$ret = TRUE;
 	} else {
@@ -302,13 +243,15 @@ function treasury_theme_load( &$pFileHash ) {
 			$pFileHash['file_size']        = $row['file_size'];
 			$pFileHash['attachment_id']    = $row['attachment_id'];
 			$pFileHash['wiki_plugin_link'] = "{attachment id=".$row['attachment_id']."}";
-			if( $sshots = treasury_theme_extract_screenshots( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
+
+			// get extra stuff such as screenshots and icons
+			if( $sshots = treasury_theme_get_screenshots( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
 				for( $i = 0; $i < count( $sshots ); $i++ ) {
 					$pFileHash['screenshots'][] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/'.basename( $sshots[$i] );
 				}
 			}
 
-			if( $icons = treasury_theme_extract_icons( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
+			if( $icons = treasury_theme_get_icons( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
 				$count = count( $icons );
 				// get a maximum of 50 icons
 				for( $i = 0; $i < 50; $i++ ) {
@@ -344,7 +287,7 @@ function treasury_theme_download( &$pFileHash ) {
 	if( is_readable( $pFileHash['source_file'] ) ) {
 		header( "Cache Control: " );
 		header( "Accept-Ranges: bytes" );
-		// this will get the browser to open the download dialogue - even when the
+		// this will get the browser to open the download dialogue - even when the 
 		// browser could deal with the content type - not perfect, but works
 		//header( "Content-Type: application/force-download" );
 		header( "Content-type: ".$pFileHash['mime_type'] );
@@ -404,7 +347,7 @@ function treasury_theme_expunge( &$pParamHash ) {
  * @access public
  * @return Path to preview image on success, FALSE on failure
  */
-function treasury_theme_extract_preview( $pPath ) {
+function treasury_theme_get_preview( $pPath ) {
 	static $ret;
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
@@ -412,7 +355,7 @@ function treasury_theme_extract_preview( $pPath ) {
 				if( basename( $pPath ) == "style_info" && is_file( $pPath.'/'.$file ) && preg_match( "/^preview\.(png|gif|jpe?g)$/", $file ) ) {
 					$ret = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
-					treasury_theme_extract_preview( $pPath.'/'.$file );
+					treasury_theme_get_preview( $pPath.'/'.$file );
 				}
 			}
 		}
@@ -428,7 +371,7 @@ function treasury_theme_extract_preview( $pPath ) {
  * @access public
  * @return Path to preview image on success, FALSE on failure
  */
-function treasury_theme_extract_screenshots( $pPath ) {
+function treasury_theme_get_screenshots( $pPath ) {
 	static $ret;
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
@@ -436,7 +379,7 @@ function treasury_theme_extract_screenshots( $pPath ) {
 				if( preg_match( "/^screenshot\d*.(png|gif|jpe?g)$/i", $file ) ) {
 					$ret[] = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
-					treasury_theme_extract_screenshots( $pPath.'/'.$file );
+					treasury_theme_get_screenshots( $pPath.'/'.$file );
 				}
 			}
 		}
@@ -452,7 +395,7 @@ function treasury_theme_extract_screenshots( $pPath ) {
  * @access public
  * @return Path to preview image on success, FALSE on failure
  */
-function treasury_theme_extract_icons( $pPath ) {
+function treasury_theme_get_icons( $pPath ) {
 	static $ret;
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
@@ -460,7 +403,7 @@ function treasury_theme_extract_icons( $pPath ) {
 				if( basename( $pPath ) == "large" && preg_match( "/\.(png|gif|jpe?g)$/i", $file ) ) {
 					$ret[] = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
-					treasury_theme_extract_icons( $pPath.'/'.$file );
+					treasury_theme_get_icons( $pPath.'/'.$file );
 				}
 			}
 		}
@@ -469,4 +412,46 @@ function treasury_theme_extract_icons( $pPath ) {
 	return( !empty( $ret ) ? $ret : FALSE );
 }
 
+/**
+ * All the files that have been extracted so far need to be processed and moved around
+ * 
+ * @param array $pStoreRow 
+ * @access public
+ * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+ */
+function treasury_theme_process_extracted_files( $pStoreRow ) {
+	// if this is a theme, we need to convert the preview image into thumbnails
+	if( !empty( $pStoreRow['thumb'] ) ) {
+		$pStoreRow['thumb']['source_file']    = $pStoreRow['thumb']['tmp_name'];
+		$pStoreRow['thumb']['dest_path']      = $pStoreRow['upload']['dest_path'];
+		$pStoreRow['thumb']['dest_base_name'] = $pStoreRow['thumb']['name'];
+		liberty_generate_thumbnails( $pStoreRow['thumb'] );
+	}
+
+	// if we have screenshots we better do something with them
+	if( !empty( $pStoreRow['screenshots'] ) ) {
+		foreach( $pStoreRow['screenshots'] as $key => $sshot ) {
+			$resizeFunc = liberty_get_function( 'resize' );
+			$sshot['source_file']       = $sshot['tmp_name'];
+			$sshot['dest_base_name']    = $sshot['name'];
+			$sshot['dest_path']         = $pStoreRow['upload']['dest_path'];
+			$sshot['max_width']         = 400;
+			$sshot['max_height']        = 300;
+			$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
+		}
+	}
+
+	// if we have icons, we should place them somewhere that we can display them
+	if( !empty( $pStoreRow['icons'] ) ) {
+		mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large' );
+		foreach( $pStoreRow['icons'] as $icon ) {
+			rename( $icon, BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large/'.basename( $icon ) );
+		}
+	}
+
+	// now that all is done, we can remove temporarily extracted files
+	if( !empty( $pStoreRow['ext_path'] ) ) {
+		unlink_r( $pStoreRow['ext_path'] );
+	}
+}
 ?>

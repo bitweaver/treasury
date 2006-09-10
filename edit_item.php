@@ -17,12 +17,6 @@ if( !empty( $_REQUEST['refresh'] ) ) {
 }
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
-	if( !$gContent->isOwner() && !$gBitUser->isAdmin() ) {
-		$gBitSmarty->assign( 'msg', tra( "You do not own this file." ) );
-		$gBitSystem->display( "error.tpl" );
-		die;
-	}
-
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		if( !empty( $_REQUEST['confirm'] ) ) {
 			if( $gContent->expunge( !empty( $_REQUEST['force_item_delete'] ) ) ) {
@@ -72,6 +66,7 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 	}
 
 	if( $gContent->store( $_REQUEST['treasury'] ) ) {
+		// this will override any thumbnails created by the plugin
 		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
 				$fileHash = $_FILES['icon'];

@@ -66,14 +66,22 @@
 								{/forminput}
 							</div>
 
-							<div class="row">
-								{formlabel label="File Processing Options" for=""}
-								{forminput}
-									{foreach from=$gTreasurySystem->mPlugins item=plugin}
-										{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
-									{/foreach}
-								{/forminput}
-							</div>
+							{capture name=options}
+								{foreach from=$gTreasurySystem->mPlugins item=plugin}
+									{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
+								{/foreach}
+							{/capture}
+
+							{if $options}
+								<div class="row">
+									{formlabel label="File Processing Options" for=""}
+									{forminput}
+										{foreach from=$gTreasurySystem->mPlugins item=plugin}
+											{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
+										{/foreach}
+									{/forminput}
+								</div>
+							{/if}
 
 							{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 
