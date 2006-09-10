@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.13 2006/09/09 10:49:59 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.14 2006/09/10 09:57:57 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.13 $
+ * @version:      $Revision: 1.14 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -26,7 +26,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return none
 	 * @access public
 	 **/
-	function TreasuryItem( $pContentId=NULL ) {
+	function TreasuryItem( $pDummy=NULL, $pContentId=NULL ) {
 		TreasuryBase::TreasuryBase();
 		$this->registerContentType(
 			TREASURYITEM_CONTENT_TYPE_GUID, array(
@@ -38,7 +38,7 @@ class TreasuryItem extends TreasuryBase {
 				'maintainer_url'      => 'http://www.bitweaver.org'
 			)
 		);
-		$this->mContentId = $pContentId;
+		$this->mContentId = !empty( $pDummy ) ? $pDummy : $pContentId;
 		$this->mContentTypeGuid = TREASURYITEM_CONTENT_TYPE_GUID;
 	}
 
