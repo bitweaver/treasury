@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.13 2006/09/10 05:59:59 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.14 2006/09/10 09:20:55 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.13 $
+ * @version:     $Revision: 1.14 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -88,12 +88,6 @@ function treasury_default_verify( &$pStoreRow ) {
 		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
 		$pStoreRow['upload']['thumbnail'] = TRUE;
 
-		// specify thumbnail sizes
-		// keep in mind we only create a few sizes here. storage.bitfile.php 
-		// assumes we have all sizes present. we need to update that to 
-		// generate thumbs on demand
-		$pStoreRow['upload']['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
-
 		// Generic values needed by the storing mechanism
 		$pStoreRow['user_id'] = $gBitUser->mUserId;
 		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
@@ -113,7 +107,7 @@ function treasury_default_verify( &$pStoreRow ) {
 }
 
 /**
- * Update the data in the database
+ * When a file is edited
  * 
  * @param array $pStoreRow File data needed to store details in the database - sanitised and generated in the verify function
  * @access public
@@ -121,7 +115,8 @@ function treasury_default_verify( &$pStoreRow ) {
  */
 function treasury_default_update( &$pStoreRow ) {
 	global $gBitSystem;
-	// No changes in the database are needed - we only need to update the uploaded files
+
+	// get the data we need to deal with
 	$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
 	if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
 		// First we remove the old file
@@ -129,8 +124,13 @@ function treasury_default_update( &$pStoreRow ) {
 
 		// Now we process the uploaded file
 		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `file_size` = ? WHERE `file_id` = ?";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['size'], $pStoreRow['file_id'] ) );
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `mime_type` = ?, `file_size` = ?, `user_id` = ? WHERE `file_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
+		}
+
+		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
+			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `user_id` = ? WHERE `foreign_id` = ?";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
 		}
 
 		return TRUE;
@@ -204,7 +204,7 @@ function treasury_default_load( &$pFileHash ) {
 				$pFileHash['thumbnail_url']['medium'] = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['large']  = $mime_thumbnail;
 			}
-			$pFileHash['filename']         = substr( $row['storage_path'], strrpos( $row['storage_path'], '/' ) + 1 );
+			$pFileHash['filename']         = basename( $row['storage_path'] );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
 			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] ) ) );
 			$pFileHash['mime_type']        = $row['mime_type'];
@@ -227,6 +227,7 @@ function treasury_default_load( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_default_download( &$pFileHash ) {
+	global $gBitSystem;
 	$ret = FALSE;
 
 	// make sure we close off obzip compression if it's on

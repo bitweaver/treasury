@@ -56,16 +56,25 @@
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_view_creator' )}
 	<div class="row">
-		{formlabel label="Uploaded" for=""}
+		{formlabel label="First Uploaded" for=""}
 		{forminput}
-			{if $gBitSystem->isFeatureActive( 'treasury_item_view_size' )}
+			{if $gBitSystem->isFeatureActive( 'treasury_item_view_date' )}
 				{$gContent->mInfo.created|bit_long_datetime}<br />
 			{/if}
-			{if $gBitSystem->isFeatureActive( 'treasury_item_view_date' )}
+			{if $gBitSystem->isFeatureActive( 'treasury_item_view_creator' )}
 				{tr}By{/tr}: {displayname hash=$gContent->mInfo}
 			{/if}
 		{/forminput}
 	</div>
+
+	{if $gBitSystem->isFeatureActive( 'treasury_item_view_date' ) and $gContent->mInfo.created != $gContent->mInfo.last_modified}
+		<div class="row">
+			{formlabel label="Last Modified" for=""}
+			{forminput}
+				{$gContent->mInfo.last_modified|bit_long_datetime}<br />
+			{/forminput}
+		</div>
+	{/if}
 {/if}
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_hits' )}

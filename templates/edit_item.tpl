@@ -30,6 +30,8 @@
 				{forminput}
 					<input type="file" name="file" id="fileupload" />
 					{formhelp note="Upload a new file to replace the current one."}
+					<input type="submit" name="reprocess_upload" value="{tr}Re-process uploaded File{/tr}" />
+					{formhelp note="This will process the already uploaded file as if you're uploading it for the first time. This will allow you to apply spcific file processing options if available."}
 				{/forminput}
 			</div>
 
@@ -38,11 +40,8 @@
 				{forminput}
 					<input type="file" id="icon" name="icon" />
 					{formhelp note="Upload an image that represents this file. The image will be scaled automatically."}
-
-					<br />
-					<input type="submit" name="reset_thumbnails" value="{tr}Recreate original Thumbnail{/tr}" />
-					<br />
 					<input type="submit" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
+					{formhelp note="This will remove the current thumbnail and it will use the appropriate mimetype icon instead."}
 				{/forminput}
 			</div>
 

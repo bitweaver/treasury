@@ -45,19 +45,33 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 	}
 }
 
-// now deal with the uploaded icon
-if( !empty( $_REQUEST['reset_thumbnails'] ) || !empty( $_REQUEST['delete_thumbnails'] ) ) {
-	$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small' );
-	$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
+// delete icon if needed
+if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
+	$fileHash['dest_path']   = dirname( $gContent->mInfo['source_url'] ).'/';
 	$fileHash['source_file'] = $gContent->mInfo['source_file'];
-	$fileHash['type'] = $gContent->mInfo['mime_type'];
+	$fileHash['type']        = $gContent->mInfo['mime_type'];
 	liberty_clear_thumbnails( $fileHash );
-
-	if( !empty( $_REQUEST['reset_thumbnails'] ) ) {
-		liberty_generate_thumbnails( $fileHash );
-	}
-
 	$gContent->load();
+}
+
+// set up everything for re-processing
+if( !empty( $_REQUEST['reprocess_upload'] ) ) {
+	// first we need to move the file out of the way
+	$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
+	rename( $gContent->mInfo['source_file'], $tmpfile );
+
+	// now that the file has been moved, we need to remove all the files in the storage dir
+	unlink_r( dirname( $gContent->mInfo['source_file'] ) );
+
+	// fill the upload hash with the file details
+	$fileHash['tmp_name'] = $tmpfile;
+	$fileHash['name']     = $gContent->mInfo['filename'];
+	$fileHash['size']     = $gContent->mInfo['file_size'];
+	$fileHash['type']     = $gContent->mInfo['mime_type'];
+	$fileHash['error']    = 0;
+
+	$_REQUEST['treasury']['upload'] = $fileHash;
+	$_REQUEST['update_file']        = TRUE;
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
@@ -81,7 +95,17 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 		}
 		$feedback['success'] = tra( 'The settings were successfully applied.' );
 	}
+
+	// get everything up to date
 	$gContent->load();
+
+	// new icons need to be displayed
+	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
+}
+
+if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $tmpfile ) && is_file( $tmpfile ) ) {
+	// move file back to where it should be
+	rename( $tmpfile, $gContent->mInfo['source_file'] );
 }
 
 // get a list of galleries this file is already part of

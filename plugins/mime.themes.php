@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.7 2006/09/10 05:59:59 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.8 2006/09/10 09:20:55 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.7 $
+ * @version:     $Revision: 1.8 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -27,7 +27,7 @@ $pluginParams = array (
 	'expunge_function'   => 'treasury_theme_expunge',
 	// Brief description of what the plugin does
 	'title'              => 'Theme Mime Handler',
-	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it.',
+	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it. Requires the default plugin file to be present.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_theme_inc.tpl',
 	// This should be the same for all mime plugins
@@ -50,6 +50,9 @@ $pluginParams = array (
 
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_THEME, $pluginParams );
 
+// depending on the scan the default file might not be included yet. we need get it manually
+require_once( 'mime.default.php' );
+
 /**
  * Sanitise and validate data before it's stored
  * 
@@ -59,10 +62,11 @@ $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_THEME, $pluginParams );
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_theme_verify( &$pStoreRow ) {
-	global $gBitSystem, $gBitUser;
-	$ret = FALSE;
-	// make sure the file is valid
-	if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
+	global $gBitSystem;
+	$ret = treasury_default_verify( $pStoreRow );
+
+	// If all of that went well, we're ready to do the style thing
+	if( $ret ) {
 		// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
 		if( !empty( $pStoreRow['plugin']['is_style'] ) ) {
 			if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
@@ -87,47 +91,10 @@ function treasury_theme_verify( &$pStoreRow ) {
 					}
 				}
 
-				// if this is an icon theme, we should end up with a number of icons
+				// if this is an icon style, we should end up with a number of icons
 				$pStoreRow['icons'] = treasury_theme_get_icons( $pStoreRow['ext_path'] );
 			}
 		}
-	}
-
-	// content_id is only set when we are updating the file
-	if( @BitBase::verifyId( $pStoreRow['content_id'] ) ) {
-		// Generic values needed by the storing mechanism
-		$pStoreRow['user_id'] = $gBitUser->mUserId;
-		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
-
-		// get the necessary file information from the database
-		$fileInfo = $gBitSystem->mDb->getRow( "
-			SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la
-				INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( la.`foreign_id`=lf.`file_id` )
-			WHERE `content_id`=?", array( $pStoreRow['content_id'] ) );
-		$pStoreRow = array_merge( $pStoreRow, $fileInfo );
-		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
-
-		$ret = TRUE;
-
-	} elseif( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
-		// try to generate thumbnails for the upload
-		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
-		$pStoreRow['upload']['thumbnail'] = TRUE;
-
-		// Generic values needed by the storing mechanism
-		$pStoreRow['user_id'] = $gBitUser->mUserId;
-		$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
-
-		// Store all uploaded files in the users storage area
-		// TODO: allow users to create personal galleries
-		$pStoreRow['attachment_id'] = $gBitSystem->mDb->GenID( 'liberty_attachments_id_seq' );
-		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
-
-		$ret = TRUE;
-
-	} else {
-		$pStoreRow['errors']['upload'] = tra( 'There was a problem with the uploaded file.' );
 	}
 
 	return $ret;
@@ -141,29 +108,13 @@ function treasury_theme_verify( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_theme_update( &$pStoreRow ) {
-	global $gBitSystem;
+	$ret = treasury_default_update( $pStoreRow );
 
-	// get the data we need to deal with
-	$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
-	if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
-		// First we remove the old file
-		@unlink( BIT_ROOT_PATH.$storage_path );
-
-		// Now we process the uploaded file
-		if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `mime_type` = ?, `file_size` = ?, `user_id` = ? WHERE `file_id` = ?";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
-		}
-
-		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
-			$sql = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `user_id` = ? WHERE `foreign_id` = ?";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
-		}
-
+	// if that all went well, we can do our style thing
+	if( $ret ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
-
-		return TRUE;
 	}
+	return $ret;
 }
 
 /**
@@ -174,28 +125,11 @@ function treasury_theme_update( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_theme_store( &$pStoreRow ) {
-	global $gBitSystem;
-	$ret = FALSE;
-	// take care of the uploaded file and insert it into the liberty_files and liberty_attachments tables
-	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
-		// add row to liberty_files
-		// this is where we store any additional data - we don't need more info for regular uploads
-		$pStoreRow['file_id'] = $gBitSystem->mDb->GenID( 'liberty_files_id_seq' );
-		$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_files` ( `storage_path`, `file_id`, `mime_type`, `file_size`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ) );
+	$ret = treasury_default_store( $pStoreRow );
 
-		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing - PLUGIN_GUID_BIT_FILES is basically the default file handler in liberty
-		// hardcode this for now
-		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
-			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `content_id`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
-		}
-
+	// if that all went well, we can do our style thing
+	if( $ret ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
-
-		$ret = TRUE;
-	} else {
-		$pStoreRow['errors']['liberty_process'] = "There was a problem processing the file.";
 	}
 	return $ret;
 }
@@ -208,59 +142,22 @@ function treasury_theme_store( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_theme_load( &$pFileHash ) {
-	global $gBitSystem;
-	$ret = FALSE;
-	if( @BitBase::verifyId( $pFileHash['content_id'] ) ) {
-		$query = "SELECT *
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
-			WHERE la.`content_id` = ?";
-		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ) ) ) {
-			$canThumbFunc = liberty_get_function( 'can_thumbnail' );
-			if( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' ) ) {
-				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
-				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
-				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
-				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
-				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
-//			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
-//				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['medium'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['large']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-			} else {
-				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
-				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['medium'] = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['large']  = $mime_thumbnail;
+	$ret = treasury_default_load( $pFileHash );
+	if( $ret ) {
+		// get extra stuff such as screenshots and icons
+		if( $sshots = treasury_theme_get_screenshots( dirname( $pFileHash['source_file'] ) ) ) {
+			for( $i = 0; $i < count( $sshots ); $i++ ) {
+				$pFileHash['screenshots'][] = dirname( $pFileHash['source_file'] ).'/'.basename( $sshots[$i] );
 			}
-			$pFileHash['filename']         = substr( $row['storage_path'], strrpos( $row['storage_path'], '/' ) + 1 );
-			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
-			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] ) ) );
-			$pFileHash['mime_type']        = $row['mime_type'];
-			$pFileHash['file_size']        = $row['file_size'];
-			$pFileHash['attachment_id']    = $row['attachment_id'];
-			$pFileHash['wiki_plugin_link'] = "{attachment id=".$row['attachment_id']."}";
+		}
 
-			// get extra stuff such as screenshots and icons
-			if( $sshots = treasury_theme_get_screenshots( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
-				for( $i = 0; $i < count( $sshots ); $i++ ) {
-					$pFileHash['screenshots'][] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/'.basename( $sshots[$i] );
-				}
+		if( $icons = treasury_theme_get_icons( dirname( $pFileHash['source_file'] ), 'icons' ) ) {
+			$count = count( $icons );
+			// get a maximum of 50 icons
+			for( $i = 0; $i < 50; $i++ ) {
+				$pFileHash['icons'][basename( $icons[$i] )] = dirname( $pFileHash['source_url'] ).'/icons/'.basename( $icons[$i] );
 			}
-
-			if( $icons = treasury_theme_get_icons( BIT_ROOT_PATH.dirname( $row['storage_path'] ) ) ) {
-				$count = count( $icons );
-				// get a maximum of 50 icons
-				for( $i = 0; $i < 50; $i++ ) {
-					$pFileHash['icons'][basename( $icons[$i] )] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large/'.basename( $icons[$i] );
-				}
-				ksort( $pFileHash['icons'] );
-			}
-
-			$ret = TRUE;
+			ksort( $pFileHash['icons'] );
 		}
 	}
 	return $ret ;
@@ -275,34 +172,7 @@ function treasury_theme_load( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_theme_download( &$pFileHash ) {
-	global $gBitSystem;
-	$ret = FALSE;
-
-	// make sure we close off obzip compression if it's on
-	if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) ) {
-		ob_end_clean();
-	}
-
-	// Check to see if the file actually exists
-	if( is_readable( $pFileHash['source_file'] ) ) {
-		header( "Cache Control: " );
-		header( "Accept-Ranges: bytes" );
-		// this will get the browser to open the download dialogue - even when the 
-		// browser could deal with the content type - not perfect, but works
-		//header( "Content-Type: application/force-download" );
-		header( "Content-type: ".$pFileHash['mime_type'] );
-		header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
-		header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
-		header( "Content-Length: ".$pFileHash['file_size'] );
-		header( "Content-Transfer-Encoding: binary" );
-		header( "Connection: close" );
-
-		readfile( $pFileHash['source_file'] );
-		$ret = TRUE;
-	} else {
-		$pFileHash['errors'] = tra( 'No matching file found.' );
-		header( "HTTP/1.1 404 Not Found" );
-	}
+	$ret = treasury_default_download( $pStoreRow );
 	return $ret;
 }
 
@@ -314,29 +184,7 @@ function treasury_theme_download( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_theme_expunge( &$pParamHash ) {
-	global $gBitSystem;
-	$ret = FALSE;
-	if( @BitBase::verifyId( $pParamHash['content_id'] ) ) {
-		$ret = TRUE;
-
-		$query = "SELECT *
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
-			WHERE la.`content_id` = ?";
-		if( $row = $gBitSystem->mDb->getRow( $query, array( $pParamHash['content_id'] ) ) ) {
-			// Make sure the storage path is pointing to a valid file
-			if( is_file( BIT_ROOT_PATH.$row['storage_path'] ) ) {
-				unlink_r( dirname( BIT_ROOT_PATH.$row['storage_path'] ) );
-			}
-
-			// Now remove all entries we made in the database - liberty_files and liberty_attachments
-			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_files` WHERE `file_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['foreign_id'] ) );
-			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['attachment_id'] ) );
-		}
-	} else {
-		$pParamHash['errors'] = tra( 'No valid content_id given.' );
-	}
+	$ret = treasury_default_expunge( $pStoreRow );
 	return $ret;
 }
 
@@ -395,15 +243,15 @@ function treasury_theme_get_screenshots( $pPath ) {
  * @access public
  * @return Path to preview image on success, FALSE on failure
  */
-function treasury_theme_get_icons( $pPath ) {
+function treasury_theme_get_icons( $pPath, $pIconDir = 'large' ) {
 	static $ret;
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
 			if( preg_match( "/^[^\.]/", $file ) ) {
-				if( basename( $pPath ) == "large" && preg_match( "/\.(png|gif|jpe?g)$/i", $file ) ) {
+				if( basename( $pPath ) == $pIconDir && preg_match( "/\.(png|gif|jpe?g)$/i", $file ) ) {
 					$ret[] = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
-					treasury_theme_get_icons( $pPath.'/'.$file );
+					treasury_theme_get_icons( $pPath.'/'.$file, $pIconDir );
 				}
 			}
 		}
@@ -443,9 +291,12 @@ function treasury_theme_process_extracted_files( $pStoreRow ) {
 
 	// if we have icons, we should place them somewhere that we can display them
 	if( !empty( $pStoreRow['icons'] ) ) {
-		mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large' );
+		@mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'icons' );
 		foreach( $pStoreRow['icons'] as $icon ) {
-			rename( $icon, BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'large/'.basename( $icon ) );
+			$dest = BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'icons/'.basename( $icon );
+			if( $icon != $dest ) {
+				rename( $icon, $dest );
+			}
 		}
 	}
 
