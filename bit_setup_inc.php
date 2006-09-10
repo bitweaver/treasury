@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.4 $
+ * @version  $Revision: 1.5 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -10,6 +10,7 @@ global $gBitSystem, $gBitUser, $gBitSmarty;
 $registerHash = array(
 	'package_name' => 'treasury',
 	'package_path' => dirname( __FILE__ ).'/',
+	'homeable' => TRUE,
 );
 $gBitSystem->registerPackage( $registerHash );
 

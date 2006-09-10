@@ -26,8 +26,6 @@ $tables = array(
 
 global $gBitInstaller;
 
-$gBitInstaller->makePackageHomeable( TREASURY_PKG_NAME );
-
 foreach( array_keys( $tables ) AS $tableName ) {
 	$gBitInstaller->registerSchemaTable( TREASURY_PKG_NAME, $tableName, $tables[$tableName] );
 }
