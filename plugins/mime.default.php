@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.16 2006/09/10 20:12:11 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.17 2006/09/11 19:11:50 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.16 $
+ * @version:     $Revision: 1.17 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -236,12 +236,13 @@ function treasury_default_download( &$pFileHash ) {
 	}
 
 	// Check to see if the file actually exists
-	if( !is_readable( $pFileHash['source_file'] ) ) {
-		header( "Cache Control: " );
-		header( "Accept-Ranges: bytes" );
+	if( is_readable( $pFileHash['source_file'] ) ) {
 		// this will get the browser to open the download dialogue - even when the 
 		// browser could deal with the content type - not perfect, but works
-		//header( "Content-Type: application/force-download" );
+		//$pFileHash['mime-type'] = "application/force-download";
+
+		header( "Cache Control: " );
+		header( "Accept-Ranges: bytes" );
 		header( "Content-type: ".$pFileHash['mime_type'] );
 		header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
 		header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );

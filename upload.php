@@ -46,13 +46,15 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;
-			if( !$treasuryItem->store( $storeHash ) ) {
+			if( $treasuryItem->store( $storeHash ) ) {
+				$success = TRUE;
+			} else {
 				$feedback['error'] = $treasuryItem->mErrors;
 			}
 		}
 	}
 
-	if( empty( $feedback['error'] ) ) {
+	if( empty( $feedback['error'] ) && !empty( $success ) ) {
 		header( 'Location: '.TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ) );
 die;
 	}

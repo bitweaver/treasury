@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.5 2006/08/30 16:23:20 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.6 2006/09/11 19:11:50 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.5 $
+ * @version:      $Revision: 1.6 $
  * @created:      Monday Jul 03, 2006   11:06:47 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -47,6 +47,10 @@ class TreasurySystem extends LibertySystem {
 	 **/
 	function lookupMimeHandler( &$pFileHash ) {
 		global $gBitSystem;
+
+		if( empty( $this->mPlugins ) ) {
+			$this->scanAllPlugins( TREASURY_PKG_PATH.'plugins/' );
+		}
 
 		if( !empty( $pFileHash['name'] ) && empty( $pFileHash['type'] ) ) {
 			$pFileHash['type'] = $gBitSystem->lookupMimeType( $pFileHash['name'] );

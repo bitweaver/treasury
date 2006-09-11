@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.9 2006/09/10 20:02:37 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.10 2006/09/11 19:11:50 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.9 $
+ * @version:     $Revision: 1.10 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -147,7 +147,7 @@ function treasury_theme_load( &$pFileHash ) {
 		// get extra stuff such as screenshots and icons
 		if( $sshots = treasury_theme_get_screenshots( dirname( $pFileHash['source_file'] ) ) ) {
 			for( $i = 0; $i < count( $sshots ); $i++ ) {
-				$pFileHash['screenshots'][] = dirname( $pFileHash['source_file'] ).'/'.basename( $sshots[$i] );
+				$pFileHash['screenshots'][] = dirname( $pFileHash['source_url'] ).'/'.basename( $sshots[$i] );
 			}
 		}
 
