@@ -66,7 +66,7 @@
 								{/forminput}
 							</div>
 
-							{capture name=options}
+							{capture assign=options}
 								{foreach from=$gTreasurySystem->mPlugins item=plugin}
 									{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
 								{/foreach}
