@@ -22,6 +22,10 @@ if( $download_function( $gContent->mInfo ) ) {
 	// add hit if download was successful
 	$gContent->addHit();
 } else {
-	$gBitSystem->fatalError( $gContent->mInfo['errors'] );
+	if( !empty( $gContent->mInfo['errors'] ) ) {
+		$gBitSystem->fatalError( $gContent->mInfo['errors'] );
+	} else {
+		$gBitSystem->fatalError( 'There was a problem trying to prepare the file for download.' );
+	}
 }
 ?>
