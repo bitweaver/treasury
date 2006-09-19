@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.4 2006/09/09 10:37:49 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.5 2006/09/19 16:03:26 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.4 $
+ * @version:      $Revision: 1.5 $
  * @created:      Monday Jul 03, 2006   11:01:55 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -66,8 +66,9 @@ class TreasuryBase extends LibertyAttachable {
 	 * @return HTML links
 	 */
 	function getDisplayPath( $pPath ) {
-		$ret = '';
+		$ret = '<a title="'.tra( 'Galleries' ).'" href="'.TREASURY_PKG_URL.'">'.tra( 'Galleries' ).'</a>';
 		if( !empty( $pPath ) && is_array( $pPath ) ) {
+			$ret .= " &raquo; ";
 			foreach( $pPath as $node ) {
 				$ret .= ( @BitBase::verifyId( $node['parent_id'] ) ? ' &raquo; ' : '' ).'<a title="'.htmlspecialchars( $node['title'] ).'" href="'.TreasuryGallery::getDisplayUrl( $node['content_id'] ).'">'.htmlspecialchars( $node['title'] ).'</a>';
 			}
