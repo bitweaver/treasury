@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.10 2006/09/11 19:11:50 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.11 2006/09/25 16:05:55 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.10 $
+ * @version:     $Revision: 1.11 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -27,7 +27,7 @@ $pluginParams = array (
 	'expunge_function'   => 'treasury_theme_expunge',
 	// Brief description of what the plugin does
 	'title'              => 'Theme Mime Handler',
-	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it. Requires the default plugin file to be present.',
+	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_theme_inc.tpl',
 	// This should be the same for all mime plugins
@@ -37,7 +37,7 @@ $pluginParams = array (
 	// TODO: allow archive processing and create galleries according to 
 	// hierarchy of extracted files
 	// Allow for additional processing options - passed in during verify and store
-	'processing_options' => 
+	'processing_options' =>
 		'<label>
 			<input type="checkbox" name="treasury[plugin][is_style]" value="true" /> '.
 			tra( 'Check this box if you are uploading a bitweaver theme. Please view <a href="/wiki/Style+Uploads">Style Uploads</a> for details.' ).

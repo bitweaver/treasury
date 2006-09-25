@@ -1,5 +1,4 @@
 <?php
-//$gExclusiveScan = array( 'kernel', 'users', 'themes', 'liberty', 'treasury' );
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );

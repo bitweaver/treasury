@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.14 2006/09/10 09:57:57 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.15 2006/09/25 16:05:54 squareing Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.14 $
+ * @version:      $Revision: 1.15 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -116,29 +116,34 @@ class TreasuryItem extends TreasuryBase {
 
 		$ret = $bindVars = array();
 		$selectSql = $joinSql = $orderSql = $whereSql = "";
-		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if( @BitBase::verifyId( $pListHash['gallery_content_id'] ) ) {
-			$whereSql = " WHERE trm.`gallery_content_id` = ? ";
+			$whereSql   = " WHERE trm.`gallery_content_id` = ? ";
 			$bindVars[] = $pListHash['gallery_content_id'];
 		}
 
 		if( !empty( $pListHash['title'] ) && is_string( $pListHash['title'] ) ) {
-			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
-			$whereSql .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
-			$joinSql = ", `".BIT_DB_PREFIX."liberty_content` lc";
+			$whereSql  .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql  .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
 			$bindVars[] = strtoupper( $pListHash['title'] );
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
-			$orderSql .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
+			$orderSql  .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
 		} else {
-			$orderSql .= " ORDER BY trm.`item_position` ASC ";
+			$orderSql  .= " ORDER BY trm.`item_position` ASC ";
 		}
 
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
 		$ret = array();
-		$query = "SELECT tri.`plugin_guid`, tct.`content_description`, uu.`login`, uu.`real_name`, la.`attachment_id`,
-				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`, lch.`hits`
+		$query = "
+			SELECT tri.`plugin_guid`,
+				tct.`content_description`,
+				uu.`login`, uu.`real_name`,
+				la.`attachment_id`,
+				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+				lch.`hits`
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )

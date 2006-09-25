@@ -1,11 +1,16 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.4 2006/09/16 15:49:59 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.5 2006/09/25 16:05:55 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
 		'label' => 'Menu Text',
 		'note' => 'The text you want to appear in the top menu.',
 		'type' => 'text',
+	),
+	'treasury_force_download' => array(
+		'label' => 'Force Download',
+		'note' => "If you set this, the mime type during download will be set to application/force-download forcing the browser to download the content regardless of it's original file type.",
+		'type' => 'checkbox',
 	),
 );
 $gBitSmarty->assign( 'treasurySettings', $treasurySettings );

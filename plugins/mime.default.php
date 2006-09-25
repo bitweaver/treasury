@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.17 2006/09/11 19:11:50 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.18 2006/09/25 16:05:55 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.17 $
+ * @version:     $Revision: 1.18 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -235,12 +235,14 @@ function treasury_default_download( &$pFileHash ) {
 		ob_end_clean();
 	}
 
+	// this will get the browser to open the download dialogue - even when the 
+	// browser could deal with the content type - not perfect, but works
+	if( $gBitSystem->isFeatureActive( 'treasury_force_download' ) ) {
+		$pFileHash['mime_type'] = "application/force-download";
+	}
+
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] ) ) {
-		// this will get the browser to open the download dialogue - even when the 
-		// browser could deal with the content type - not perfect, but works
-		//$pFileHash['mime-type'] = "application/force-download";
-
 		header( "Cache Control: " );
 		header( "Accept-Ranges: bytes" );
 		header( "Content-type: ".$pFileHash['mime_type'] );
