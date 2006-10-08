@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.15 2006/09/25 16:05:54 squareing Exp $
+ * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.16 2006/10/08 11:21:05 bitweaver Exp $
  *
  * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.15 $
+ * @version:      $Revision: 1.16 $
  * @created:      Monday Jul 03, 2006   11:55:41 CEST
  * @package:      treasury
  * @copyright:    2003-2006 bitweaver
@@ -143,7 +143,7 @@ class TreasuryItem extends TreasuryBase {
 				uu.`login`, uu.`real_name`,
 				la.`attachment_id`,
 				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
-				lch.`hits`
+				lch.`hits` $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
