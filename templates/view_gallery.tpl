@@ -49,93 +49,120 @@
 			{$gContent->mInfo.data|escape|nl2br}
 		</p>
 
-		{if $gContent->mItems}
-			<table class="data">
-				<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
-				<tr>
-					{if $gContent->getPreference('item_list_thumb_size')}
-						<th style="width:10%"></th>
-					{/if}
-					<th style="width:50%">
-						{smartlink ititle=Name isort=title list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
-					</th>
-					{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
-						<th style="width:10%">
-							{smartlink ititle=Uploaded isort=created list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
-						</th>
-					{/if}
-					{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
-						<th style="width:10%">{tr}Size{/tr}</th>
-					{/if}
-					{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
-						<th style="width:10%">
-							{smartlink ititle=Downloads isort="lch.hits" list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
-						</th>
-					{/if}
-					<th style="width:20%">{tr}Actions{/tr}</th>
-				</tr>
+		{formfeedback hash=$feedback}
 
-				{foreach from=$gContent->mItems item=item}
+		{if $gContent->mItems}
+			{form id=formid}
+				<input type="hidden" name="structure_id" value="{$gContent->mStructureId}" />
+				<table class="data">
+					<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
 					<tr>
 						{if $gContent->getPreference('item_list_thumb_size')}
-							{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
-							<td style="text-align:center;">
-								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-									<a href="{$item.display_url|escape}">
-								{/if}
-								<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
-								{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
-									<br />{$item.filename}
-								{/if}
-								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-									</a>
-								{/if}
-							</td>
+							<th style="width:10%"></th>
 						{/if}
-						<td>
-							<h3><a href="{$item.display_url}">{$item.title}</a></h3>
-							{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
-								<p>{$item.data}</p>
-							{/if}
-						</td>
+						<th style="width:50%">
+							{smartlink ititle=Name isort=title list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
+						</th>
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
-							<td>
-								{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' )}
-									{$item.created|bit_short_date}<br />
-								{/if}
-								{if $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
-									{tr}by{/tr}: {displayname hash=$item}
-								{/if}
-							</td>
+							<th style="width:10%">
+								{smartlink ititle=Uploaded isort=created list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
+							</th>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
-							<td style="text-align:right;">
-								{$item.file_size|kbsize}
-							</td>
+							<th style="width:10%">{tr}Size{/tr}</th>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
-							<td style="text-align:right;">
-								{$item.hits|default:"{tr}none{/tr}"}
-							</td>
+							<th style="width:10%">
+								{smartlink ititle=Downloads isort="lch.hits" list_page=$listInfo.current_page structure_id=$gContent->mStructureId}
+							</th>
 						{/if}
-						<td class="actionicon">
-							{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
-								<a href="{$item.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
-							{/if}
-							{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-								<a href="{$item.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
-							{/if}
-							{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
-								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
-								<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
-							{/if}
-							{*if $gBitUser->isAdmin()}
-								{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
-							{/if*}
-						</td>
+						<th style="width:20%">{tr}Actions{/tr}</th>
 					</tr>
-				{/foreach}
-			</table>
+
+					{foreach from=$gContent->mItems item=item}
+						<tr>
+							{if $gContent->getPreference('item_list_thumb_size')}
+								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
+								<td style="text-align:center;">
+									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+										<a href="{$item.display_url|escape}">
+									{/if}
+									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
+										<br />{$item.filename}
+									{/if}
+									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+										</a>
+									{/if}
+								</td>
+							{/if}
+							<td>
+								<h3><a href="{$item.display_url}">{$item.title}</a></h3>
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
+									<p>{$item.data}</p>
+								{/if}
+							</td>
+							{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
+								<td>
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' )}
+										{$item.created|bit_short_date}<br />
+									{/if}
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
+										{tr}by{/tr}: {displayname hash=$item}
+									{/if}
+								</td>
+							{/if}
+							{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
+								<td style="text-align:right;">
+									{$item.file_size|kbsize}
+								</td>
+							{/if}
+							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+								<td style="text-align:right;">
+									{$item.hits|default:"{tr}none{/tr}"}
+								</td>
+							{/if}
+							<td class="actionicon">
+								{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
+									<a href="{$item.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
+								{/if}
+								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+									<a href="{$item.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
+								{/if}
+								{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=delete">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
+									<input type="checkbox" name="content_ids[]" value="{$item.content_id}" />
+									{assign var=checks value=true}
+								{/if}
+								{*if $gBitUser->isAdmin()}
+									{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
+								{/if*}
+							</td>
+						</tr>
+					{/foreach}
+				</table>
+
+				{if $checks}
+					<div style="text-align:right">
+						<script type="text/javascript">/* <![CDATA[ check / uncheck all */
+							document.write("<label for=\"switcher\">{tr}Select All{/tr}</label> ");
+							document.write("<input name=\"switcher\" id=\"switcher\" type=\"checkbox\" onclick=\"switchCheckboxes(this.form.id,'content_ids[]','switcher')\" />");
+						/* ]]> */</script>
+						<br />
+
+						{tr}With selected items{/tr}:<br />
+						<select name="action">
+							<option value="dummy">{tr}No Action{/tr}</option>
+							<option value="delete">{tr}Delete{/tr}</option>
+						</select>
+					</div>
+
+					<div class="submit">
+						<input type="submit" name="submit" value="Process Selected Files" />
+					</div>
+				{/if}
+			{/form}
 		{else}
 			<p class="norecords">
 				{tr}No Files Found{/tr}

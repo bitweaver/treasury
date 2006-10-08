@@ -13,6 +13,25 @@ $feedback = array();
 $gContent->updateUserPermissions();
 $gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
 
+if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'delete' ) {
+	$feedback['success'] = '';
+	foreach( $_REQUEST['content_ids'] as $contentId ) {
+		if( @BitBase::verifyId( $contentId ) ) {
+			if( $galleryItem = $gLibertySystem->getLibertyObject( $contentId ) ) {
+				$galleryItem->load();
+				$title = $galleryItem->getTitle();
+				if( $galleryItem->expunge() ) {
+					$feedback['success'] .= "<li>$title</li>";
+				}
+			}
+		}
+	}
+
+	if( !empty( $feedback['success'] ) ) {
+		$feedback['success'] = tra( 'The following items were successfully deleted' ).':<ul>'.$feedback['success'].'</ul>';
+	}
+}
+
 // used to display the newly updated version of an image
 if( !empty( $_REQUEST['refresh'] ) ) {
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
