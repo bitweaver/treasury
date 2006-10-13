@@ -1,4 +1,16 @@
 <?php
+/**
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/list.php,v 1.2 2006/10/13 12:47:20 lsces Exp $
+ *
+ * @author       xing  <xing@synapse.plus.com>
+ * @package      treasury
+ * @copyright    2003-2006 bitweaver
+ * @license      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
+ **/
+
+/**
+ * Setup
+ */ 
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );

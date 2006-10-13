@@ -1,12 +1,12 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.18 2006/09/25 16:05:55 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.19 2006/10/13 12:47:20 lsces Exp $
  *
- * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.18 $
- * @created:     Sunday Jul 02, 2006   14:42:13 CEST
- * @package:     treasury
- * @subpackage:  treasury_mime_handler
+ * @author      xing  <xing@synapse.plus.com>
+ * @version     $Revision: 1.19 $
+ * created     Sunday Jul 02, 2006   14:42:13 CEST
+ * @package     treasury
+ * @subpackage  treasury_mime_handler
  **/
 
 // TODO: since plugins can do just about anything here, we might need the 
@@ -15,11 +15,16 @@
 // table.plugin_guid.php
 // where plugins can insert their own tables
 
+/**
+ * setup
+ */
 global $gTreasurySystem;
 
-// This is the name of the plugin - max char length is 16
-// As a naming convention, the treasury mime handler definition should start with:
-// TREASURY_MIME_GUID_
+/**
+ *  This is the name of the plugin - max char length is 16
+ * As a naming convention, the treasury mime handler definition should start with:
+ * TREASURY_MIME_GUID_
+ */
 define( 'TREASURY_MIME_GUID_DEFAULT', 'mime_default' );
 
 $pluginParams = array (

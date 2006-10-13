@@ -1,14 +1,18 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.16 2006/10/08 11:21:05 bitweaver Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.17 2006/10/13 12:47:20 lsces Exp $
  *
- * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.16 $
- * @created:      Monday Jul 03, 2006   11:55:41 CEST
- * @package:      treasury
- * @copyright:    2003-2006 bitweaver
- * @license:      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
+ * @author       xing  <xing@synapse.plus.com>
+ * @version      $Revision: 1.17 $
+ * created      Monday Jul 03, 2006   11:55:41 CEST
+ * @package      treasury
+ * @copyright   2003-2006 bitweaver
+ * @license      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
  **/
+
+/**
+ * Setup
+ */ 
 define( 'TREASURYITEM_CONTENT_TYPE_GUID', 'treasuryitem' );
 require_once( TREASURY_PKG_PATH.'TreasuryBase.php' );
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
@@ -16,6 +20,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 /**
  *   TreasuryItem 
  * 
+ * @package treasury
  * @uses TreasuryBase
  */
 class TreasuryItem extends TreasuryBase {

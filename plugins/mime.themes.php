@@ -1,19 +1,24 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.11 2006/09/25 16:05:55 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.12 2006/10/13 12:47:20 lsces Exp $
  *
- * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.11 $
- * @created:     Sunday Jul 02, 2006   14:42:13 CEST
- * @package:     treasury
- * @subpackage:  treasury_mime_handler
+ * @author      xing  <xing@synapse.plus.com>
+ * @version     $Revision: 1.12 $
+ * created     Sunday Jul 02, 2006   14:42:13 CEST
+ * @package     treasury
+ * @subpackage  treasury_mime_handler
  **/
 
+/**
+ * setup
+ */
 global $gTreasurySystem;
 
-// This is the name of the plugin - max char length is 16
-// As a naming convention, the treasury mime handler definition should start with:
-// TREASURY_MIME_GUID_
+/**
+ *  This is the name of the plugin - max char length is 16
+ * As a naming convention, the treasury mime handler definition should start with:
+ * TREASURY_MIME_GUID_
+ */
 define( 'TREASURY_MIME_GUID_THEME', 'mime_theme' );
 
 $pluginParams = array (

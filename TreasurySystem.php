@@ -1,22 +1,26 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.7 2006/09/11 19:20:26 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.8 2006/10/13 12:47:20 lsces Exp $
  *
- * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.7 $
- * @created:      Monday Jul 03, 2006   11:06:47 CEST
- * @package:      treasury
- * @copyright:    2003-2006 bitweaver
- * @license:      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
+ * @author       xing  <xing@synapse.plus.com>
+ * @version      $Revision: 1.8 $
+ * created      Monday Jul 03, 2006   11:06:47 CEST
+ * @package      treasury
+ * @copyright    2003-2006 bitweaver
+ * @license      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
  **/
-require_once( LIBERTY_PKG_PATH.'LibertySystem.php' );
 
+/**
+ * Setup
+ */ 
+require_once( LIBERTY_PKG_PATH.'LibertySystem.php' );
 define( 'TREASURY_DEFAULT_MIME_HANDLER', 'mime_default' );
 define( 'TREASURY_MIME', 'mime_handler' );
 
 /**
  *   TreasurySystem 
  * 
+ * @package treasury
  * @uses LibertySystem
  */
 class TreasurySystem extends LibertySystem {

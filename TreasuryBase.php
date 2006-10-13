@@ -1,20 +1,25 @@
 <?php
 /**
- * @version:      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.5 2006/09/19 16:03:26 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.6 2006/10/13 12:47:20 lsces Exp $
  *
- * @author:       xing  <xing@synapse.plus.com>
- * @version:      $Revision: 1.5 $
- * @created:      Monday Jul 03, 2006   11:01:55 CEST
- * @package:      treasury
- * @copyright:    2003-2006 bitweaver
- * @license:      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
+ * @author       xing  <xing@synapse.plus.com>
+ * @version      $Revision: 1.6 $
+ * created      Monday Jul 03, 2006   11:01:55 CEST
+ * @package      treasury
+ * @copyright    2003-2006 bitweaver
+ * @license      LGPL {@link http://www.gnu.org/licenses/lgpl.html}
  **/
+ 
+/**
+ * Setup
+ */ 
 require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
 require_once( LIBERTY_PKG_PATH.'LibertyStructure.php' );
 
 /**
  *   TreasuryBase 
  * 
+ * @package treasury
  * @uses LibertyAttachable
  */
 class TreasuryBase extends LibertyAttachable {
