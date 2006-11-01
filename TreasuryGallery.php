@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.15 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.16 2006/11/01 10:51:23 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.15 $
+ * @version      $Revision: 1.16 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -364,14 +364,14 @@ class TreasuryGallery extends TreasuryBase {
 				// Delete items in galleries
 				foreach( $itemContentIds as $iid ) {
 					if( $pForceDeleteItems ) {
-						// Remove item even if it exist on other galleries
+						// Remove item even if it exists in other galleries
 						$count = 1;
 					} else {
-						// Only delete item if it doesn't exist on other galleries
+						// Only delete item if it doesn't exist in other galleries
 						$count = $this->mDb->getOne( "SELECT COUNT( `item_content_id` ) FROM `".BIT_DB_PREFIX."treasury_map` WHERE `item_content_id`=?", array( $iid ) );
 					}
 
-					// Only delete item if it doesn't exist on other galleries
+					// Only delete item if it doesn't exist in other galleries
 					if( $count == 1 ) {
 						$itemObject->mContentId = $iid;
 						$itemObject->load();
