@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.17 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.18 2006/11/08 08:02:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.17 $
+ * @version      $Revision: 1.18 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -97,10 +97,10 @@ class TreasuryItem extends TreasuryBase {
 					$galleryContentIds = $this->getGalleriesFromItemContentId();
 					if( @is_array( $galleryContentIds ) ) {
 						$gallery = new TreasuryGallery();
-						foreach( $galleryContentIds as $gid ) {
-							$gallery->mContentId = $gid;
+						foreach( $galleryContentIds as $gcid ) {
+							$gallery->mContentId = $gcid;
 							$gallery->load();
-							$this->mInfo['galleries'][$gid] = $gallery->mInfo;
+							$this->mInfo['galleries'][$gcid] = $gallery->mInfo;
 						}
 					}
 				}
@@ -227,9 +227,9 @@ class TreasuryItem extends TreasuryBase {
 					$this->expungeItemMap();
 
 					// ---------- Map store
-					foreach( $pStoreHash['map_store']['galleryContentIds'] as $gid ) {
+					foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
 						$storeRow = array(
-							'gallery_content_id' => $gid,
+							'gallery_content_id' => $gcid,
 							'item_content_id' => $pStoreHash['item_store']['content_id'],
 						);
 						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
@@ -262,9 +262,9 @@ class TreasuryItem extends TreasuryBase {
 						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_item', $pStoreHash['item_store'] );
 
 						// ---------- Map store
-						foreach( $pStoreHash['map_store']['galleryContentIds'] as $gid ) {
+						foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
 							$storeRow = array(
-								'gallery_content_id' => $gid,
+								'gallery_content_id' => $gcid,
 								'item_content_id' => $pStoreHash['item_store']['content_id'],
 							);
 							$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
@@ -341,14 +341,14 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		// make sure we have the correct permissions to upload to this gallery
-		foreach( $pStoreHash['galleryContentIds'] as $gid ) {
-			$gallery = new TreasuryGallery( NULL, $gid );
+		foreach( $pStoreHash['galleryContentIds'] as $gcid ) {
+			$gallery = new TreasuryGallery( NULL, $gcid );
 			if( $gallery->loadPermissions() ) {
 				if( $gallery->hasUserPermission( 'p_treasury_upload_item' ) ) {
-					$pStoreHash['map_store']['galleryContentIds'][] = $gid;
+					$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
 				}
 			} else {
-				$pStoreHash['map_store']['galleryContentIds'][] = $gid;
+				$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
 			}
 		}
 
@@ -395,9 +395,9 @@ class TreasuryItem extends TreasuryBase {
 			$galleryContentIds = $this->getGalleriesFromItemContentId();
 			if( @is_array( $galleryContentIds ) ) {
 				$gallery = new TreasuryGallery();
-				foreach( $galleryContentIds as $gid ) {
+				foreach( $galleryContentIds as $gcid ) {
 					// reduce load: we don't need to fully load the gallery to load the permissions
-					$gallery->mContentId = $gid;
+					$gallery->mContentId = $gcid;
 					if( $gallery->hasUserPermission( $pPermName ) ) {
 						// we only need one gallery that allows us to download the file
 						return TRUE;
