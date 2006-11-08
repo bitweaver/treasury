@@ -80,7 +80,7 @@
 					</tr>
 
 					{foreach from=$gContent->mItems item=item}
-						<tr>
+					<tr class="{cycle values="odd,even"}">
 							{if $gContent->getPreference('item_list_thumb_size')}
 								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 								<td style="text-align:center;">
