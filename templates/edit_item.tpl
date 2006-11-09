@@ -14,14 +14,14 @@
 			<div class="row">
 				{formlabel label="File title" for=title}
 				{forminput}
-					<input type="text" size="40" id="title" value="{$gContent->mInfo.title}" name="treasury[title]" />
+					<input type="text" size="40" id="title" value="{$gContent->mInfo.title}" name="title" />
 				{/forminput}
 			</div>
 
 			<div class="row">
 				{formlabel label="Description" for="edit"}
 				{forminput}
-					<textarea cols="50" rows="3" id="edit" name="treasury[edit]" />{$gContent->mInfo.data|escape}</textarea>
+					<textarea cols="50" rows="3" id="edit" name="edit" />{$gContent->mInfo.data|escape}</textarea>
 				{/forminput}
 			</div>
 

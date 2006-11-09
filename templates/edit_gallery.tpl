@@ -21,9 +21,9 @@
 									{formlabel label="Parent" for="treasury-parent"}
 									{forminput}
 										{if $galInfo.content_id}
-											{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$galInfo.parent_id disabled=disabled}
+											{html_options id="treasury-parent" name="parent_id" values=$galleryStructure options=$galleryStructure selected=$galInfo.parent_id disabled=disabled}
 										{else}
-											{html_options id="treasury-parent" name="treasury[parent_id]" values=$galleryStructure options=$galleryStructure selected=$gContent->mStructureId}
+											{html_options id="treasury-parent" name="parent_id" values=$galleryStructure options=$galleryStructure selected=$gContent->mStructureId}
 										{/if}
 										{formhelp note="Pick where you would like to create a new sub-category. To change the hierarchy of the categories, please visit the change structure page."}
 									{/forminput}
@@ -34,14 +34,14 @@
 						<div class="row">
 							{formlabel label="Title" for="treasury-title"}
 							{forminput}
-								<input type="text" size="50" id="treasury-title" name="treasury[title]" value="{$galInfo.title|escape}" />
+								<input type="text" size="50" id="treasury-title" name="title" value="{$galInfo.title|escape}" />
 							{/forminput}
 						</div>
 
 						<div class="row">
 							{formlabel label="Description" for="treasury-desc"}
 							{forminput}
-								<textarea id="treasury-desc" name="treasury[edit]" rows="3" cols="50">{$galInfo.data|escape}</textarea>
+								<textarea id="treasury-desc" name="edit" rows="3" cols="50">{$galInfo.data|escape}</textarea>
 								{formhelp note="A description of the category. This will be visible when users view this particular category."}
 							{/forminput}
 						</div>
@@ -50,7 +50,7 @@
 						<div class="row">
 							{formlabel label="Private Gallery" for="treasury-is_private"}
 							{forminput}
-							<input type="checkbox" id="treasury-is_private" name="treasury[is_private]" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
+							<input type="checkbox" id="treasury-is_private" name="is_private" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
 								{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
 							{/forminput}
 						</div>
@@ -60,12 +60,12 @@
 							<div class="row">
 								{formlabel label="File Thumbnail Size" for="item_list_thumb_size"}
 								{forminput}
-									{html_options values=$imageSizes options=$imageSizes name="treasury[preferences][item_list_thumb_size]" id="item_list_thumb_size" selected=$gContent->getPreference('item_list_thumb_size')|default:$gBitSystem->getConfig('treasury_item_list_thumb')}
+									{html_options values=$imageSizes options=$imageSizes name="preferences[item_list_thumb_size]" id="item_list_thumb_size" selected=$gContent->getPreference('item_list_thumb_size')|default:$gBitSystem->getConfig('treasury_item_list_thumb')}
 									{formhelp note="Pick the size of preview icon in the file list."}
 								{/forminput}
 							</div>
 						{else}
-							<input type="hidden" name="treasury[preferences][item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_item_list_thumb')}" />
+							<input type="hidden" name="preferences[item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_item_list_thumb')}" />
 						{/if}
 
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}

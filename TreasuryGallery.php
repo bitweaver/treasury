@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.16 2006/11/01 10:51:23 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.17 2006/11/09 19:42:51 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.16 $
+ * @version      $Revision: 1.17 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -139,7 +139,6 @@ class TreasuryGallery extends TreasuryBase {
 
 		$ret = $bindVars = array();
 		$selectSql = $joinSql = $orderSql = $whereSql = '';
-		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if( @BitBase::verifyId( $pListHash['root_structure_id'] ) ) {
 			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
@@ -171,17 +170,21 @@ class TreasuryGallery extends TreasuryBase {
 			$orderSql .= " ORDER BY ls.`root_structure_id`, ls.`structure_id` ASC";
 		}
 
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
 		$query = "SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
 			lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`created`, lch.`hits`,
 			uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name
+			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lc.`content_id` = lch.`content_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
-			$joinSql $whereSql $orderSql";
+				$joinSql
+			$whereSql
+			$orderSql";
 
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 

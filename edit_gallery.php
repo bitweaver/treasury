@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.7 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.8 2006/11/09 19:42:51 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -43,7 +43,7 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 	$_REQUEST['treasury']['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
 	$galleryStore = new TreasuryGallery( !empty( $_REQUEST['structure_id'] ) ? $_REQUEST['structure_id'] : NULL, !empty( $_REQUEST['content_id'] ) ? $_REQUEST['content_id'] : NULL );
 	$galleryStore->load();
-	if( $galleryStore->store( $_REQUEST['treasury'] ) ) {
+	if( $galleryStore->store( $_REQUEST ) ) {
 		// process image upload
 		if( $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) ) {
 			// now deal with the uploaded image

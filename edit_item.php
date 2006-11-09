@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.11 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.12 2006/11/09 19:42:51 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -91,7 +91,7 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 		$_REQUEST['treasury']['upload'] = $_FILES['file'];
 	}
 
-	if( $gContent->store( $_REQUEST['treasury'] ) ) {
+	if( $gContent->store( $_REQUEST ) ) {
 		// this will override any thumbnails created by the plugin
 		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
