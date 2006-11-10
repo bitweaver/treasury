@@ -166,8 +166,10 @@
 		{else}
 			<p class="norecords">
 				{tr}No Files Found{/tr}
-				<br />
-				<a href="{$smarty.const.TREASURY_PKG_URL}upload.php?content_id={$gContent->mContentId}">{tr}Upload Files{/tr}</a>
+				{if $gBitUser->hasPermission( 'p_treasury_upload_item' )}
+					<br />
+					<a href="{$smarty.const.TREASURY_PKG_URL}upload.php?content_id={$gContent->mContentId}">{tr}Upload Files{/tr}</a>
+				{/if}
 			</p>
 		{/if}
 		{pagination}
