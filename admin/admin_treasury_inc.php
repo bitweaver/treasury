@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.6 2006/11/16 12:36:17 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.7 2006/11/16 15:17:15 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -130,7 +130,7 @@ $imageSizes = array(
 	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
 	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
 	'medium' => tra( 'Medium ( 400 x 300 pixels )' ),
-	'large'  => tra( 'Medium ( 800 x 600 pixels )' ),
+	'large'  => tra( 'Large ( 800 x 600 pixels )' ),
 );
 $gBitSmarty->assign( 'imageSizes', $imageSizes );
 

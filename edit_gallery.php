@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.8 2006/11/09 19:42:51 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.9 2006/11/16 15:17:15 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -107,6 +107,8 @@ $imageSizes = array(
 	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),
 	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
 	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
+	'medium' => tra( 'Medium ( 400 x 300 pixels )' ),
+	'large'  => tra( 'Large ( 800 x 600 pixels )' ),
 );
 $gBitSmarty->assign( 'imageSizes', $imageSizes );
 
