@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.5 2006/09/25 16:05:55 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.6 2006/11/16 12:36:17 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -13,6 +13,13 @@ $treasurySettings = array(
 		'type' => 'checkbox',
 	),
 );
+if( !$gBitSystem->isPackageActive( 'gigaupload' ) ) {
+	$treasurySettings["treasury_extended_upload_slots"] = array(
+		'label' => 'Extended Upload Slots',
+		'note' => 'When you enable this, users can enter the title and description of the file when uploading them.',
+		'type' => 'checkbox'
+	);
+};
 $gBitSmarty->assign( 'treasurySettings', $treasurySettings );
 
 $galleryListing = array(

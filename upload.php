@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.9 2006/11/07 17:16:52 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.10 2006/11/16 12:36:17 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -51,13 +51,14 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
+	$i = 0;
 	foreach( $_FILES as $upload ) {
 		if( !empty( $upload['tmp_name'] ) ) {
 			// store each file individually
 			$treasuryItem = new TreasuryItem();
 
 			// transfer the form data to a store hash
-			$storeHash = !empty( $_REQUEST['treasury'] ) ? $_REQUEST['treasury'] : array();
+			$storeHash = !empty( $_REQUEST['filedata'][$i] ) ? $_REQUEST['filedata'][$i] : array();
 
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;
@@ -66,6 +67,7 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 			} else {
 				$feedback['error'] = $treasuryItem->mErrors;
 			}
+			$i++;
 		}
 	}
 
@@ -76,7 +78,11 @@ die;
 }
 
 if( $gBitSystem->isPackageActive( 'gigaupload' ) ) {
-	gigaupload_smarty_setup( FISHEYE_PKG_URL.'upload.php' );
+	gigaupload_smarty_setup( TREASURY_PKG_URL.'upload.php' );
+} elseif( $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' ) ) {
+	$uploadSlots = array();
+	$uploadSlots = array_pad( $uploadSlots, 9, 0 );
+	$gBitSmarty->assign( 'uploadSlots', $uploadSlots );
 } else {
 	$gBitSmarty->assign( 'loadMultiFile', TRUE );
 }
