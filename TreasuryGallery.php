@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.17 2006/11/09 19:42:51 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.18 2006/11/28 19:10:33 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.17 $
+ * @version      $Revision: 1.18 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -140,6 +140,13 @@ class TreasuryGallery extends TreasuryBase {
 		$ret = $bindVars = array();
 		$selectSql = $joinSql = $orderSql = $whereSql = '';
 
+		if ( !empty( $pListHash['object_permission'] ) ) {
+			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql .= ' ( uop.`perm_name` = ?  AND uop.`object_type` = ? ) ';
+			$bindVars[] = $pListHash['object_permission'];
+			$bindVars[] = TREASURYGALLERY_CONTENT_TYPE_GUID;
+		}
+
 		if( @BitBase::verifyId( $pListHash['root_structure_id'] ) ) {
 			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
 			$whereSql .= " ls.`root_structure_id`=? ";
@@ -178,9 +185,10 @@ class TreasuryGallery extends TreasuryBase {
 			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lc.`content_id` = lch.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lc.`content_id` = lch.`content_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_object_permissions` uop ON ( lc.`content_id` = uop.`object_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
 				$joinSql
 			$whereSql
@@ -203,8 +211,9 @@ class TreasuryGallery extends TreasuryBase {
 		$query = "SELECT COUNT( lc.`title` )
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
+				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_object_permissions` uop ON ( lc.`content_id` = uop.`object_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
 			$joinSql $whereSql";
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
