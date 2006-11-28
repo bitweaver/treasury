@@ -109,44 +109,6 @@
 									{/forminput}
 								</div>
 							{/if}
-
-							<div class="row">
-								{formlabel label="Add File(s) to these Galleries"}
-								{forminput}
-									{foreach from=$galleryList item=gallery}
-										{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
-										<br />
-									{foreachelse}
-										<p class="norecords">
-											{tr}No Galleries Found{/tr}.<br />
-											{tr}The following gallery will automatically be created for you{/tr}: <strong>File Gallery</strong>
-										</p>
-									{/foreach}
-								{/forminput}
-							</div>
-
-							{capture assign=options}
-								{foreach from=$gTreasurySystem->mPlugins item=plugin}
-									{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
-								{/foreach}
-							{/capture}
-
-							{if $options}
-								<div class="row">
-									{formlabel label="File Processing Options" for=""}
-									{forminput}
-										{foreach from=$gTreasurySystem->mPlugins item=plugin}
-											{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
-										{/foreach}
-									{/forminput}
-								</div>
-							{/if}
-
-							{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
-
-							{if $gBitSystem->isPackageActive( 'gigaupload' )}
-								{include file="bitpackage:gigaupload/progress_container_inc.tpl"}
-							{/if}
 						{/legend}
 					{/jstab}
 
@@ -154,6 +116,45 @@
 
 					{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_upload_tab_tpl}
 				{/jstabs}
+
+				<div class="row">
+					{formlabel label="Add File(s) to these Galleries"}
+					{forminput}
+						{foreach from=$galleryList item=gallery}
+							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
+							<br />
+						{foreachelse}
+							<p class="norecords">
+								{tr}No Galleries Found{/tr}.<br />
+								{tr}The following gallery will automatically be created for you{/tr}: <strong>File Gallery</strong>
+							</p>
+						{/foreach}
+					{/forminput}
+				</div>
+
+				{capture assign=options}
+					{foreach from=$gTreasurySystem->mPlugins item=plugin}
+						{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
+					{/foreach}
+				{/capture}
+
+				{if $options}
+					<div class="row">
+						{formlabel label="File Processing Options" for=""}
+						{forminput}
+							{foreach from=$gTreasurySystem->mPlugins item=plugin}
+								{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
+							{/foreach}
+						{/forminput}
+					</div>
+				{/if}
+
+				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+
+				{if $gBitSystem->isPackageActive( 'gigaupload' )}
+					{include file="bitpackage:gigaupload/progress_container_inc.tpl"}
+				{/if}
+
 			</div> <!-- end #uploadblock -->
 
 			<div class="row submit">
