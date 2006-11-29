@@ -8,7 +8,7 @@
 		<div class="floaticon">
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 			{if $gBitUser->hasPermission('p_treasury_upload_item')}
-				{smartlink ititle="Upload Files" ibiticon="icons/applications-internet" ifile="upload.php" content_id=$gContent->mContentId}
+				{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
 			{/if}
 			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_edit_gallery')}
 				{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}

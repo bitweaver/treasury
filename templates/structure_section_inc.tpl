@@ -1,7 +1,7 @@
 {strip}
 {if $gBitUser->hasPermission( 'p_treasury_edit_gallery' ) && $editicons}
 	<div class="floaticon">
-		{smartlink ititle="Upload Files" ibiticon="icons/applications-internet" ifile="upload.php" content_id=$subtree[ix].content_id}
+		{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$subtree[ix].content_id}
 		{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}
 		{if $gBitUser->isAdmin()}
 			{if $gContent->mPerms}

@@ -12,7 +12,7 @@
 	{/if}
 
 	{if $gBitUser->hasPermission( 'p_treasury_upload_item' )}
-		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}upload.php">{biticon ipackage="icons" iname="applications-internet" iexplain="Upload Files" iforce="icon"} {tr}Upload Files{/tr}</a></li>
+		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}upload.php">{biticon ipackage="icons" iname="go-up" iexplain="Upload Files" iforce="icon"} {tr}Upload Files{/tr}</a></li>
 	{/if}
 </ul>
 {/strip}
