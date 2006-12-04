@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/Attic/mod_uplods.php,v 1.1 2006/12/04 21:05:25 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.1 2006/12/04 22:25:48 squareing Exp $
  * @package fisheye
  * @subpackage modules
  */

@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/Attic/mod_uplods.tpl,v 1.2 2006/12/04 22:21:04 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.1 2006/12/04 22:25:48 squareing Exp $ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'fisheye' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
