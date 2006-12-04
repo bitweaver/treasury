@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.18 2006/11/08 08:02:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.19 2006/12/04 21:03:40 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.18 $
+ * @version      $Revision: 1.19 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -222,7 +222,7 @@ class TreasuryItem extends TreasuryBase {
 			// if this is an update, we bypass the plugin stuff - no changes there
 			if( !empty( $pStoreHash['item_store']['content_id'] ) ) {
 				// ########## Update
-				if( LibertyContent::store( $pStoreHash ) ) {
+				if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
 					// remove all related entries in the treasury map
 					$this->expungeItemMap();
 
@@ -254,11 +254,11 @@ class TreasuryItem extends TreasuryBase {
 				$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
 				// verify the uploaded file using the plugin
 				if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
-					if( LibertyContent::store( $pStoreHash ) ) {
+					if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
 						// ---------- Item store
 						// we can now insert the data into the item table
 						$pStoreHash['item_store']['plugin_guid'] = $guid;
-						$pStoreHash['item_store']['content_id'] = $pStoreHash['upload_store']['content_id'] = $pStoreHash['content_id'];
+						$pStoreHash['item_store']['content_id'] = $pStoreHash['upload_store']['content_id'] = $pStoreHash['content_store']['content_id'];
 						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_item', $pStoreHash['item_store'] );
 
 						// ---------- Map store
@@ -369,7 +369,11 @@ class TreasuryItem extends TreasuryBase {
 			} else {
 				$defaultName = $pStoreHash['upload']['name'];
 			}
-			$pStoreHash['content_store']['title'] = str_replace( '_', ' ', substr( $defaultName, 0, strrpos( $defaultName, '.' ) ) );
+			if( strpos( $defaultName, '.' ) ) {
+				$pStoreHash['content_store']['title'] = str_replace( '_', ' ', substr( $defaultName, 0, strrpos( $defaultName, '.' ) ) );
+			} else {
+				$pStoreHash['content_store']['title'] = str_replace( '_', ' ', $defaultName );
+			}
 		} elseif( !empty( $pStoreHash['title'] ) ) {
 			$pStoreHash['content_store']['title'] = substr( $pStoreHash['title'], 0, 160 );
 		}
