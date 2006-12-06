@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.1 2006/12/06 18:41:56 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.2 2006/12/06 18:45:17 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.1 $
+ * @version:     $Revision: 1.2 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -26,7 +26,7 @@ $pluginParams = array (
 	'download_function'  => 'treasury_flash_download',
 	'expunge_function'   => 'treasury_flash_expunge',
 	// Brief description of what the plugin does
-	'title'              => 'Video Mime Handler',
+	'title'              => 'Macromedia Flash File Handler',
 	'description'        => 'Allow upload and viewing of flash files.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_flash_inc.tpl',
