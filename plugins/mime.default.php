@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.19 2006/10/13 12:47:20 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.20 2006/12/07 23:47:04 bitweaver Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.19 $
+ * @version     $Revision: 1.20 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -236,7 +236,7 @@ function treasury_default_download( &$pFileHash ) {
 	$ret = FALSE;
 
 	// make sure we close off obzip compression if it's on
-	if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) ) {
+	if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
 		ob_end_clean();
 	}
 
