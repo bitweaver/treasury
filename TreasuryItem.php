@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.19 2006/12/04 21:03:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.20 2006/12/13 18:13:15 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.19 $
+ * @version      $Revision: 1.20 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -106,6 +106,7 @@ class TreasuryItem extends TreasuryBase {
 				}
 			}
 		}
+		return( count( $this->mInfo ) );
 	}
 
 	/**
@@ -384,7 +385,7 @@ class TreasuryItem extends TreasuryBase {
 		} elseif( empty( $pStoreHash['edit'] ) ) {
 			unset( $pStoreHash['edit'] );
 		} else {
-			$pStoreHash['content_store']['data'] = $pStoreHash['edit'];
+			$pStoreHash['content_store']['edit'] = $pStoreHash['edit'];
 			//$pStoreHash['edit'] = substr( $pStoreHash['edit'], 0, 500 );
 		}
 
