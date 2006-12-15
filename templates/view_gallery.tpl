@@ -101,6 +101,9 @@
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
 									<p>{$item.data}</p>
 								{/if}
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
+									<small>{ldelim}attachment id={$item.attachment_id}{rdelim}</small>
+								{/if}
 							</td>
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
 								<td>

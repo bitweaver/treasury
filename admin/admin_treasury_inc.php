@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.7 2006/11/16 15:17:15 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.8 2006/12/15 20:48:50 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -87,6 +87,11 @@ $itemListing = array(
 		'note' => 'Display the number of times the file has been downloaded.',
 		'type' => 'checkbox',
 	),
+	'treasury_item_list_attid' => array(
+		'label' => 'Attachment ID',
+		'note' => 'Display the syntax used to include the file in a wiki page.',
+		'type' => 'checkbox',
+	),
 );
 $gBitSmarty->assign( 'itemListing', $itemListing );
 
@@ -119,6 +124,11 @@ $itemViewing = array(
 	'treasury_item_view_hits' => array(
 		'label' => 'Downloads',
 		'note' => 'Display the number of times the file has been downloaded.',
+		'type' => 'checkbox',
+	),
+	'treasury_item_view_attid' => array(
+		'label' => 'Attachment ID',
+		'note' => 'Display the syntax used to include the file in a wiki page.',
 		'type' => 'checkbox',
 	),
 );
