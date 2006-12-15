@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.20 2006/12/07 23:47:04 bitweaver Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.21 2006/12/15 20:52:40 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.20 $
+ * @version     $Revision: 1.21 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -160,11 +160,11 @@ function treasury_default_store( &$pStoreRow ) {
 		$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_files` ( `storage_path`, `file_id`, `mime_type`, `file_size`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
 		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ) );
 
-		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing - PLUGIN_GUID_BIT_FILES is basically the default file handler in liberty
+		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
 		// hardcode this for now
-		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
+		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' ) ) {
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `content_id`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
 		}
 		$ret = TRUE;
 	} else {
@@ -195,12 +195,6 @@ function treasury_default_load( &$pFileHash ) {
 				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
 				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
 				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
-//			} elseif( $canThumbFunc( $row['mime_type'] ) ) {
-//				$pFileHash['thumbnail_url']['icon']   = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['avatar'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['small']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['medium'] = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
-//				$pFileHash['thumbnail_url']['large']  = LIBERTY_PKG_URL.'icons/generating_thumbnails.png';
 			} else {
 				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
