@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.7 2006/11/26 15:08:52 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.8 2006/12/15 20:47:05 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -17,7 +17,6 @@ $gBitSystem->verifyPackage( 'treasury' );
 $gBitSystem->verifyPermission( 'p_treasury_view_item' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
-$extras = TRUE;
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 if( empty( $gContent->mInfo ) ) {
@@ -29,7 +28,7 @@ if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
 	$gGallery = new TreasuryGallery( $_REQUEST['structure_id'] );
 	$gGallery->load();
 } else {
-	// if we don't have a structure id to go by, we just get one
+	// if we don't have a structure id to go by, we just get a gallery we can work with
 	$galleryContentIds = $gContent->getGalleriesFromItemContentId( $gContent->mContentId );
 	if( @BitBase::verifyId( $galleryContentIds[0] ) ) {
 		$gGallery = new TreasuryGallery( NULL, $galleryContentIds[0] );
