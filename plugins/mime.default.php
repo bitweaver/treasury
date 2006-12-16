@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.21 2006/12/15 20:52:40 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.22 2006/12/16 13:50:54 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.21 $
+ * @version     $Revision: 1.22 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -242,17 +242,25 @@ function treasury_default_download( &$pFileHash ) {
 
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] ) ) {
-		header( "Cache Control: " );
-		header( "Accept-Ranges: bytes" );
-		header( "Content-type: ".$pFileHash['mime_type'] );
-		header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
-		header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
-		header( "Content-Length: ".filesize( $pFileHash['source_file'] ) );
-		header( "Content-Transfer-Encoding: binary" );
-		header( "Connection: close" );
+		if( include_once( 'HTTP/Download.php' ) ) {
+			$dl = new HTTP_Download();
+			$dl->setFile( $pFileHash['source_file'] );
+			$dl->setContentDisposition( HTTP_DOWNLOAD_ATTACHMENT, $pFileHash['filename'] );
+			$dl->setContentType( $pFileHash['mime_type'] );
+			$dl->send();
+		} else {
+			header( "Cache Control: " );
+			header( "Accept-Ranges: bytes" );
+			header( "Content-type: ".$pFileHash['mime_type'] );
+			header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
+			header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
+			header( "Content-Length: ".filesize( $pFileHash['source_file'] ) );
+			header( "Content-Transfer-Encoding: binary" );
+			header( "Connection: close" );
 
-		readfile( $pFileHash['source_file'] );
-		$ret = TRUE;
+			readfile( $pFileHash['source_file'] );
+			$ret = TRUE;
+		}
 	} else {
 		$pFileHash['errors'] = tra( 'No matching file found.' );
 	}

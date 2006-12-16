@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.1 2006/12/06 18:41:56 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.2 2006/12/16 13:50:54 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.1 $
+ * @version:     $Revision: 1.2 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -55,9 +55,7 @@ require_once( 'mime.default.php' );
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_video_verify( &$pStoreRow ) {
-	global $gBitSystem;
-	$ret = treasury_default_verify( $pStoreRow );
-	return $ret;
+	return treasury_default_verify( $pStoreRow );
 }
 
 /**
@@ -68,8 +66,7 @@ function treasury_video_verify( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_video_update( &$pStoreRow ) {
-	$ret = treasury_default_update( $pStoreRow );
-	return $ret;
+	return treasury_default_update( $pStoreRow );
 }
 
 /**
@@ -80,10 +77,8 @@ function treasury_video_update( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_video_store( &$pStoreRow ) {
-	$ret = treasury_default_store( $pStoreRow );
-
-	// if that all went well, we can do our style thing
-	if( $ret ) {
+	// if storing works, we extract some frameshots
+	if( $ret = treasury_default_store( $pStoreRow ) ) {
 		treasury_video_extract_frameshots( $pStoreRow );
 	}
 	return $ret;
@@ -97,8 +92,7 @@ function treasury_video_store( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_video_load( &$pFileHash ) {
-	$ret = treasury_default_load( $pFileHash );
-	if( $ret ) {
+	if( $ret = treasury_default_load( $pFileHash ) ) {
 		// get extra stuff such as screenshots and icons
 		if( $fshots = treasury_video_get_frameshots( dirname( $pFileHash['source_file'] ) ) ) {
 			for( $i = 0; $i < count( $fshots ); $i++ ) {
@@ -121,9 +115,7 @@ function treasury_video_download( &$pFileHash ) {
 	// this will get the browser to open the download dialogue - even when the 
 	// browser could deal with the content type - not perfect, but works
 	$pFileHash['mime_type'] = "application/force-download";
-
-	$ret = treasury_default_download( $pFileHash );
-	return $ret;
+	return treasury_default_download( $pFileHash );
 }
 
 /**
@@ -134,8 +126,7 @@ function treasury_video_download( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_video_expunge( &$pParamHash ) {
-	$ret = treasury_default_expunge( $pParamHash );
-	return $ret;
+	return treasury_default_expunge( $pParamHash );
 }
 
 /**
@@ -146,9 +137,9 @@ function treasury_video_expunge( &$pParamHash ) {
  * @return set of frameshots if successful
  */
 function treasury_video_extract_frameshots( $pStoreRow ) {
-	$destDir    = BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'];
-	$video      = $destDir.$pStoreRow['upload']['name'];
-	$output     = shell_exec( "mplayer -vf screenshot -framedrop -vo jpeg:quality=50:outdir=$destDir -sstep 30 -af volume=-200 $video" );
+	$destDir = BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'];
+	$video   = $destDir.$pStoreRow['upload']['name'];
+	$output  = shell_exec( "mplayer -vf screenshot -framedrop -vo jpeg:quality=50:outdir=$destDir -sstep 30 -af volume=-200 $video" );
 
 	if( !empty( $output ) ) {
 		// unfortunately i can't seem to fully control mplayer all the time so we simply remove all xs images

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.12 2006/10/13 12:47:20 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.13 2006/12/16 13:50:54 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.12 $
+ * @version     $Revision: 1.13 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -113,10 +113,7 @@ function treasury_theme_verify( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_theme_update( &$pStoreRow ) {
-	$ret = treasury_default_update( $pStoreRow );
-
-	// if that all went well, we can do our style thing
-	if( $ret ) {
+	if( $ret = treasury_default_update( $pStoreRow ) ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
 	}
 	return $ret;
@@ -130,10 +127,7 @@ function treasury_theme_update( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_theme_store( &$pStoreRow ) {
-	$ret = treasury_default_store( $pStoreRow );
-
-	// if that all went well, we can do our style thing
-	if( $ret ) {
+	if( $ret = treasury_default_store( $pStoreRow ) ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
 	}
 	return $ret;
@@ -147,8 +141,7 @@ function treasury_theme_store( &$pStoreRow ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_theme_load( &$pFileHash ) {
-	$ret = treasury_default_load( $pFileHash );
-	if( $ret ) {
+	if( $ret = treasury_default_load( $pFileHash ) ) {
 		// get extra stuff such as screenshots and icons
 		if( $sshots = treasury_theme_get_screenshots( dirname( $pFileHash['source_file'] ) ) ) {
 			for( $i = 0; $i < count( $sshots ); $i++ ) {
@@ -177,8 +170,7 @@ function treasury_theme_load( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_theme_download( &$pFileHash ) {
-	$ret = treasury_default_download( $pFileHash );
-	return $ret;
+	return treasury_default_download( $pFileHash );
 }
 
 /**
@@ -189,8 +181,7 @@ function treasury_theme_download( &$pFileHash ) {
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
 function treasury_theme_expunge( &$pParamHash ) {
-	$ret = treasury_default_expunge( $pParamHash );
-	return $ret;
+	return treasury_default_expunge( $pParamHash );
 }
 
 /**
