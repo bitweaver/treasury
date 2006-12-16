@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.22 2006/12/16 13:50:54 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.23 2006/12/16 17:22:51 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.22 $
+ * @version     $Revision: 1.23 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -230,9 +230,9 @@ function treasury_default_download( &$pFileHash ) {
 	$ret = FALSE;
 
 	// make sure we close off obzip compression if it's on
-	if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
-		ob_end_clean();
-	}
+	//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
+		@ob_end_clean();
+	//}
 
 	// this will get the browser to open the download dialogue - even when the 
 	// browser could deal with the content type - not perfect, but works
@@ -244,10 +244,17 @@ function treasury_default_download( &$pFileHash ) {
 	if( is_readable( $pFileHash['source_file'] ) ) {
 		if( include_once( 'HTTP/Download.php' ) ) {
 			$dl = new HTTP_Download();
+			$dl->setLastModified( $pFileHash['last_modified'] );
 			$dl->setFile( $pFileHash['source_file'] );
 			$dl->setContentDisposition( HTTP_DOWNLOAD_ATTACHMENT, $pFileHash['filename'] );
 			$dl->setContentType( $pFileHash['mime_type'] );
-			$dl->send();
+			$res = $dl->send();
+
+			if( PEAR::isError( $res ) ) {
+				$gBitSystem->fatalError( $res->getMessage() );
+			} else {
+				$ret = TRUE;
+			}
 		} else {
 			header( "Cache Control: " );
 			header( "Accept-Ranges: bytes" );
