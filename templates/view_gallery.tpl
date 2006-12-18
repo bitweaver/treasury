@@ -134,8 +134,8 @@
 								{/if}
 								{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
 									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
-									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=delete">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
-									<input type="checkbox" name="content_ids[]" value="{$item.content_id}" />
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
+									<input type="checkbox" name="del_content_ids[]" value="{$item.content_id}" />
 									{assign var=checks value=true}
 								{/if}
 								{*if $gBitUser->isAdmin()}
@@ -150,19 +150,19 @@
 					<div style="text-align:right">
 						<script type="text/javascript">/* <![CDATA[ check / uncheck all */
 							document.write("<label for=\"switcher\">{tr}Select All{/tr}</label> ");
-							document.write("<input name=\"switcher\" id=\"switcher\" type=\"checkbox\" onclick=\"switchCheckboxes(this.form.id,'content_ids[]','switcher')\" />");
+							document.write("<input name=\"switcher\" id=\"switcher\" type=\"checkbox\" onclick=\"switchCheckboxes(this.form.id,'del_content_ids[]','switcher')\" />");
 						/* ]]> */</script>
 						<br />
 
 						{tr}With selected items{/tr}:<br />
-						<select name="action">
+						<select name="action" onchange="this.form.submit();">
 							<option value="dummy">{tr}No Action{/tr}</option>
-							<option value="delete">{tr}Delete{/tr}</option>
+							<option value="remove">{tr}Delete{/tr}</option>
 						</select>
-					</div>
 
-					<div class="submit">
-						<input type="submit" name="submit" value="Process Selected Files" />
+						<noscript>
+							<div><input type="submit" name="submit" value="Process Selected Files" /></div>
+						</noscript>
 					</div>
 				{/if}
 			{/form}

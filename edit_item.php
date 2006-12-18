@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.13 2006/12/18 12:32:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.14 2006/12/18 16:59:41 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -53,7 +53,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 		);
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	} else {
-		$feedback['error'] = tra( 'No valid gallery content id given.' );
+		$feedback['error'] = tra( 'No valid content id given.' );
 	}
 }
 

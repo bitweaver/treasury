@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.21 2006/12/15 20:45:42 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.22 2006/12/18 16:59:40 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.21 $
+ * @version      $Revision: 1.22 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -489,6 +489,7 @@ class TreasuryItem extends TreasuryBase {
 	 * 
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 * TODO: make it possible to remove only items when they are not part of other galleries
 	 */
 	function expunge() {
 		global $gTreasurySystem;
@@ -500,7 +501,7 @@ class TreasuryItem extends TreasuryBase {
 
 			// Remove item entry
 			$query = "DELETE FROM `".BIT_DB_PREFIX."treasury_item` WHERE `content_id` = ?";
-			$rs = $this->mDb->query($query, array( $this->mContentId ) );
+			$rs = $this->mDb->query( $query, array( $this->mContentId ) );
 
 			// let the plugin do its thing
 			$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );

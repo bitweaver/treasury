@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.7 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.8 2006/12/18 16:59:41 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -25,22 +25,38 @@ $feedback = array();
 $gContent->updateUserPermissions();
 $gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
 
-if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'delete' ) {
-	$feedback['success'] = '';
-	foreach( $_REQUEST['content_ids'] as $contentId ) {
-		if( @BitBase::verifyId( $contentId ) ) {
-			if( $galleryItem = $gLibertySystem->getLibertyObject( $contentId ) ) {
-				$galleryItem->load();
-				$title = $galleryItem->getTitle();
-				if( $galleryItem->expunge() ) {
-					$feedback['success'] .= "<li>$title</li>";
+if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
+	if( !empty( $_REQUEST['confirm'] ) ) {
+		$feedback['success'] = '';
+		foreach( $_REQUEST['del_content_ids'] as $contentId ) {
+			if( @BitBase::verifyId( $contentId ) ) {
+				if( $galleryItem = $gLibertySystem->getLibertyObject( $contentId ) ) {
+					$galleryItem->load();
+					$title = $galleryItem->getTitle();
+					if( $galleryItem->expunge() ) {
+						$feedback['success'] .= "<li>$title</li>";
+					}
 				}
 			}
 		}
-	}
 
-	if( !empty( $feedback['success'] ) ) {
-		$feedback['success'] = tra( 'The following items were successfully deleted' ).':<ul>'.$feedback['success'].'</ul>';
+		if( !empty( $feedback['success'] ) ) {
+			$feedback['success'] = tra( 'The following items were successfully deleted' ).':<ul>'.$feedback['success'].'</ul>';
+		}
+	} else {
+		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
+		foreach( $_REQUEST['del_content_ids'] as $cid ) {
+			$item = new TreasuryItem( $cid );
+			$itemInfo = $item->load();
+			$formHash['input'][] = '<input type="hidden" name="del_content_ids[]" value="'.$cid.'"/>'."<strong>{$item->mInfo['title']}</strong> - {$item->mInfo['mime_type']} - {$item->mInfo['file_size']} bytes";
+		}
+		$formHash['action'] = 'remove';
+		$formHash['structure_id'] = $_REQUEST['structure_id'];
+		$msgHash = array(
+			'label' => 'Remove Files',
+			'warning' => 'This will permanently remove these files.',
+		);
+		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	}
 }
 
