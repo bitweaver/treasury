@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.1 2006/12/04 22:25:48 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.2 2006/12/18 16:20:37 squareing Exp $
  * @package fisheye
  * @subpackage modules
  */
@@ -15,6 +15,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
 $item = new TreasuryItem();
 $display = TRUE;
 $listHash = &$module_params;
+$listHash['gallery_content_id'] = !empty( $module_params['content_id'] ) ? $module_params['content_id'] : NULL;
 $listHash['max_records'] = $module_rows;
 
 if( $gQueryUserId ) {
