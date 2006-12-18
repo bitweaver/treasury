@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.13 2006/12/18 12:32:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.14 2006/12/18 13:13:15 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -54,6 +54,9 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 
 			// transfer galleryContentIds as well
 			$storeHash['galleryContentIds'] = !empty( $_REQUEST['galleryContentIds'] ) ? $_REQUEST['galleryContentIds'] : array();
+
+			// transfer plugin settings
+			$storeHash['plugin'] = !empty( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;

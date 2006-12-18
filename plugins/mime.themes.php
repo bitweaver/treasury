@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.13 2006/12/16 13:50:54 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.14 2006/12/18 13:13:15 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.13 $
+ * @version     $Revision: 1.14 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -44,7 +44,7 @@ $pluginParams = array (
 	// Allow for additional processing options - passed in during verify and store
 	'processing_options' =>
 		'<label>
-			<input type="checkbox" name="treasury[plugin][is_style]" value="true" /> '.
+			<input type="checkbox" name="plugin[is_theme]" value="true" /> '.
 			tra( 'Check this box if you are uploading a bitweaver theme. Please view <a href="/wiki/Style+Uploads">Style Uploads</a> for details.' ).
 		'</label>',
 	// this should pick up all common archives
@@ -70,35 +70,32 @@ function treasury_theme_verify( &$pStoreRow ) {
 	global $gBitSystem;
 	$ret = treasury_default_verify( $pStoreRow );
 
-	// If all of that went well, we're ready to do the style thing
-	if( $ret ) {
-		// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
-		if( !empty( $pStoreRow['plugin']['is_style'] ) ) {
-			if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
-				if( $preview = treasury_theme_get_preview( $pStoreRow['ext_path'] ) ) {
-					$pStoreRow['thumb']['name']     = basename( $preview );
-					$pStoreRow['thumb']['tmp_name'] = $preview;
-					$pStoreRow['thumb']['type']     = $gBitSystem->lookupMimeType( $preview );
-					$pStoreRow['thumb']['error']    = 0;
-				}
+	// if this is a theme, we'll extract the archive and look for the theme image found as <style>/style_info/preview.<ext>
+	if( ( $ret ) && !empty( $pStoreRow['plugin']['is_theme'] ) ) {
+		if( $pStoreRow['ext_path'] = liberty_process_archive( $pStoreRow['upload'] ) ) {
+			if( $preview = treasury_theme_get_preview( $pStoreRow['ext_path'] ) ) {
+				$pStoreRow['thumb']['name']     = basename( $preview );
+				$pStoreRow['thumb']['tmp_name'] = $preview;
+				$pStoreRow['thumb']['type']     = $gBitSystem->lookupMimeType( $preview );
+				$pStoreRow['thumb']['error']    = 0;
+			}
 
-				// check to see if we have screenshots - limit them to 3 screenshots / theme
-				if( $sshots = treasury_theme_get_screenshots( $pStoreRow['ext_path'] ) ) {
-					$i = 0;
-					foreach( $sshots as $key => $sshot ) {
-						if( $i < 3 ) {
-							$pStoreRow['screenshots']['screenshot'.$key]['name']     = 'screenshot'.$key;
-							$pStoreRow['screenshots']['screenshot'.$key]['tmp_name'] = $sshot;
-							$pStoreRow['screenshots']['screenshot'.$key]['type']     = $gBitSystem->lookupMimeType( $sshot );
-							$pStoreRow['screenshots']['screenshot'.$key]['error']    = 0;
-							$i++;
-						}
+			// check to see if we have screenshots - limit them to 3 screenshots / theme
+			if( $sshots = treasury_theme_get_screenshots( $pStoreRow['ext_path'] ) ) {
+				$i = 0;
+				foreach( $sshots as $key => $sshot ) {
+					if( $i < 3 ) {
+						$pStoreRow['screenshots']['screenshot'.$key]['name']     = 'screenshot'.$key;
+						$pStoreRow['screenshots']['screenshot'.$key]['tmp_name'] = $sshot;
+						$pStoreRow['screenshots']['screenshot'.$key]['type']     = $gBitSystem->lookupMimeType( $sshot );
+						$pStoreRow['screenshots']['screenshot'.$key]['error']    = 0;
+						$i++;
 					}
 				}
-
-				// if this is an icon style, we should end up with a number of icons
-				$pStoreRow['icons'] = treasury_theme_get_icons( $pStoreRow['ext_path'] );
 			}
+
+			// if this is an icon style, we should end up with a number of icons
+			$pStoreRow['icons'] = treasury_theme_get_icons( $pStoreRow['ext_path'] );
 		}
 	}
 
@@ -149,7 +146,12 @@ function treasury_theme_load( &$pFileHash ) {
 			}
 		}
 
-		if( $icons = treasury_theme_get_icons( dirname( $pFileHash['source_file'] ), 'icons' ) ) {
+		// first we try to get only pngs - best icon format available
+		if( !$icons = treasury_theme_get_icons( dirname( $pFileHash['source_file'] ), 'icons', '/\.png$/i' ) ) {
+			$icons = treasury_theme_get_icons( dirname( $pFileHash['source_file'] ), 'icons' );
+		}
+
+		if( !empty( $icons ) ) {
 			$count = count( $icons );
 			// get a maximum of 50 icons
 			for( $i = 0; $i < 50; $i++ ) {
@@ -239,15 +241,15 @@ function treasury_theme_get_screenshots( $pPath ) {
  * @access public
  * @return Path to preview image on success, FALSE on failure
  */
-function treasury_theme_get_icons( $pPath, $pIconDir = 'large' ) {
+function treasury_theme_get_icons( $pPath, $pIconDir = 'large', $pPattern = '/\.(png|gif|jpe?g)$/i' ) {
 	static $ret;
 	if( $dh = opendir( $pPath ) ) {
 		while( FALSE !== ( $file = readdir( $dh ) ) ) {
 			if( preg_match( "/^[^\.]/", $file ) ) {
-				if( basename( $pPath ) == $pIconDir && preg_match( "/\.(png|gif|jpe?g)$/i", $file ) ) {
+				if( basename( $pPath ) == $pIconDir && preg_match( $pPattern, $file ) ) {
 					$ret[] = $pPath.'/'.$file;
 				} elseif( is_dir( $pPath.'/'.$file ) ) {
-					treasury_theme_get_icons( $pPath.'/'.$file, $pIconDir );
+					treasury_theme_get_icons( $pPath.'/'.$file, $pIconDir, $pPattern );
 				}
 			}
 		}
