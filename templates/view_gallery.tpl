@@ -80,7 +80,7 @@
 					</tr>
 
 					{foreach from=$gContent->mItems item=item}
-					<tr class="{cycle values="odd,even"}">
+						<tr class="{cycle values="odd,even"}">
 							{if $gContent->getPreference('item_list_thumb_size')}
 								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 								<td style="text-align:center;">
@@ -102,7 +102,7 @@
 									<p>{$item.data}</p>
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
-									<small>{ldelim}attachment id={$item.attachment_id}{rdelim}</small>
+									<small>{$item.wiki_plugin_link}</small>
 								{/if}
 							</td>
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
