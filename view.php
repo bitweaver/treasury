@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.8 2006/12/18 16:59:41 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.9 2006/12/18 21:05:26 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -90,6 +90,7 @@ $gBitSmarty->assign( 'subtree', $gStructure->getSubTree( $gStructure->mStructure
 $listHash = $_REQUEST;
 $listHash['root_structure_id'] = $gContent->mInfo['root_structure_id'];
 $listHash['structure_id']      = $gContent->mInfo['structure_id'];
+$listHash['sort_mode']         = !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'created_desc';
 
 $gContent->loadItems( $listHash );
 
