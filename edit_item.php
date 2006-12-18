@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.12 2006/11/09 19:42:51 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.13 2006/12/18 12:32:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -125,18 +125,9 @@ $galleryContentIds = $gContent->getGalleriesFromItemContentId();
 $gBitSmarty->assign( 'galleryContentIds', $galleryContentIds );
 
 $gallery = new TreasuryGallery();
-$listHash['load_only_root'] = TRUE;
+$listHash['get_sub_tree']   = TRUE;
 $listHash['max_records']    = -1;
 $galleryList = $gallery->getList( $listHash );
-
-if( @is_array( $galleryList ) ) {
-	foreach( $galleryList as $key => $gallery ) {
-		if( empty( $gStructure ) ) {
-			$gStructure = new LibertyStructure();
-		}
-		$galleryList[$key]['subtree'] = $gStructure->getSubTree( $gallery['root_structure_id'] );
-	}
-}
 $gBitSmarty->assign( 'galleryList', $galleryList );
 
 $gContent->invokeServices( 'content_edit_function' );

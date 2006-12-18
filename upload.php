@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.12 2006/12/04 21:03:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.13 2006/12/18 12:32:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -31,19 +31,10 @@ require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
 // turn the max_file_size value into megabytes
 $gBitSmarty->assign_by_ref( 'feedback', $feedback = array() );
 
-$listHash['load_only_root']    = TRUE;
+$listHash['get_sub_tree']      = TRUE;
 $listHash['max_records']       = -1;
 $listHash['object_permission'] = 'p_treasury_upload_item';
 $galleryList = $gContent->getList( $listHash );
-
-if( @is_array( $galleryList ) ) {
-	foreach( $galleryList as $key => $gallery ) {
-		if( empty( $gStructure ) ) {
-			$gStructure = new LibertyStructure();
-		}
-		$galleryList[$key]['subtree'] = $gStructure->getSubTree( $gallery['root_structure_id'] );
-	}
-}
 $gBitSmarty->assign( 'galleryList', $galleryList );
 
 if( !empty( $_REQUEST['content_id'] ) ) {

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.18 2006/11/28 19:10:33 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.19 2006/12/18 12:32:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.18 $
+ * @version      $Revision: 1.19 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -129,23 +129,16 @@ class TreasuryGallery extends TreasuryBase {
 	 * @param $pListHash[offset] number of results data is offset by
 	 * @param $pListHash[title] gallery name
 	 * @param $pListHash[parent_id] gallery parent_id
-	 * @param $pListHash[load_only_root] only load galleries that are at the root of the structure
+	 * @param $pListHash[get_sub_tree] get the subtree to every gallery
 	 * @access public
 	 * @return List of galleries
 	 **/
 	function getList( &$pListHash ) {
-		global $gBitSystem;
+		global $gBitSystem, $gBitUser;
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
 		$selectSql = $joinSql = $orderSql = $whereSql = '';
-
-		if ( !empty( $pListHash['object_permission'] ) ) {
-			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
-			$whereSql .= ' ( uop.`perm_name` = ?  AND uop.`object_type` = ? ) ';
-			$bindVars[] = $pListHash['object_permission'];
-			$bindVars[] = TREASURYGALLERY_CONTENT_TYPE_GUID;
-		}
 
 		if( @BitBase::verifyId( $pListHash['root_structure_id'] ) ) {
 			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
@@ -153,7 +146,7 @@ class TreasuryGallery extends TreasuryBase {
 			$bindVars[] = $pListHash['root_structure_id'];
 		}
 
-		if( !empty( $pListHash['load_only_root'] ) ) {
+		if( !empty( $pListHash['get_sub_tree'] ) ) {
 			$whereSql .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
 			$whereSql .= " ls.`structure_id`=ls.`root_structure_id` ";
 		}
@@ -188,7 +181,6 @@ class TreasuryGallery extends TreasuryBase {
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lc.`content_id` = lch.`content_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
-				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_object_permissions` uop ON ( lc.`content_id` = uop.`object_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
 				$joinSql
 			$whereSql
@@ -196,16 +188,34 @@ class TreasuryGallery extends TreasuryBase {
 
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 
+		if( !empty( $pListHash['get_sub_tree'] ) ) {
+			$struct = new LibertyStructure();
+		}
+
 		while( $aux = $result->fetchRow() ) {
-			$content_ids[]             = $aux['content_id'];
-			$aux['user']               = $aux['creator_user'];
-			$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
-			$aux['display_name']       = BitUser::getTitle( $aux );
-			$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
-			$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
-			$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-			$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
-			$ret[$aux['content_id']]   = $aux;
+			$hasUserPerm = TRUE;
+			// this is quite expensive (3 database calls per gallery)... wonder how else we could do this.
+			if( !empty( $pListHash['object_permission'] ) ) {
+				$gal = new TreasuryGallery( NULL, $aux['content_id'] );
+				if( !$gal->hasUserPermission( $pListHash['object_permission'] ) ) {
+					$hasUserPerm = FALSE;
+				}
+			}
+
+			if( $hasUserPerm ) {
+				$content_ids[]             = $aux['content_id'];
+				$aux['user']               = $aux['creator_user'];
+				$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
+				$aux['display_name']       = BitUser::getTitle( $aux );
+				$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
+				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
+				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
+				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
+				if( !empty( $pListHash['get_sub_tree'] ) ) {
+					$aux['subtree']        = $struct->getSubTree( $aux['structure_id'] );
+				}
+				$ret[$aux['content_id']]   = $aux;
+			}
 		}
 
 		$query = "SELECT COUNT( lc.`title` )
@@ -213,7 +223,6 @@ class TreasuryGallery extends TreasuryBase {
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uue ON ( uue.`user_id` = lc.`modifier_user_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_users` uuc ON ( uuc.`user_id` = lc.`user_id` )
-				LEFT OUTER JOIN `".BIT_DB_PREFIX."users_object_permissions` uop ON ( lc.`content_id` = uop.`object_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_structures` ls ON ( ls.`structure_id` = trg.`structure_id` )
 			$joinSql $whereSql";
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
