@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.23 2006/12/16 17:22:51 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.24 2006/12/20 10:54:18 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.23 $
+ * @version     $Revision: 1.24 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -229,24 +229,13 @@ function treasury_default_download( &$pFileHash ) {
 	global $gBitSystem;
 	$ret = FALSE;
 
-	// make sure we close off obzip compression if it's on
-	//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
-		@ob_end_clean();
-	//}
-
-	// this will get the browser to open the download dialogue - even when the 
-	// browser could deal with the content type - not perfect, but works
-	if( $gBitSystem->isFeatureActive( 'treasury_force_download' ) ) {
-		$pFileHash['mime_type'] = "application/force-download";
-	}
-
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] ) ) {
 		if( include_once( 'HTTP/Download.php' ) ) {
 			$dl = new HTTP_Download();
 			$dl->setLastModified( $pFileHash['last_modified'] );
 			$dl->setFile( $pFileHash['source_file'] );
-			$dl->setContentDisposition( HTTP_DOWNLOAD_ATTACHMENT, $pFileHash['filename'] );
+			$dl->setContentDisposition( HTTP_DOWNLOAD_INLINE, $pFileHash['filename'] );
 			$dl->setContentType( $pFileHash['mime_type'] );
 			$res = $dl->send();
 
@@ -256,6 +245,17 @@ function treasury_default_download( &$pFileHash ) {
 				$ret = TRUE;
 			}
 		} else {
+			// make sure we close off obzip compression if it's on
+			//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
+			@ob_end_clean();
+			//}
+
+			// this will get the browser to open the download dialogue - even when the 
+			// browser could deal with the content type - not perfect, but works
+			if( $gBitSystem->isFeatureActive( 'treasury_force_download' ) ) {
+				$pFileHash['mime_type'] = "application/force-download";
+			}
+
 			header( "Cache Control: " );
 			header( "Accept-Ranges: bytes" );
 			header( "Content-type: ".$pFileHash['mime_type'] );
