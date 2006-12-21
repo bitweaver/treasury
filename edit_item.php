@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.14 2006/12/18 16:59:41 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.15 2006/12/21 09:28:10 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -82,13 +82,13 @@ if( !empty( $_REQUEST['reprocess_upload'] ) ) {
 	$fileHash['type']     = $gContent->mInfo['mime_type'];
 	$fileHash['error']    = 0;
 
-	$_REQUEST['treasury']['upload'] = $fileHash;
-	$_REQUEST['update_file']        = TRUE;
+	$_REQUEST['upload']      = $fileHash;
+	$_REQUEST['update_file'] = TRUE;
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
 	if( !empty( $_FILES['file']['tmp_name'] ) ) {
-		$_REQUEST['treasury']['upload'] = $_FILES['file'];
+		$_REQUEST['upload'] = $_FILES['file'];
 	}
 
 	if( $gContent->store( $_REQUEST ) ) {
