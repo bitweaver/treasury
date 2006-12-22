@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.22 2006/12/18 16:59:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.23 2006/12/22 21:59:22 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.22 $
+ * @version      $Revision: 1.23 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -90,7 +90,9 @@ class TreasuryItem extends TreasuryBase {
 				$this->mInfo                 = $aux;
 				$this->mInfo['title']        = $this->getTitle( $aux );
 				$this->mInfo['display_url']  = $this->getDisplayUrl();
-				$this->mInfo['download_url'] = $this->getDownloadUrl();
+				if( empty( $this->mInfo['download_url'] ) ) {
+					$this->mInfo['download_url'] = $this->getDownloadUrl();
+				}
 			}
 		}
 		return( count( $this->mInfo ) );

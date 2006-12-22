@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.3 2006/12/16 13:50:54 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.4 2006/12/22 21:59:22 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.3 $
+ * @version:     $Revision: 1.4 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -24,7 +24,7 @@ $pluginParams = array(
 	'verify_function'    => 'treasury_default_verify',
 	'store_function'     => 'treasury_default_store',
 	'update_function'    => 'treasury_default_update',
-	'load_function'      => 'treasury_default_load',
+	'load_function'      => 'treasury_flash_load',
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
@@ -44,4 +44,21 @@ $pluginParams = array(
 );
 
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_FLASH, $pluginParams );
+
+/**
+ * Load file data from the database
+ * 
+ * @param array $pRow 
+ * @access public
+ * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
+ */
+function treasury_flash_load( &$pFileHash ) {
+	if( $ret = treasury_default_load( &$pFileHash ) ) {
+		// override default download_url since we want to point users to the view_tpl
+		$pFileHash['download_url'] = TreasuryItem::getDisplayUrl( $pFileHash['content_id'], $pFileHash );
+		// this is the true download url we will use in the view_tpl
+		$pFileHash['download_swf'] = TreasuryItem::getDownloadUrl( $pFileHash['content_id'] );
+	}
+	return $ret ;
+}
 ?>
