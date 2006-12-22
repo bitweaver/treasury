@@ -10,7 +10,7 @@
 {/if}
 
 <div class="row">
-	<object type="application/x-shockwave-flash" data="{$smarty.const.TREASURY_PKG_URL}templates/flash.container.swf?path={$gContent->mInfo.source_url}" width="100%" height="480">
+	<object type="application/x-shockwave-flash" data="{$smarty.const.TREASURY_PKG_URL}templates/flash.container.swf?path={$gContent->mInfo.source_url}" width="100%" height="600">
 		<param name="movie" value="{$smarty.const.TREASURY_PKG_URL}templates/flash.container.swf?path={$gContent->mInfo.source_url}" />
 		<img src="{$smarty.const.TREASURY_PKG_URL}templates/noflash.container.gif" width="200" height="100" alt="" />
 	</object>
