@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.7 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.8 2006/12/23 15:40:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -36,7 +36,7 @@ if( $download_function( $gContent->mInfo ) ) {
 	if( !empty( $gContent->mInfo['errors'] ) ) {
 		$gBitSystem->fatalError( $gContent->mInfo['errors'] );
 	} else {
-		$gBitSystem->fatalError( 'There was a problem trying to prepare the file for download.' );
+		$gBitSystem->fatalError( 'There was an undetermined problem trying to prepare the file for download.' );
 	}
 }
 ?>
