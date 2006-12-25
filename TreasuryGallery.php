@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.19 2006/12/18 12:32:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.20 2006/12/25 21:44:04 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.19 $
+ * @version      $Revision: 1.20 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -426,7 +426,7 @@ class TreasuryGallery extends TreasuryBase {
 				}
 
 				// Finally nuke the structure in liberty_structures
-				$struct->s_remove_page( $this->mStructureId, FALSE );
+				$struct->removeStructureNode( $this->mStructureId, FALSE );
 			}
 
 			if( empty( $errors ) ) {
