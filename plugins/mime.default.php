@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.24 2006/12/20 10:54:18 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.25 2006/12/29 10:04:34 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.24 $
+ * @version     $Revision: 1.25 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -235,7 +235,8 @@ function treasury_default_download( &$pFileHash ) {
 			$dl = new HTTP_Download();
 			$dl->setLastModified( $pFileHash['last_modified'] );
 			$dl->setFile( $pFileHash['source_file'] );
-			$dl->setContentDisposition( HTTP_DOWNLOAD_INLINE, $pFileHash['filename'] );
+			//$dl->setContentDisposition( HTTP_DOWNLOAD_INLINE, $pFileHash['filename'] );
+			$dl->setContentDisposition( HTTP_DOWNLOAD_ATTACHMENT, $pFileHash['filename'] );
 			$dl->setContentType( $pFileHash['mime_type'] );
 			$res = $dl->send();
 
