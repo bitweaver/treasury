@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.9 2006/11/16 15:17:15 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.10 2006/12/30 16:18:52 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -77,7 +77,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || 
 				header( "Location: ".TREASURY_PKG_URL );
 				die;
 			} else {
-				$feedback['errors'] = $gContent->mErrors;
+				$feedback['error'] = $gContent->mErrors;
 			}
 		}
 
