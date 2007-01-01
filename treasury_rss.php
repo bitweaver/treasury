@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.1 2006/12/10 15:15:09 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.2 2007/01/01 12:53:27 squareing Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -9,12 +9,13 @@
  * Initialization
  */
 require_once( "../bit_setup_inc.php" );
-require_once( RSS_PKG_PATH."rss_inc.php" );
-require_once( TREASURY_PKG_PATH."TreasuryItem.php" );
 
 $gBitSystem->verifyPackage( 'treasury' );
 $gBitSystem->verifyPackage( 'rss' );
 $gBitSystem->verifyFeature( 'treasury_rss' );
+
+require_once( TREASURY_PKG_PATH."TreasuryItem.php" );
+require_once( RSS_PKG_PATH."rss_inc.php" );
 
 $rss->title       = $gBitSystem->getConfig( 'treasury_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'File Galleries' ) );
 $rss->description = $gBitSystem->getConfig( 'treasury_rss_description', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'RSS Feed' ) );
