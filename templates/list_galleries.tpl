@@ -27,7 +27,7 @@
 							</a>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_desc' )}
-							<p>{$gallery.data}</p>
+							<p>{$gallery.data|escape|nl2br}</p>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_structure' ) and count($gallery.subtree) gt 1}
 							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php"}

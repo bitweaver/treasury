@@ -14,7 +14,7 @@
 			<div class="row">
 				{formlabel label="File title" for=title}
 				{forminput}
-					<input type="text" size="40" id="title" value="{$gContent->mInfo.title}" name="title" />
+					<input type="text" size="40" id="title" value="{$gContent->mInfo.title|escape}" name="title" />
 				{/forminput}
 			</div>
 

@@ -87,7 +87,7 @@
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 										<a href="{$item.display_url|escape}">
 									{/if}
-									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title}" title="{$item.title}" />
+									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title|escape}" title="{$item.title|escape}" />
 									{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
 										<br />{$item.filename}
 									{/if}
@@ -97,9 +97,9 @@
 								</td>
 							{/if}
 							<td>
-								<h3><a href="{$item.display_url}">{$item.title}</a></h3>
+								<h3><a href="{$item.display_url}">{$item.title|escape}</a></h3>
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
-									<p>{$item.data}</p>
+									<p>{$item.data|escape|nl2br}</p>
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
 									<small>{$item.wiki_plugin_link}</small>

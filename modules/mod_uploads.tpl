@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.1 2006/12/04 22:25:48 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.2 2007/01/05 08:31:23 squareing Exp $ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'fisheye' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
@@ -21,9 +21,9 @@
 					{if $module_params.description}
 						<br />
 						{if $maxlendesc gt 0}
-							{$modItem.data|truncate:$maxlendesc:"...":true}
+							{$modItem.data|escape|truncate:$maxlendesc:"...":true}
 						{else}
-							{$modItem.data}
+							{$modItem.data|escape}
 						{/if}
 					{/if}
 				</li>
