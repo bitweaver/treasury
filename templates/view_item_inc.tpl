@@ -22,7 +22,7 @@
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_name' )}
 	<div class="row">
-		{formlabel label="File name" for=""}
+		{formlabel label="Filename" for=""}
 		{forminput}
 			<a href="{$gContent->mInfo.download_url}">{$gContent->mInfo.filename|escape}</a>
 			&nbsp; <small>({$gContent->mInfo.mime_type})</small>
@@ -32,7 +32,7 @@
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_size' )}
 	<div class="row">
-		{formlabel label="File size" for=""}
+		{formlabel label="Filesize" for=""}
 		{forminput}
 			{$gContent->mInfo.file_size|kbsize}
 		{/forminput}
