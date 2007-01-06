@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.21 2007/01/06 09:46:27 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.22 2007/01/06 12:23:28 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.21 $
+ * @version      $Revision: 1.22 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -134,7 +134,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @return List of galleries
 	 **/
 	function getList( &$pListHash ) {
-		global $gBitSystem, $gBitUser;
+		global $gBitDbType, $gBitSystem, $gBitUser;
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
@@ -170,12 +170,25 @@ class TreasuryGallery extends TreasuryBase {
 			$orderSql .= " ORDER BY ls.`root_structure_id`, ls.`structure_id` ASC";
 		}
 
+		// update query with service sql
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-		$query = "SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
+		// get the number of files in this gallery
+		if( $gBitDbType != 'mysql' && $gBitDbType != 'mysqli' ) {
+			$subselect = ", (
+				SELECT COUNT( trm.`item_content_id` )
+				FROM `".BIT_DB_PREFIX."treasury_map` trm
+				WHERE trm.`gallery_content_id`=trg.`content_id`
+			) AS item_count";
+		} else {
+			$subselect = "";
+		}
+
+		$query = "
+			SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
 			lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`created`, lch.`hits`,
 			uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $subselect $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trg.`content_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lc.`content_id` = lch.`content_id` )
@@ -211,6 +224,16 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
 				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
+				if( !empty( $pListHash['get_item_count'] ) ) {
+					$aux['item_count']     = $struct->getSubTree( $aux['structure_id'] );
+				}
+
+				// sucky additional query to fetch item number without subselect
+				if( $gBitDbType == 'mysql' || $gBitDbType == 'mysqli' ) {
+					$item_count_query = "SELECT COUNT( trm.`item_content_id` ) FROM `".BIT_DB_PREFIX."treasury_map` trm WHERE trm.`gallery_content_id`=?";
+					$aux['item_count'] = $this->mDb->getOne( $item_count_query, array( $aux['content_id'] ));
+				}
+
 				if( !empty( $pListHash['get_sub_tree'] ) ) {
 					$aux['subtree']        = $struct->getSubTree( $aux['structure_id'] );
 				}
@@ -289,7 +312,7 @@ class TreasuryGallery extends TreasuryBase {
 	function verify( &$pParamHash ) {
 		// make sure we're all loaded up if everything is valid
 		if( $this->isValid() && empty( $this->mInfo ) ) {
-			$this->load( TRUE );
+			$this->load();
 		}
 
 		// It is possible a derived class set this to something different

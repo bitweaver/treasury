@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.8 2006/12/15 20:48:50 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.9 2007/01/06 12:23:28 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -31,6 +31,11 @@ $galleryListing = array(
 	'treasury_gallery_list_structure' => array(
 		'label' => 'Display Sub Galleries',
 		'note' => 'Show all subgalleries in the list.',
+		'type' => 'checkbox',
+	),
+	'treasury_gallery_list_item_count' => array(
+		'label' => 'Display Item Count',
+		'note' => 'Display the number of files within this gallery.',
 		'type' => 'checkbox',
 	),
 	'treasury_gallery_list_created' => array(
