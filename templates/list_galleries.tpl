@@ -32,14 +32,14 @@
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_structure' ) and count($gallery.subtree) gt 1}
 							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php"}
 						{/if}
-						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_item_count' )}
-						<br />{tr}Number of files{/tr}: {$gallery.item_count}
-						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_created' )}
 							<br />{tr}Created{/tr}: {$gallery.created|bit_long_datetime}
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_creator' )}
 							<br />{tr}by{/tr}: {displayname hash=$gallery}
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_item_count' )}
+							<br />{tr}Number of files{/tr}: {$gallery.item_count}
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_hits' ) and $gallery.hits}
 							<br />{tr}Number of Times accessed{/tr}: {$gallery.hits}
