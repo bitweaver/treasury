@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.20 2006/12/25 21:44:04 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.21 2007/01/06 09:46:27 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.20 $
+ * @version      $Revision: 1.21 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -164,7 +164,7 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
-			$orderSql .= " ORDER BY ".$this->mDb->convert_sortmode( $pListHash['sort_mode'] )." ";
+			$orderSql .= " ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] )." ";
 		} else {
 			// default sort mode makes list look nice
 			$orderSql .= " ORDER BY ls.`root_structure_id`, ls.`structure_id` ASC";
