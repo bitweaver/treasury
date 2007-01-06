@@ -85,7 +85,7 @@
 								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 								<td style="text-align:center;">
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-										<a href="{$item.display_url|escape:"url"}">
+										<a href="{$item.display_url}">
 									{/if}
 									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title|escape}" title="{$item.title|escape}" />
 									{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
