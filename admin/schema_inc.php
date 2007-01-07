@@ -88,4 +88,10 @@ $gBitInstaller->registerUserPermissions( TREASURY_PKG_NAME, array(
 	// admin permission
 	//array( 'p_treasury_admin',          'Can admin file galleries',                      'admin',      TREASURY_PKG_NAME ),
 ) );
+
+if( defined( 'RSS_PKG_NAME' )) {
+	$gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
+		array( RSS_PKG_NAME, TREASURY_PKG_NAME.'_rss', 'y'),
+	));
+}
 ?>
