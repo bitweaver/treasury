@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.4 2006/12/22 21:59:22 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.5 2007/01/07 21:06:06 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.4 $
+ * @version:     $Revision: 1.5 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -22,8 +22,8 @@ define( 'TREASURY_MIME_GUID_FLASH', 'mime_flash' );
 $pluginParams = array(
 	// simply refer to the default functions - we only want to use a custom view_tpl here
 	'verify_function'    => 'treasury_default_verify',
-	'store_function'     => 'treasury_default_store',
-	'update_function'    => 'treasury_default_update',
+	'store_function'     => 'treasury_flash_store',
+	'update_function'    => 'treasury_flash_update',
 	'load_function'      => 'treasury_flash_load',
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
@@ -36,7 +36,11 @@ $pluginParams = array(
 	'plugin_type'        => TREASURY_MIME,
 	// Set this to TRUE if you want the plugin active right after installation
 	'auto_activate'      => FALSE,
-	'processing_options' => '',
+	// Allow for additional processing options - passed in during verify and store
+	'processing_options' =>
+		'<label>'.tra( "Width" ).': <input type="text" size="5" name="plugin[swf_width]" />px </label><br />'.
+		'<label>'.tra( "Height" ).': <input type="text" size="5" name="plugin[swf_height]" />px </label><br />'.
+		tra( 'If this is a flash file please insert the width and hight.' ),
 	// this should pick up all videos
 	'mimetypes'          => array(
 		'#application/x-shockwave-flash#i',
@@ -44,6 +48,46 @@ $pluginParams = array(
 );
 
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_FLASH, $pluginParams );
+
+/**
+ * Update file settings - taken over by treasury_default_store appart from the width and height settings
+ * 
+ * @access public
+ * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
+ */
+function treasury_flash_update( &$pStoreRow, &$pCommonObject ) {
+	global $gBitSystem;
+	if( $ret = treasury_default_update( $pStoreRow, $pCommonObject ) ) {
+		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_width'] )) {
+			$pCommonObject->storePreference( 'swf_width', $pStoreRow['plugin']['swf_width'] );
+		}
+
+		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_height'] )) {
+			$pCommonObject->storePreference( 'swf_height', $pStoreRow['plugin']['swf_height'] );
+		}
+	}
+	return $ret;
+}
+
+/**
+ * Store file settings - taken over by treasury_default_store appart from the width and height settings
+ * 
+ * @access public
+ * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
+ */
+function treasury_flash_store( &$pStoreRow, &$pCommonObject ) {
+	global $gBitSystem;
+	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject ) ) {
+		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_width'] )) {
+			$pCommonObject->storePreference( 'swf_width', $pStoreRow['plugin']['swf_width'] );
+		}
+
+		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_height'] )) {
+			$pCommonObject->storePreference( 'swf_height', $pStoreRow['plugin']['swf_height'] );
+		}
+	}
+	return $ret;
+}
 
 /**
  * Load file data from the database

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.2 2006/12/16 13:50:54 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.3 2007/01/07 21:06:06 squareing Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.2 $
+ * @version:     $Revision: 1.3 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -19,12 +19,12 @@ define( 'TREASURY_MIME_GUID_VIDEO', 'mime_video' );
 $pluginParams = array (
 	// Set of functions and what they are called in this paricular plugin
 	// Use the GUID as your namespace
-	'verify_function'    => 'treasury_video_verify',
+	'verify_function'    => 'treasury_default_verify',
 	'store_function'     => 'treasury_video_store',
-	'update_function'    => 'treasury_video_update',
+	'update_function'    => 'treasury_default_update',
 	'load_function'      => 'treasury_video_load',
-	'download_function'  => 'treasury_video_download',
-	'expunge_function'   => 'treasury_video_expunge',
+	'download_function'  => 'treasury_default_download',
+	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
 	'title'              => 'Video Mime Handler',
 	'description'        => 'This plugin will extract a few images from the uploaded video and display them as preview. This plugin requires mplayer to be installed on the server ( does not work with all video types ).',
@@ -40,34 +40,10 @@ $pluginParams = array (
 		'#video/.*#i',
 	),
 );
-
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_VIDEO, $pluginParams );
 
 // depending on the scan the default file might not be included yet. we need get it manually
 require_once( 'mime.default.php' );
-
-/**
- * Sanitise and validate data before it's stored
- * 
- * @param array $pStoreRow Hash of data that needs to be stored
- * @param array $pStoreRow['upload'] Hash passed in by $_FILES upload
- * @access public
- * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
- */
-function treasury_video_verify( &$pStoreRow ) {
-	return treasury_default_verify( $pStoreRow );
-}
-
-/**
- * When a file is edited
- * 
- * @param array $pStoreRow File data needed to store details in the database - sanitised and generated in the verify function
- * @access public
- * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
- */
-function treasury_video_update( &$pStoreRow ) {
-	return treasury_default_update( $pStoreRow );
-}
 
 /**
  * Store the data in the database
@@ -76,9 +52,9 @@ function treasury_video_update( &$pStoreRow ) {
  * @access public
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
-function treasury_video_store( &$pStoreRow ) {
+function treasury_video_store( &$pStoreRow, &$pCommonObject ) {
 	// if storing works, we extract some frameshots
-	if( $ret = treasury_default_store( $pStoreRow ) ) {
+	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject ) ) {
 		treasury_video_extract_frameshots( $pStoreRow );
 	}
 	return $ret;
@@ -103,32 +79,8 @@ function treasury_video_load( &$pFileHash ) {
 	return $ret ;
 }
 
-/**
- * Takes care of the entire download process. Make sure it doesn't die at the end.
- * in this functioin it would be possible to add download resume possibilites and the like
- * 
- * @param array $pFileHash Basically the same has as returned by the load function
- * @access public
- * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
- */
-function treasury_video_download( &$pFileHash ) {
-	// this will get the browser to open the download dialogue - even when the 
-	// browser could deal with the content type - not perfect, but works
-	$pFileHash['mime_type'] = "application/force-download";
-	return treasury_default_download( $pFileHash );
-}
 
-/**
- * Nuke data in tables when content is removed
- * 
- * @param array $pParamHash The contents of TreasuryItem->mInfo
- * @access public
- * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
- */
-function treasury_video_expunge( &$pParamHash ) {
-	return treasury_default_expunge( $pParamHash );
-}
-
+// ================= additional functions
 /**
  * Extract frameshots from video if possible
  * 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.14 2006/12/18 13:13:15 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.15 2007/01/07 21:06:06 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.14 $
+ * @version     $Revision: 1.15 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -28,8 +28,8 @@ $pluginParams = array (
 	'store_function'     => 'treasury_theme_store',
 	'update_function'    => 'treasury_theme_update',
 	'load_function'      => 'treasury_theme_load',
-	'download_function'  => 'treasury_theme_download',
-	'expunge_function'   => 'treasury_theme_expunge',
+	'download_function'  => 'treasury_default_download',
+	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
 	'title'              => 'Theme Mime Handler',
 	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it.',
@@ -52,7 +52,6 @@ $pluginParams = array (
 		'#application/[a-z\-]*(rar|zip|tar|tgz|stuffit)[a-z\-]*#i',
 	),
 );
-
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_THEME, $pluginParams );
 
 // depending on the scan the default file might not be included yet. we need get it manually
@@ -109,8 +108,8 @@ function treasury_theme_verify( &$pStoreRow ) {
  * @access public
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
-function treasury_theme_update( &$pStoreRow ) {
-	if( $ret = treasury_default_update( $pStoreRow ) ) {
+function treasury_theme_update( &$pStoreRow, &$pCommonObject ) {
+	if( $ret = treasury_default_update( $pStoreRow, $pCommonObject ) ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
 	}
 	return $ret;
@@ -123,8 +122,8 @@ function treasury_theme_update( &$pStoreRow ) {
  * @access public
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
-function treasury_theme_store( &$pStoreRow ) {
-	if( $ret = treasury_default_store( $pStoreRow ) ) {
+function treasury_theme_store( &$pStoreRow, &$pCommonObject ) {
+	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject ) ) {
 		treasury_theme_process_extracted_files( $pStoreRow );
 	}
 	return $ret;
@@ -161,29 +160,6 @@ function treasury_theme_load( &$pFileHash ) {
 		}
 	}
 	return $ret ;
-}
-
-/**
- * Takes care of the entire download process. Make sure it doesn't die at the end.
- * in this functioin it would be possible to add download resume possibilites and the like
- * 
- * @param array $pFileHash Basically the same has as returned by the load function
- * @access public
- * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
- */
-function treasury_theme_download( &$pFileHash ) {
-	return treasury_default_download( $pFileHash );
-}
-
-/**
- * Nuke data in tables when content is removed
- * 
- * @param array $pParamHash The contents of TreasuryItem->mInfo
- * @access public
- * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
- */
-function treasury_theme_expunge( &$pParamHash ) {
-	return treasury_default_expunge( $pParamHash );
 }
 
 /**

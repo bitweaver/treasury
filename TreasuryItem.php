@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.24 2007/01/06 09:46:27 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.25 2007/01/07 21:06:06 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.24 $
+ * @version      $Revision: 1.25 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -94,6 +94,9 @@ class TreasuryItem extends TreasuryBase {
 					$this->mInfo['download_url'] = $this->getDownloadUrl();
 				}
 			}
+
+			// we might have content preferences set by some plugin
+			$this->loadPreferences();
 		}
 		return( count( $this->mInfo ) );
 	}
@@ -226,14 +229,20 @@ class TreasuryItem extends TreasuryBase {
 					}
 
 					// Call the appropriate plugin to deal with the upload
-					if( !empty( $pStoreHash['upload_store']['upload'] ) ) {
+					// if this is a newly uploaded file, we fetch the new plugin handler
+					$guid = NULL;
+					if( !empty( $pStoreHash['upload_store']['upload']['tmp_name'] ) ) {
 						$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
-						$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
-						if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
-							$update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' );
-							if( empty( $update_function ) || !$update_function( $pStoreHash['upload_store'] ) ) {
-								$this->mErrors = $pStoreHash['upload_store']['errors'];
-							}
+					} else {
+						$guid = $this->mInfo['plugin_guid'];
+					}
+
+					// now we can pass the info on to the update function
+					$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
+					if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
+						$update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' );
+						if( empty( $update_function ) || !$update_function( $pStoreHash['upload_store'], $this ) ) {
+							$this->mErrors = $pStoreHash['upload_store']['errors'];
 						}
 					}
 				}
@@ -265,7 +274,7 @@ class TreasuryItem extends TreasuryBase {
 						//       - thumbnail creation - icon.jpg (48x48), avatar.jpg (100x100), small.jpg (400x300)
 						//       - storing file data in liberty_attachments and liberty_files (if you want to use liberty)
 						$store_function = $gTreasurySystem->getPluginFunction( $guid, 'store_function' );
-						if( empty( $store_function ) || !$store_function( $pStoreHash['upload_store'] ) ) {
+						if( empty( $store_function ) || !$store_function( $pStoreHash['upload_store'], $this ) ) {
 							$this->mErrors = $pStoreHash['upload_store']['errors'];
 						}
 					}
@@ -305,9 +314,11 @@ class TreasuryItem extends TreasuryBase {
 			} else {
 				$this->mErrors['upload'] = tra( "There was a problem processing the uploaded file. Please try again." );
 			}
-			if( !empty( $pStoreHash['plugin'] ) ) {
-				$pStoreHash['upload_store']['plugin'] = $pStoreHash['plugin'];
-			}
+		}
+
+		// make sure the plugin has it's custom information to deal with as needed
+		if( !empty( $pStoreHash['plugin'] ) ) {
+			$pStoreHash['upload_store']['plugin'] = $pStoreHash['plugin'];
 		}
 
 		// Make sure we know what to update
