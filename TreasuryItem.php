@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.25 2007/01/07 21:06:06 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.26 2007/01/09 20:05:08 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.25 $
+ * @version      $Revision: 1.26 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -96,7 +96,7 @@ class TreasuryItem extends TreasuryBase {
 			}
 
 			// we might have content preferences set by some plugin
-			$this->loadPreferences();
+			LibertyContent::load();
 		}
 		return( count( $this->mInfo ) );
 	}
