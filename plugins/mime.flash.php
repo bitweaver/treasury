@@ -1,9 +1,9 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.5 2007/01/07 21:06:06 squareing Exp $
+ * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.6 2007/01/10 17:12:00 hiranchaudhuri Exp $
  *
  * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.5 $
+ * @version:     $Revision: 1.6 $
  * @created:     Sunday Jul 02, 2006   14:42:13 CEST
  * @package:     treasury
  * @subpackage:  treasury_mime_handler
@@ -97,7 +97,7 @@ function treasury_flash_store( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_flash_load( &$pFileHash ) {
-	if( $ret = treasury_default_load( &$pFileHash ) ) {
+	if( $ret = treasury_default_load( $pFileHash ) ) {
 		// override default download_url since we want to point users to the view_tpl
 		$pFileHash['download_url'] = TreasuryItem::getDisplayUrl( $pFileHash['content_id'], $pFileHash );
 		// this is the true download url we will use in the view_tpl
