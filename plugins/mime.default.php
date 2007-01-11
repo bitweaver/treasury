@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.26 2007/01/07 21:06:06 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.27 2007/01/11 10:10:24 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.26 $
+ * @version     $Revision: 1.27 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -154,7 +154,7 @@ function treasury_default_update( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
  */
 function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
-	global $gBitSystem;
+	global $gBitSystem, $gLibertySystem;
 	$ret = FALSE;
 	// take care of the uploaded file and insert it into the liberty_files and liberty_attachments tables
 	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
@@ -167,6 +167,11 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
 		// hardcode this for now
 		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' ) ) {
+			// since we're using this plugin, make sure it's enabled in liberty
+			if( !$gLibertySystem->isPluginActive( 'treasury' )) {
+				$gLibertySystem->setActivePlugin( 'treasury' );
+			}
+
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `content_id`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
 		}
