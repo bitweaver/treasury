@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.26 2007/01/09 20:05:08 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.27 2007/01/13 18:44:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.26 $
+ * @version      $Revision: 1.27 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -124,6 +124,12 @@ class TreasuryItem extends TreasuryBase {
 			$whereSql  .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
 			$whereSql  .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
 			$bindVars[] = strtoupper( $pListHash['title'] );
+		}
+
+		if( !empty( $pListHash['max_age'] ) && is_numeric( $pListHash['max_age'] ) ) {
+			$whereSql  .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql  .= " lc.`created` > ? ";
+			$bindVars[] = $pListHash['max_age'];
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
