@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.15 2006/12/21 09:28:10 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.16 2007/01/14 17:19:49 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -35,7 +35,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 				header( "Location: ".TREASURY_PKG_URL );
 				die;
 			} else {
-				$feedback['errors'] = $gContent->mErrors;
+				$feedback['error'] = $gContent->mErrors;
 			}
 		}
 		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
