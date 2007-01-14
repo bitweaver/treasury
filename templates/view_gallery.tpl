@@ -4,30 +4,30 @@
 <div class="display treasury">
 	{include file="bitpackage:treasury/gallery_nav_inc.tpl" galleryDisplayPath=$gContent->mInfo.gallery_display_path}
 
-	<div class="header">
-		<div class="floaticon">
-			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
-			{if $gBitUser->hasPermission('p_treasury_upload_item')}
-				{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
+	<div class="floaticon">
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
+		{if $gBitUser->hasPermission('p_treasury_upload_item')}
+			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
+		{/if}
+		{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_edit_gallery')}
+			{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+		{/if}
+		{if $gBitUser->hasPermission('p_treasury_create_gallery')}
+			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
+		{/if}
+		{if $gBitUser->isAdmin()}
+			{if $gContent->mPerms}
+				{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
+			{else}
+				{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
 			{/if}
-			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_edit_gallery')}
-				{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
-			{/if}
-			{if $gBitUser->hasPermission('p_treasury_create_gallery')}
-				{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
-			{/if}
-			{if $gBitUser->isAdmin()}
-				{if $gContent->mPerms}
-					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
-				{else}
-					{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
-				{/if}
-			{/if}
-			{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
-				{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
-			{/if}
-		</div>
+		{/if}
+		{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
+			{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
+		{/if}
+	</div>
 
+	<div class="header">
 		<h1>{$gContent->getTitle()}</h1>
 	</div>
 
