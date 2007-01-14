@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.3 2007/01/07 10:48:32 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.4 2007/01/14 15:29:25 squareing Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -48,7 +48,7 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	// set the rss link
 	$rss->link = 'http://'.$_SERVER['HTTP_HOST'].TREASURY_PKG_URL;
 
-	require_once $gBitSmarty->_get_plugin_filepath( 'modifier', 'kbsize' );
+	require_once $gBitSmarty->_get_plugin_filepath( 'modifier', 'display_bytes' );
 	// get all the data ready for the feed creator
 	foreach( $feeds as $feed ) {
 		$item               = new FeedItem();
@@ -59,7 +59,7 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 		if( !empty( $feed['data'] ) ) {
 			$item->description .= "<li>".tra( 'Description' ).": {$feed['data']}</li>";
 		}
-		$item->description .= "<li>".tra( 'Filename' ).": {$feed['filename']} [".smarty_modifier_kbsize( $feed['file_size'] )."]</li>";
+		$item->description .= "<li>".tra( 'Filename' ).": {$feed['filename']} [".smarty_modifier_display_bytes( $feed['file_size'] )."]</li>";
 		$item->description .= "</ul>";
 
 		$item->date         = ( int )$feed['last_modified'];

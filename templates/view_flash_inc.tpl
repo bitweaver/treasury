@@ -41,7 +41,7 @@
 	<div class="row">
 		{formlabel label="File size" for=""}
 		{forminput}
-			{$gContent->mInfo.file_size|kbsize}
+			{$gContent->mInfo.file_size|display_bytes}
 		{/forminput}
 	</div>
 
@@ -49,7 +49,7 @@
 	<div class="row">
 		{formlabel label="Download Calculator" for=""}
 		{forminput}
-			{$gContent->mInfo.file_size|kbsize}
+			{$gContent->mInfo.file_size|display_bytes}
 		{/forminput}
 	</div>
 	*}

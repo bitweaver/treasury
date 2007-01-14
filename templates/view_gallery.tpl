@@ -117,7 +117,7 @@
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
 								<td style="text-align:right;">
-									{$item.file_size|kbsize}
+									{$item.file_size|display_bytes}
 								</td>
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
