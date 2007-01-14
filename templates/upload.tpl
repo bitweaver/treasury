@@ -122,7 +122,6 @@
 					{forminput}
 						{foreach from=$galleryList item=gallery}
 							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
-							<br />
 						{foreachelse}
 							<p class="norecords">
 								{tr}No Galleries Found{/tr}.<br />
