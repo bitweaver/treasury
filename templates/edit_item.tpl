@@ -26,6 +26,7 @@
 			</div>
 
 			<div class="row">
+				{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}
 				{formlabel label="Replace File" for="fileupload"}
 				{forminput}
 					<input type="file" name="file" id="fileupload" />
