@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.27 2007/01/13 18:44:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.28 2007/01/20 10:24:41 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.27 $
+ * @version      $Revision: 1.28 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -69,7 +69,7 @@ class TreasuryItem extends TreasuryBase {
 			$query = "
 				SELECT
 					tri.`plugin_guid`,
-					tct.`content_description`,
+					lct.`content_description`,
 					uu.`login`, uu.`real_name`, la.`attachment_id`,
 					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
@@ -77,7 +77,7 @@ class TreasuryItem extends TreasuryBase {
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
 					INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
@@ -143,7 +143,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = array();
 		$query = "
 			SELECT tri.`plugin_guid`,
-				tct.`content_description`,
+				lct.`content_description`,
 				uu.`login`, uu.`real_name`,
 				la.`attachment_id`,
 				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
@@ -152,16 +152,19 @@ class TreasuryItem extends TreasuryBase {
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 			$joinSql $whereSql $orderSql";
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 		while( $aux = $result->fetchRow() ) {
 			$aux['title'] = $this->getTitle( $aux );
-			$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-			if( empty( $load_function ) || !$load_function( $aux ) ) {
-				$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
+			if( $load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' )) {
+				if( !$load_function( $aux )) {
+					$this->mErrors['plugin_load'] = tra( 'There was a ploblem loading the file data.' );
+				}
+			} else {
+				$this->mErrors['load_function'] = tra( 'No suitable load function found.' );
 			}
 			$aux['display_url']  = $this->getDisplayUrl( $aux['content_id'], $aux, $pStructureId );
 			$aux['display_link'] = $this->getDisplayLink( $aux['title'], $aux, $pStructureId );
@@ -174,14 +177,14 @@ class TreasuryItem extends TreasuryBase {
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` tct ON ( lc.`content_type_guid` = tct.`content_type_guid` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 			$joinSql $whereSql";
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
 		LibertyContent::postGetList( $pListHash );
 
 		// TODO: do the cant query
-		return( !empty( $this->mErrors ) ? $this->mErrors : $ret );
+		return( count( $this->mErrors ) == 0 ) ? $ret : FALSE;
 	}
 
 	/**
@@ -244,48 +247,60 @@ class TreasuryItem extends TreasuryBase {
 					}
 
 					// now we can pass the info on to the update function
-					$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
-					if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
-						$update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' );
-						if( empty( $update_function ) || !$update_function( $pStoreHash['upload_store'], $this ) ) {
-							$this->mErrors = $pStoreHash['upload_store']['errors'];
+					if( $verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' )) {
+						if( $verify_function( $pStoreHash['upload_store'] ) ) {
+							if( $update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' )) {
+								if( !$update_function( $pStoreHash['upload_store'], $this ) ) {
+									$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
+								}
+							} else {
+								$this->mErrors['update_function'] = tra( 'No suitable update function found.' );
+							}
 						}
+					} else {
+						$this->mErrors['verify_function'] = tra( 'No suitable verify function found.' );
 					}
 				}
 			} else {
 				// ########## Insert
 				// call the appropriate plugin to deal with the upload
 				$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
-				$verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' );
-				// verify the uploaded file using the plugin
-				if( !empty( $verify_function) && $verify_function( $pStoreHash['upload_store'] ) ) {
-					if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
-						// ---------- Item store
-						// we can now insert the data into the item table
-						$pStoreHash['item_store']['plugin_guid'] = $guid;
-						$pStoreHash['item_store']['content_id'] = $pStoreHash['upload_store']['content_id'] = $pStoreHash['content_store']['content_id'];
-						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_item', $pStoreHash['item_store'] );
+				if( $verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' )) {
+					// verify the uploaded file using the plugin
+					if( $verify_function( $pStoreHash['upload_store'] ) ) {
+						if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
+							// ---------- Item store
+							// we can now insert the data into the item table
+							$pStoreHash['item_store']['plugin_guid'] = $guid;
+							$pStoreHash['item_store']['content_id'] = $pStoreHash['upload_store']['content_id'] = $pStoreHash['content_store']['content_id'];
+							$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_item', $pStoreHash['item_store'] );
 
-						// ---------- Map store
-						foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
-							$storeRow = array(
-								'gallery_content_id' => $gcid,
-								'item_content_id' => $pStoreHash['item_store']['content_id'],
-							);
-							$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
-						}
+							// ---------- Map store
+							foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
+								$storeRow = array(
+									'gallery_content_id' => $gcid,
+									'item_content_id' => $pStoreHash['item_store']['content_id'],
+								);
+								$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
+							}
 
-						// ---------- Plugin Store
-						// The plugin is responsible for:
-						//       - thumbnail creation - icon.jpg (48x48), avatar.jpg (100x100), small.jpg (400x300)
-						//       - storing file data in liberty_attachments and liberty_files (if you want to use liberty)
-						$store_function = $gTreasurySystem->getPluginFunction( $guid, 'store_function' );
-						if( empty( $store_function ) || !$store_function( $pStoreHash['upload_store'], $this ) ) {
-							$this->mErrors = $pStoreHash['upload_store']['errors'];
+							// ---------- Plugin Store
+							// The plugin is responsible for:
+							//       - thumbnail creation - icon.jpg (48x48), avatar.jpg (100x100), small.jpg (400x300)
+							//       - storing file data in liberty_attachments and liberty_files (if you want to use liberty)
+							if( $store_function = $gTreasurySystem->getPluginFunction( $guid, 'store_function' )) {
+								if( !$store_function( $pStoreHash['upload_store'], $this )) {
+									$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
+								}
+							} else {
+								$this->mErrors['verify_function'] = tra( 'No suitable store function found.' );
+							}
 						}
+					} else {
+						$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
 					}
 				} else {
-					$this->mErrors = $pStoreHash['upload_store']['errors'];
+					$this->mErrors['verify_function'] = tra( 'No suitable verify function found.' );
 				}
 			}
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.27 2007/01/11 10:10:24 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.28 2007/01/20 10:24:41 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.27 $
+ * @version     $Revision: 1.28 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -71,9 +71,9 @@ function treasury_default_verify( &$pStoreRow ) {
 	$ret = FALSE;
 
 	// content_id is only set when we are updating the file
-	if( @BitBase::verifyId( $pStoreRow['content_id'] ) ) {
+	if( @BitBase::verifyId( $pStoreRow['content_id'] )) {
 		// if a new file has been uploaded, we need to get some information from the database for the file update
-		if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
+		if( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] )) {
 			// Generic values needed by the storing mechanism
 			$pStoreRow['user_id'] = $gBitUser->mUserId;
 			$pStoreRow['upload']['source_file'] = $pStoreRow['upload']['tmp_name'];
@@ -84,14 +84,14 @@ function treasury_default_verify( &$pStoreRow ) {
 				SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
 				FROM `".BIT_DB_PREFIX."liberty_attachments` la
 					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( la.`foreign_id`=lf.`file_id` )
-				WHERE `content_id`=?", array( $pStoreRow['content_id'] ) );
+				WHERE `content_id`=?", array( $pStoreRow['content_id'] ));
 			$pStoreRow = array_merge( $pStoreRow, $fileInfo );
 			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 		}
 
 		$ret = TRUE;
 
-	} elseif( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] ) ) {
+	} elseif( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] )) {
 		// try to generate thumbnails for the upload
 		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
 		$pStoreRow['upload']['thumbnail'] = TRUE;
@@ -127,19 +127,20 @@ function treasury_default_update( &$pStoreRow, &$pCommonObject ) {
 	if( !empty( $pStoreRow['upload']['tmp_name'] )) {
 		// get the data we need to deal with
 		$query = "SELECT `storage_path` FROM `".BIT_DB_PREFIX."liberty_files` lf WHERE `file_id` = ?";
-		if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ) ) ) {
+		if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ))) {
 			// First we remove the old file
 			@unlink( BIT_ROOT_PATH.$storage_path );
 
 			// Now we process the uploaded file
-			if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
+			if( $storagePath = liberty_process_upload( $pStoreRow )) {
 				$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `mime_type` = ?, `file_size` = ?, `user_id` = ? WHERE `file_id` = ?";
-				$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
+				$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ));
 			}
 
-			if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.bitfile.php' ) ) {
+			// in case the user has changed
+			if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' )) {
 				$sql = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `user_id` = ? WHERE `foreign_id` = ?";
-				$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ) );
+				$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ));
 			}
 		}
 	}
@@ -157,23 +158,23 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 	global $gBitSystem, $gLibertySystem;
 	$ret = FALSE;
 	// take care of the uploaded file and insert it into the liberty_files and liberty_attachments tables
-	if( $storagePath = liberty_process_upload( $pStoreRow ) ) {
+	if( $storagePath = liberty_process_upload( $pStoreRow )) {
 		// add row to liberty_files
 		// this is where we store any additional data - we don't need more info for regular uploads
 		$pStoreRow['file_id'] = $gBitSystem->mDb->GenID( 'liberty_files_id_seq' );
 		$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_files` ( `storage_path`, `file_id`, `mime_type`, `file_size`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ) );
+		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ));
 
 		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
 		// hardcode this for now
-		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' ) ) {
+		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' )) {
 			// since we're using this plugin, make sure it's enabled in liberty
 			if( !$gLibertySystem->isPluginActive( 'treasury' )) {
 				$gLibertySystem->setActivePlugin( 'treasury' );
 			}
 
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `content_id`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ) );
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ));
 		}
 		$ret = TRUE;
 	} else {
@@ -192,20 +193,20 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 function treasury_default_load( &$pFileHash ) {
 	global $gBitSystem;
 	$ret = FALSE;
-	if( @BitBase::verifyId( $pFileHash['content_id'] ) ) {
+	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
 		$query = "SELECT *
 			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 			WHERE la.`content_id` = ?";
-		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ) ) ) {
-			$canThumbFunc = liberty_get_function( 'can_thumbnail' );
-			if( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' ) ) {
+		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
+			//$canThumbFunc = liberty_get_function( 'can_thumbnail' );
+			if( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' )) {
 				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
 				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
 				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
 				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
 				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
 			} else {
-				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ) );
+				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ));
 				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
 				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
@@ -214,7 +215,7 @@ function treasury_default_load( &$pFileHash ) {
 			}
 			$pFileHash['filename']         = basename( $row['storage_path'] );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
-			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] ) ) );
+			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] )));
 			$pFileHash['mime_type']        = $row['mime_type'];
 			$pFileHash['file_size']        = $row['file_size'];
 			$pFileHash['attachment_id']    = $row['attachment_id'];
@@ -239,8 +240,9 @@ function treasury_default_download( &$pFileHash ) {
 	$ret = FALSE;
 
 	// Check to see if the file actually exists
-	if( is_readable( $pFileHash['source_file'] ) ) {
-		if( include_once( 'HTTP/Download.php' ) ) {
+	if( is_readable( $pFileHash['source_file'] )) {
+		// if we have PEAR HTTP/Download installed, we make use of it since it allows download resume and download manager access
+		if( include_once( 'HTTP/Download.php' )) {
 			$dl = new HTTP_Download();
 			$dl->setLastModified( $pFileHash['last_modified'] );
 			$dl->setFile( $pFileHash['source_file'] );
@@ -249,20 +251,20 @@ function treasury_default_download( &$pFileHash ) {
 			$dl->setContentType( $pFileHash['mime_type'] );
 			$res = $dl->send();
 
-			if( PEAR::isError( $res ) ) {
+			if( PEAR::isError( $res )) {
 				$gBitSystem->fatalError( $res->getMessage() );
 			} else {
 				$ret = TRUE;
 			}
 		} else {
 			// make sure we close off obzip compression if it's on
-			//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] ) ) {
+			//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] )) {
 			@ob_end_clean();
 			//}
 
 			// this will get the browser to open the download dialogue - even when the 
 			// browser could deal with the content type - not perfect, but works
-			if( $gBitSystem->isFeatureActive( 'treasury_force_download' ) ) {
+			if( $gBitSystem->isFeatureActive( 'treasury_force_download' )) {
 				$pFileHash['mime_type'] = "application/force-download";
 			}
 
@@ -271,7 +273,7 @@ function treasury_default_download( &$pFileHash ) {
 			header( "Content-type: ".$pFileHash['mime_type'] );
 			header( "Content-Disposition: attachment; filename=".$pFileHash['filename'] );
 			header( "Last-Modified: ".gmdate( "D, d M Y H:i:s", $pFileHash['last_modified'] )." GMT", true, 200 );
-			header( "Content-Length: ".filesize( $pFileHash['source_file'] ) );
+			header( "Content-Length: ".filesize( $pFileHash['source_file'] ));
 			header( "Content-Transfer-Encoding: binary" );
 			header( "Connection: close" );
 
@@ -279,7 +281,7 @@ function treasury_default_download( &$pFileHash ) {
 			$ret = TRUE;
 		}
 	} else {
-		$pFileHash['errors'] = tra( 'No matching file found.' );
+		$pFileHash['errors']['no_file'] = tra( 'No matching file found.' );
 	}
 	return $ret;
 }
@@ -294,26 +296,26 @@ function treasury_default_download( &$pFileHash ) {
 function treasury_default_expunge( &$pParamHash ) {
 	global $gBitSystem;
 	$ret = FALSE;
-	if( @BitBase::verifyId( $pParamHash['content_id'] ) ) {
+	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		$ret = TRUE;
 
 		$query = "SELECT *
 			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 			WHERE la.`content_id` = ?";
-		if( $row = $gBitSystem->mDb->getRow( $query, array( $pParamHash['content_id'] ) ) ) {
+		if( $row = $gBitSystem->mDb->getRow( $query, array( $pParamHash['content_id'] ))) {
 			// Make sure the storage path is pointing to a valid file
-			if( is_file( BIT_ROOT_PATH.$row['storage_path'] ) ) {
-				unlink_r( dirname( BIT_ROOT_PATH.$row['storage_path'] ) );
+			if( is_file( BIT_ROOT_PATH.$row['storage_path'] )) {
+				unlink_r( dirname( BIT_ROOT_PATH.$row['storage_path'] ));
 			}
 
 			// Now remove all entries we made in the database - liberty_files and liberty_attachments
 			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_files` WHERE `file_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['foreign_id'] ) );
+			$gBitSystem->mDb->query( $sql, array( $row['foreign_id'] ));
 			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['attachment_id'] ) );
+			$gBitSystem->mDb->query( $sql, array( $row['attachment_id'] ));
 		}
 	} else {
-		$pParamHash['errors'] = tra( 'No valid content_id given.' );
+		$pParamHash['errors']['content_id'] = tra( 'No valid content_id given.' );
 	}
 	return $ret;
 }
