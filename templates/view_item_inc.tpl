@@ -80,7 +80,7 @@
 	</div>
 {/if}
 
-{if $gBitSystem->isFeatureActive( 'treasury_item_view_attid' )}
+{if $gBitSystem->isFeatureActive( 'treasury_item_view_attid' ) && $gBitUser->hasPermission( 'p_liberty_attach_attachments' )}
 	<div class="row">
 		{formlabel label="Wiki attachment" for=""}
 		{forminput}
