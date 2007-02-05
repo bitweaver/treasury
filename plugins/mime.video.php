@@ -1,19 +1,24 @@
 <?php
 /**
- * @version:     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.3 2007/01/07 21:06:06 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.4 2007/02/05 11:14:32 lsces Exp $
  *
- * @author:      xing  <xing@synapse.plus.com>
- * @version:     $Revision: 1.3 $
- * @created:     Sunday Jul 02, 2006   14:42:13 CEST
- * @package:     treasury
- * @subpackage:  treasury_mime_handler
+ * @author		xing  <xing@synapse.plus.com>
+ * @version		$Revision: 1.4 $
+ * created		Sunday Jul 02, 2006   14:42:13 CEST
+ * @package		treasury
+ * @subpackage	treasury_mime_handler
  **/
 
+/**
+ * setup
+ */
 global $gTreasurySystem;
 
-// This is the name of the plugin - max char length is 16
-// As a naming convention, the treasury mime handler definition should start with:
-// TREASURY_MIME_GUID_
+/**
+ *  This is the name of the plugin - max char length is 16
+ * As a naming convention, the treasury mime handler definition should start with:
+ * TREASURY_MIME_GUID_
+ */
 define( 'TREASURY_MIME_GUID_VIDEO', 'mime_video' );
 
 $pluginParams = array (

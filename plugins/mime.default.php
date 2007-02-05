@@ -1,19 +1,20 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.28 2007/01/20 10:24:41 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.29 2007/02/05 11:14:32 lsces Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.28 $
+ * @version     $Revision: 1.29 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
+ *
+ * @todo since plugins can do just about anything here, we might need the<br> 
+ * option to create specific tables during install. if required we can scan for<br>
+ * files called:<br>
+ * table.plugin_guid.php<br>
+ * where plugins can insert their own tables<br>
  **/
 
-// TODO: since plugins can do just about anything here, we might need the 
-// option to create specific tables during install. if required we can scan for 
-// files called:
-// table.plugin_guid.php
-// where plugins can insert their own tables
 
 /**
  * setup
