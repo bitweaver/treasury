@@ -22,6 +22,13 @@ $tables = array(
 		item_position I4
 	",
 
+	'treasury_process_queue' => "
+		content_id I4 PRIMARY,
+		queue_date I8 NOTNULL,
+		begin_date I8,
+		end_date I8
+	",
+
 );
 
 global $gBitInstaller;

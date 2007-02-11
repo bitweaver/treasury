@@ -1,0 +1,47 @@
+<html>
+<head>
+
+
+	<script type="text/javascript" src="ufo.js"></script>
+
+
+</head>
+<body style="margin:50px;">
+
+
+<h2>playing a single media file:</h2>
+
+
+<p id="player1"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
+<script type="text/javascript">
+	var FO = {	movie:"flvplayer.swf",width:"240",height:"140",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
+				flashvars:"file=video.flv&showdigits=false&autostart=false&showfsbutton=true&repeat=true" };
+	UFO.create(	FO, "player1");
+</script>
+
+
+<h2>with logo and preview image:</h2>
+
+
+<p id="player2"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
+<script type="text/javascript">
+	var FO = {	movie:"/treasury/libs/flv_player/flvplayer.swf",width:"240",height:"140",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
+				flashvars:"file=/treasury/libs/flv_player/video.flv&showdigits=false&image=preview.jpg&logo=logo.png&showicons=false&volume=100" };
+	UFO.create(	FO, "player2");
+</script>
+
+
+
+<h2>playing a  playlist file:</h2>
+
+
+<p id="player3"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
+<script type="text/javascript">
+	var FU = { 	movie:"flvplayer.swf",width:"300",height:"250",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
+				flashvars:"file=playlist.xml&displayheight=160&repeat=true&lightcolor=0x557722&backcolor=0x000000&frontcolor=0xCCCCCC" };
+	UFO.create(	FU, "player3");
+</script>
+
+
+</body>
+</html>
