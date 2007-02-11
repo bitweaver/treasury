@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.1 2007/02/11 12:23:16 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.2 2007/02/11 13:47:37 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.1 $
+ * @version		$Revision: 1.2 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -48,7 +48,7 @@ open conversion jobs every minute:
 // ================================ configuration options
 
 // set the absolute path to ffmpeg if it's not in your PATH
-$ffmpeg = 'ffmpeg';
+$ffmpeg = '/usr/local/bin/ffmpeg';
 
 // sampling rate (valid values are 11025, 22050, 44100)
 $sampling_rate = 22050;
@@ -155,7 +155,7 @@ if( !shell_exec( "$ffmpeg -h" )) {
 
 		if( filesize( $dest_file ) > 1 ) {
 			// since the flv conversion worked, we will create a preview screenshots to show.
-			shell_exec( "ffmpeg -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
+			shell_exec( "$ffmpeg -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
 			if( is_file( "$dest_path/preview1.jpg" ) ) {
 				$fileHash['type']        = 'image/jpg';
 				$fileHash['thumbsizes']  = array( 'icon', 'avatar', 'small', 'medium' );
