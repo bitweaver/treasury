@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.29 2007/02/05 11:14:32 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.30 2007/02/12 15:37:50 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.29 $
+ * @version     $Revision: 1.30 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -196,7 +196,8 @@ function treasury_default_load( &$pFileHash ) {
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
 		$query = "SELECT *
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
+			FROM `".BIT_DB_PREFIX."liberty_attachments` la
+			INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 			WHERE la.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
 			//$canThumbFunc = liberty_get_function( 'can_thumbnail' );
@@ -243,7 +244,7 @@ function treasury_default_download( &$pFileHash ) {
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] )) {
 		// if we have PEAR HTTP/Download installed, we make use of it since it allows download resume and download manager access
-		if( include_once( 'HTTP/Download.php' )) {
+		if( @include_once( 'HTTP/Download.php' )) {
 			$dl = new HTTP_Download();
 			$dl->setLastModified( $pFileHash['last_modified'] );
 			$dl->setFile( $pFileHash['source_file'] );

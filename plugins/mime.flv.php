@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.1 2007/02/11 12:23:18 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.2 2007/02/12 15:37:50 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.1 $
+ * @version		$Revision: 1.2 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -26,7 +26,7 @@ $pluginParams = array (
 	// Use the GUID as your namespace
 	'verify_function'    => 'treasury_default_verify',
 	'store_function'     => 'treasury_flv_store',
-	'update_function'    => 'treasury_default_update',
+	'update_function'    => 'treasury_flv_update',
 	'load_function'      => 'treasury_flv_load',
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
@@ -47,7 +47,7 @@ $pluginParams = array (
 );
 $gTreasurySystem->registerPlugin( TREASURY_MIME_GUID_FLV, $pluginParams );
 
-// depending on the scan the default file might not be included yet. we need get it manually
+// depending on the scan the default file might not be included yet. we need to get it manually
 require_once( 'mime.default.php' );
 
 /**
@@ -61,15 +61,36 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 	global $gBitSystem;
 	// if storing works, we extract some frameshots
 	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject )) {
-		$query = "
-			DELETE FROM `".BIT_DB_PREFIX."treasury_process_queue`
-			WHERE `content_id`=?";
-		$gBitSystem->mDb->query( $query, array( $pStoreRow['content_id'] ));
-		$query = "
-			INSERT INTO `".BIT_DB_PREFIX."treasury_process_queue`
-			(`content_id`, `queue_date`) VALUES (?,?)";
-		$gBitSystem->mDb->query( $query, array( $pStoreRow['content_id'], $gBitSystem->getUTCTime() ));
-		touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
+		if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
+			// add an indication that this file is being processed
+			touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
+		}
+	}
+	return $ret;
+}
+
+/**
+ * treasury_flv_update 
+ * 
+ * @param array $pStoreRow 
+ * @param array $pCommonObject 
+ * @access public
+ * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+ */
+function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
+	// if storing works, we extract some frameshots
+	if( $ret = treasury_default_update( $pStoreRow, $pCommonObject )) {
+		if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
+			// add an indication that this file is being processed
+			touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
+			// remove any error file since this is a new video file
+			@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."error" );
+
+			if( !empty( $pStoreRow['upload']['tmp_name'] )) {
+				// since this user is uploading a new video, we will remove the old flick.flv file
+				@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."flick.flv" );
+			}
+		}
 	}
 	return $ret;
 }
@@ -82,23 +103,48 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_flv_load( &$pFileHash ) {
-	global $gBitSmarty;
+	global $gBitSmarty, $gLibertySystem;
 	if( $ret = treasury_default_load( $pFileHash )) {
-		// we need some javascript for the flv player:
+		// check for status of conversion
 		if( is_file( dirname( $pFileHash['source_file'] ).'/error' )) {
 			$pFileHash['status']['error'] = TRUE;
-		}
-
-		if( is_file( dirname( $pFileHash['source_file'] ).'/processing' )) {
+		} elseif( is_file( dirname( $pFileHash['source_file'] ).'/processing' )) {
 			$pFileHash['status']['processing'] = TRUE;
-		}
-
-		if( is_file( dirname( $pFileHash['source_file'] ).'/flick.flv' )) {
+		} elseif( is_file( dirname( $pFileHash['source_file'] ).'/flick.flv' )) {
 			$pFileHash['flv_url'] = dirname( $pFileHash['source_url'] ).'/flick.flv';
+			// we need some javascript for the flv player:
 			$gBitSmarty->assign( 'treasuryFlv', TRUE );
 		}
-		// TODO: make use of ffmpeg-php if available
+
+		// we can use a special plugin if active to include flvs in wiki pages
+		if( defined( 'PLUGIN_GUID_DATAFLASHVIDEO' ) && !empty( $gLibertySystem->mPlugins[PLUGIN_GUID_DATAFLASHVIDEO] )) {
+			$pFileHash['wiki_plugin_link'] = "{flashvideo id={$pFileHash['attachment_id']}}";
+		}
 	}
 	return $ret ;
+}
+
+/**
+ * This function will add an entry to the process queue for the cron job to take care of
+ * 
+ * @param array $pContentId 
+ * @access public
+ * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+ */
+function treasury_flv_add_process( $pContentId ) {
+	global $gBitSystem;
+	$ret = FALSE;
+	if( @BitBase::verifyId( $pContentId )) {
+		$query = "
+			DELETE FROM `".BIT_DB_PREFIX."treasury_process_queue`
+			WHERE `content_id`=?";
+		$gBitSystem->mDb->query( $query, array( $pContentId ));
+		$query = "
+			INSERT INTO `".BIT_DB_PREFIX."treasury_process_queue`
+			(`content_id`, `queue_date`) VALUES (?,?)";
+		$gBitSystem->mDb->query( $query, array( $pContentId, $gBitSystem->getUTCTime() ));
+		$ret = TRUE;
+	}
+	return $ret;
 }
 ?>
