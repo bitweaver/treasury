@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.29 2007/02/07 22:30:09 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.30 2007/02/13 14:31:28 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.29 $
+ * @version      $Revision: 1.30 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -113,11 +113,17 @@ class TreasuryItem extends TreasuryBase {
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
-		$selectSql = $joinSql = $orderSql = $whereSql = "";
+		$selectSql = $joinSql = $whereSql = "";
 
 		if( @BitBase::verifyId( $pListHash['gallery_content_id'] ) ) {
 			$whereSql   = " WHERE trm.`gallery_content_id` = ? ";
 			$bindVars[] = $pListHash['gallery_content_id'];
+		}
+
+		if( @BitBase::verifyId( $pListHash['user_id'] ) ) {
+			$whereSql  .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
+			$whereSql  .= " lc.`user_id` = ? ";
+			$bindVars[] = $pListHash['user_id'];
 		}
 
 		if( !empty( $pListHash['title'] ) && is_string( $pListHash['title'] ) ) {
@@ -133,9 +139,9 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		if( !empty( $pListHash['sort_mode'] ) ) {
-			$orderSql  .= " ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] )." ";
+			$orderSql   = " ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] )." ";
 		} else {
-			$orderSql  .= " ORDER BY trm.`item_position` ASC ";
+			$orderSql   = " ORDER BY trm.`item_position` ASC ";
 		}
 
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
