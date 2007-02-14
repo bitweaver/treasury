@@ -12,7 +12,7 @@
 			</a>
 		</div>
 	{/if}
-	{formfeedback warning="The video is being processed. please try to reload in a couple of minutes."}
+	{formfeedback warning="{tr}The video is being processed. please try to reload in a couple of minutes.{/tr}"}
 {elseif $gContent->mInfo.status.error}
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}
 		<div class="row" style="text-align:center;">
@@ -24,7 +24,7 @@
 		</div>
 	{/if}
 	{if $gContent->isOwner() || $gBitUser->isAdmin()}
-		{formfeedback error="The Video could not be processed. You can upload a different version of the film or simply leave as is."}
+		{formfeedback error="{tr}The Video could not be processed. You can upload a different version of the film or simply leave as is.{/tr}"}
 	{/if}
 {/if}
 
