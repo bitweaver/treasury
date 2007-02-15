@@ -1,17 +1,19 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.3 2007/02/12 15:37:50 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.4 2007/02/15 19:29:22 lsces Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.3 $
+ * @version		$Revision: 1.4 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
  **/
 
 
-/*
-================================= FFMPEG =================================
+/**
+ * Body of file
+ */
+/* ================================= FFMPEG =================================
 If you want to make use of the flv plugin, you need to install the svn version
 of ffmpeg. only the latest version of ffmpeg supports the flv format.
 
