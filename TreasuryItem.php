@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.30 2007/02/13 14:31:28 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.31 2007/02/15 21:25:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.30 $
+ * @version      $Revision: 1.31 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -372,7 +372,7 @@ class TreasuryItem extends TreasuryBase {
 		foreach( $pStoreHash['galleryContentIds'] as $gcid ) {
 			$gallery = new TreasuryGallery( NULL, $gcid );
 			if( $gallery->loadPermissions() ) {
-				if( $gBitUser->isInGroup( $gallery->mPerms['p_treasury_upload_item']['group_id'] )) {
+				if( $gBitUser->isAdmin() || ( !empty( $gallery->mPerms['p_treasury_upload_item']['group_id'] ) && $gBitUser->isInGroup( $gallery->mPerms['p_treasury_upload_item']['group_id'] ))) {
 					$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
 				}
 			} else {
