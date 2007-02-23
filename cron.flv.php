@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.5 2007/02/23 07:22:48 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.6 2007/02/23 14:15:15 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.5 $
+ * @version		$Revision: 1.6 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -66,11 +66,13 @@ if( extension_loaded( 'ffmpeg' )) {
 
 
 // =========================== Configuration Options ===========================
-// set the absolute path to ffmpeg
-$ffmpeg        = '/usr/local/bin/ffmpeg';
-// sampling rate (valid values are 11025, 22050, 44100)
+// set the absolute path to ffmpeg - use which to get dynamically - if this doesn't work, set it manually
+$ffmpeg        = shell_exec( 'which ffmpeg' );
+// set the path manually without using `which`
+//$ffmpeg        = '/usr/bin/ffmpeg';
+// sampling rate                   valid values are: 11025, 22050, 44100
 $sampling_rate = 22050;
-// bit rate of audio (valid values are 16,32,64)
+// audio bitrate                   valid values are: 16, 32, 64
 $bit_rate      = 32;
 // width of video in pixels - height is adjusted automatically
 // vaues need to be multiples of 4: e.g.: 320, 400, 520...
