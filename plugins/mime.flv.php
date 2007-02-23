@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.2 2007/02/12 15:37:50 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.3 2007/02/23 15:18:43 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.2 $
+ * @version		$Revision: 1.3 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -80,16 +80,14 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
 	// if storing works, we extract some frameshots
 	if( $ret = treasury_default_update( $pStoreRow, $pCommonObject )) {
-		if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
+		// we only need to add a new process when we are actually uploading a new file
+		if( !empty( $pStoreRow['upload']['tmp_name'] ) && treasury_flv_add_process( $pStoreRow['content_id'] )) {
 			// add an indication that this file is being processed
 			touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
 			// remove any error file since this is a new video file
 			@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."error" );
-
-			if( !empty( $pStoreRow['upload']['tmp_name'] )) {
-				// since this user is uploading a new video, we will remove the old flick.flv file
-				@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."flick.flv" );
-			}
+			// since this user is uploading a new video, we will remove the old flick.flv file
+			@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."flick.flv" );
 		}
 	}
 	return $ret;
