@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.6 2007/02/23 14:15:15 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.7 2007/02/24 10:14:03 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.6 $
+ * @version		$Revision: 1.7 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -22,7 +22,7 @@ of ffmpeg. only the latest version of ffmpeg supports the flv format.
 You will need the svn version of ffmpeg and you will have to compile this
 yourself:
 
-cvs -z9 -d:pserver:anonymous@mplayerhq.hu:/cvsroot/ffmpeg co ffmpeg
+svn checkout svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
 cd ffmpeg
 ./configure --help | grep enable
 ./configure --enable-mp3lame --enable-gpl
