@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.3 2007/02/23 15:18:43 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.4 2007/02/25 08:10:59 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.3 $
+ * @version		$Revision: 1.4 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -59,11 +59,18 @@ require_once( 'mime.default.php' );
  */
 function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 	global $gBitSystem;
-	// if storing works, we extract some frameshots
+	// if storing works, we process the video
 	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject )) {
-		if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
-			// add an indication that this file is being processed
-			touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
+		if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
+			// if we want to use cron, we add a process, otherwise we convert video right away
+			if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
+				// add an indication that this file is being processed
+				touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
+			}
+		} else {
+			if( !treasury_flv_converter( $pStoreRow )) {
+				$pStoreRow['errors'] = $pStoreRow['log'];
+			}
 		}
 	}
 	return $ret;
@@ -78,16 +85,26 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
  */
 function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
-	// if storing works, we extract some frameshots
+	global $gBitSystem;
+	// if storing works, we process the video
 	if( $ret = treasury_default_update( $pStoreRow, $pCommonObject )) {
 		// we only need to add a new process when we are actually uploading a new file
-		if( !empty( $pStoreRow['upload']['tmp_name'] ) && treasury_flv_add_process( $pStoreRow['content_id'] )) {
+		if( !empty( $pStoreRow['upload']['tmp_name'] )) {
 			// add an indication that this file is being processed
 			touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
 			// remove any error file since this is a new video file
 			@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."error" );
 			// since this user is uploading a new video, we will remove the old flick.flv file
 			@unlink( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."flick.flv" );
+
+			// if we want to use cron, we add a process, otherwise we convert video right away
+			if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
+				treasury_flv_add_process( $pStoreRow['content_id'] );
+			} else {
+				if( !treasury_flv_converter( $pStoreRow )) {
+					$pStoreRow['errors'] = $pStoreRow['log'][$pStoreRow['content_id']]['message'];
+				}
+			}
 		}
 	}
 	return $ret;
@@ -142,6 +159,119 @@ function treasury_flv_add_process( $pContentId ) {
 			(`content_id`, `queue_date`) VALUES (?,?)";
 		$gBitSystem->mDb->query( $query, array( $pContentId, $gBitSystem->getUTCTime() ));
 		$ret = TRUE;
+	}
+	return $ret;
+}
+
+/**
+ * Convert a stored video file in treasury to flashvideo
+ * 
+ * @param array $pParamHash 
+ * @access public
+ * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+ */
+function treasury_flv_converter( &$pParamHash ) {
+	global $gBitSystem;
+
+	// video conversion can take a while
+	ini_set( "max_execution_time", "1800" );
+
+	// these are set in the treasury plugin admin screen
+	$convert['ffmpeg']     = $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' ));
+	$convert['video_rate'] = $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 );
+	$convert['audio_rate'] = $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 );
+	$convert['width']      = $gBitSystem->getConfig( 'treasury_flv_width', 320 );
+
+	$ret = FALSE;
+
+	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
+		$begin = date( 'U' );
+		$log   = array();
+
+		$item = new TreasuryItem( NULL, $pParamHash['content_id'] );
+		$item->load();
+
+		$source = $item->mInfo['source_file'];
+		$dest_path = dirname( $item->mInfo['source_file'] );
+		$dest_file = $dest_path.'/flick.flv';
+
+		// we can do some nice stuff if ffmpeg-php is available
+		if( extension_loaded( 'ffmpeg' )) {
+			$movie = new ffmpeg_movie( $source );
+			$info['duration']   = $movie->getDuration();
+			$info['width']      = $movie->getFrameWidth();
+			$info['height']     = $movie->getFrameHeight();
+			// aspect ratio
+			$info['aspect']     = $info['width'] / $info['height'];
+
+			// size of flv - width is set to width
+			$ratio              = $convert['width'] / $info['width'];
+			$info['flv_width']  = $convert['width'];
+			$info['flv_height'] = round( $ratio * $info['height'] );
+			// height of video needs to be an even number
+			if( $info['flv_height'] % 2 ) {
+				$info['flv_height']++;
+			}
+			$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
+
+			// screenshot offset is relative to flick length - we'll pick a frame somewhere in the middle
+			// if we're dealing with a wmv file, we things get wonky - as to be expected with m$ in the game - gah!
+			if( preg_match( "!\.wmv$!i", $source )) {
+				if( $info['duration'] >= 240 ) {
+					$info['offset'] = '00:01:00';
+				} else {
+					$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
+				}
+			} else {
+				if( $info['duration'] >= 120 ) {
+					$info['offset'] = '00:01:00';
+				} else {
+					$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
+				}
+			}
+		} else {
+			// set some default values if ffmpeg isn't available
+			$info['aspect']     = "4:3";
+			$info['flv_width']  = $convert['width'];
+			$info['flv_height'] = round( $convert['width'] / 4 * 3 );
+			$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
+			$info['offset']     = '00:00:10';
+		}
+
+		// we store the video size as a content preference
+		$prefNames = array( 'flv_height', 'flv_width', 'duration' );
+		foreach( $prefNames as $name ) {
+			if( !empty( $info[$name] )) {
+				$item->storePreference( $name, $info[$name] );
+			}
+		}
+
+		$log['debug'] = shell_exec( "{$convert['ffmpeg']} -i '$source' -acodec mp3 -ar {$convert['video_rate']} -ab {$convert['audio_rate']} -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file'" );
+
+		if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
+			// since the flv conversion worked, we will create a preview screenshots to show.
+			shell_exec( "{$convert['ffmpeg']} -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
+			if( is_file( "$dest_path/preview1.jpg" )) {
+				$fileHash['type']        = 'image/jpg';
+				$fileHash['thumbsizes']  = array( 'icon', 'avatar', 'small', 'medium' );
+				$fileHash['source_file'] = "$dest_path/preview1.jpg";
+				$fileHash['dest_path']   = str_replace( BIT_ROOT_PATH, '', "$dest_path/" );
+				liberty_generate_thumbnails( $fileHash );
+			}
+			$log['message'] = 'SUCCESS: Video converted to flash video';
+		} else {
+			// remove badly converted file
+			@unlink( $dest_file );
+			touch( $dest_path."/error" );
+			$log['message'] = 'ERROR: There was a problem during video conversion. DEBUG OUTPUT: '.$log['debug'];
+		}
+
+		@unlink( $dest_path.'/processing' );
+		$log['time']     = date( 'd/M/Y:H:i:s O' );
+		$log['duration'] = date( 'U' ) - $begin;
+
+		// return the log
+		$pParamHash['log'] = $log;
 	}
 	return $ret;
 }

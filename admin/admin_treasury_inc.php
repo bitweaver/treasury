@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.10 2007/01/06 12:27:58 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.11 2007/02/25 08:10:58 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -10,6 +10,11 @@ $treasurySettings = array(
 	'treasury_force_download' => array(
 		'label' => 'Force Download',
 		'note' => "If you set this, the mime type during download will be set to application/force-download forcing the browser to download the content regardless of it's original file type.",
+		'type' => 'checkbox',
+	),
+	'treasury_use_cron' => array(
+		'label' => 'Use Cron',
+		'note' => "Use cron to monitor for lengthy or taxing jobs that need to be taken care of. If this is not selected, treasury will deal with all files as they are uploaded. This can take a long time and might upset the user or cause your server to choke.",
 		'type' => 'checkbox',
 	),
 );
