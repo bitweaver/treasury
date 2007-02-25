@@ -87,7 +87,7 @@
 				</div>
 
 				<div class="row">
-					{formlabel label="Video bitrate" for="treasury_flv_width"}
+					{formlabel label="Video width" for="treasury_flv_width"}
 					{forminput}
 						<select name="treasury_flv_width" id="treasury_flv_width">
 							<option value="240" {if $gBitSystem->getConfig('treasury_flv_width') == 240}selected="selected"{/if}>240</option>
