@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.9 2007/02/25 08:10:57 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/Attic/cron.flv.php,v 1.10 2007/02/25 14:25:25 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.9 $
+ * @version		$Revision: 1.10 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -78,11 +78,6 @@ if( extension_loaded( 'ffmpeg' )) {
 
 
 
-// running from cron can cause us not to be in the right dir.
-chdir( dirname( __FILE__ ));
-require_once( '../bit_setup_inc.php' );
-require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
-
 // increase the execution time. depending on the size and length of a flick, it 
 // can take quite some time before it is done
 ini_set( "max_execution_time", "1800" );
@@ -99,6 +94,11 @@ if( !empty( $argc )) {
 	// reduce feedback for command line to keep log noise way down
 	define( 'BIT_PHP_ERROR_REPORTING', E_ERROR | E_PARSE );
 }
+
+// running from cron can cause us not to be in the right dir.
+chdir( dirname( __FILE__ ));
+require_once( '../bit_setup_inc.php' );
+require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
 
 // add some protection for arbitrary thumbail execution.
 // if argc is present, we will trust it was exec'ed command line.
@@ -129,25 +129,19 @@ $gBitSystem->mDb->CompleteTrans();
 $log   = array();
 $total = date( 'U' );
 
-// check to see if ffmpeg is available at all
-if( !shell_exec( "{$params['ffmpeg']} -h" )) {
-	$log[0]['time']     = date( 'd/M/Y:H:i:s O' );
-	$log[0]['duration'] = 0;
-	$log[0]['message']  = 'ERROR: ffmpeg does not seem to be available on your system. Please see the comments at the beginning of this file on how to install and configure it.';
-} else {
-	foreach( $processList as $item ) {
-		if( treasury_flv_converter( $item )) {
-			$query = "UPDATE `".BIT_DB_PREFIX."treasury_process_queue` SET `end_date`=? WHERE `content_id`=?";
-			$result = $gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $contentId ));
-		}
-		$log[$item['content_id']] = $item['log'];
+// we just zap through all these files and let the converter function worry about all the problems that might arise
+foreach( $processList as $item ) {
+	if( treasury_flv_converter( $item )) {
+		$query = "UPDATE `".BIT_DB_PREFIX."treasury_process_queue` SET `end_date`=? WHERE `content_id`=?";
+		$result = $gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $contentId ));
 	}
+	$log[$item['content_id']] = $item['log'];
 }
 
 // output some info
 foreach( array_keys( $log ) as $contentId ) {
 	// generate something that kinda looks like apache common log format
-	print $contentId.' - - ['.$log[$contentId]['time'].'] "'.$log[$contentId]['message'].'" '.$log[$contentId]['duration']."seconds <br/>\n";
+	print $contentId.' - - ['.$log[$contentId]['time'].'] "'.$log[$contentId]['message'].'" '.$log[$contentId]['duration']." seconds <br/>\n";
 }
 
 if( count( $processList )) {
