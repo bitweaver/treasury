@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.11 2007/02/25 08:10:58 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.12 2007/02/25 15:37:18 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -14,7 +14,7 @@ $treasurySettings = array(
 	),
 	'treasury_use_cron' => array(
 		'label' => 'Use Cron',
-		'note' => "Use cron to monitor for lengthy or taxing jobs that need to be taken care of. If this is not selected, treasury will deal with all files as they are uploaded. This can take a long time and might upset the user or cause your server to choke.",
+		'note' => "Use cron to monitor for lengthy or taxing jobs that need to be taken care of. If this is not selected, treasury will deal with all files as they are uploaded. This can take a long time and might upset the user or cause your server to choke. Before you activate this, make sure you have added the required cron job(s) to your cron file.",
 		'type' => 'checkbox',
 	),
 );
