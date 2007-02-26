@@ -13,7 +13,7 @@
 	</div>
 
 	<div class="header">
-		<h1>{tr}Download{/tr}: {$gContent->getTitle()|escape}</h1>
+		<h1>{tr}File{/tr}: {$gContent->getTitle()|escape}</h1>
 	</div>
 
 	<div class="body">
