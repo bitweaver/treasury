@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.9 2007/02/26 18:24:51 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.10 2007/02/26 22:46:34 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.9 $
+ * @version		$Revision: 1.10 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -134,6 +134,11 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParamet
 			$gBitSmarty->assign( 'treasuryFlv', TRUE );
 		}
 
+		// check to see if the original is still available
+		if( !is_file( $pFileHash['source_file'] )) {
+			$pFileHash['download_url'] = FALSE;
+		}
+
 		// if we are passed an object, we'll modify width and height according to our needs
 		if( is_object( $pCommonObject )) {
 			if( !$pCommonObject->getPreference( 'flv_width' )) {
@@ -145,6 +150,9 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParamet
 			}
 
 			treasury_flv_calculate_videosize( $pPluginParameters, $pCommonObject->mPrefs );
+
+			// since pCommonObject is only set when the file is fully loaded, we can add a hit - hardly anyone will download the original if they can view the flv...
+			$pCommonObject->addHit();
 		}
 
 		// we can use a special plugin if active to include flvs in wiki pages
