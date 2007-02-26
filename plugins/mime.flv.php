@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.6 2007/02/26 15:36:06 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.7 2007/02/26 16:16:34 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.6 $
+ * @version		$Revision: 1.7 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -304,6 +304,54 @@ function treasury_flv_converter( &$pParamHash ) {
 		// return the log
 		$pParamHash['log'] = $log;
 	}
+	return $ret;
+}
+
+/**
+ * Calculate the display video size
+ * 
+ * @param array $pParamHash hash of data to be used to calculate video size
+ * @access public
+ * @return TRUE when there has been a video size change, FALSE if there has been no change
+ */
+function treasury_flv_calculate_videosize( &$pParamHash ) {
+	$ret = FALSE;
+
+	// if we want to display a different size
+	if( !empty( $pParamHash['size'] )) {
+		if( $pParamHash['size'] == 'small' ) {
+			$new_width = 160;
+			$pParamHash['digits'] = 'false';
+		} elseif( $pParamHash['size'] == 'medium' ) {
+			$new_width = 320;
+		} elseif( $pParamHash['size'] == 'large' ) {
+			$new_width = 480;
+		} elseif( $pParamHash['size'] == 'huge' ) {
+			$new_width = 600;
+		}
+	}
+
+	// if they set a custom width, we use that
+	if( @BitBase::verifyId( $pParamHash['width'] )) {
+		$new_width = $pParamHash['width'];
+	}
+
+	// if we want to change the video size
+	if( !empty( $new_width )) {
+		// if they set a custom height, we use that
+		if( @BitBase::verifyId( $pParamHash['height'] )) {
+			$pParamHash['flv_height'] = $pParamHash['height'];
+		} else {
+			$ratio = $pParamHash['flv_width'] / $new_width;
+			$pParamHash['flv_height'] = round( $pParamHash['flv_height'] / $ratio );
+		}
+
+		// now that all calculations are done, we apply the width
+		$pParamHash['flv_width']  = $new_width;
+
+		$ret = TRUE;
+	}
+
 	return $ret;
 }
 ?>
