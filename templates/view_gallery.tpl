@@ -126,7 +126,7 @@
 								</td>
 							{/if}
 							<td class="actionicon">
-								{if $gBitUser->hasPermission( 'p_treasury_download_item' )}
+								{if $gBitUser->hasPermission( 'p_treasury_download_item' ) && $item.download_url}
 									<a href="{$item.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
 								{/if}
 								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}

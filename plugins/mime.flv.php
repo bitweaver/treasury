@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.10 2007/02/26 22:46:34 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.11 2007/02/26 23:03:30 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.10 $
+ * @version		$Revision: 1.11 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -132,11 +132,6 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParamet
 			$pFileHash['flv_url'] = dirname( $pFileHash['source_url'] ).'/flick.flv';
 			// we need some javascript for the flv player:
 			$gBitSmarty->assign( 'treasuryFlv', TRUE );
-		}
-
-		// check to see if the original is still available
-		if( !is_file( $pFileHash['source_file'] )) {
-			$pFileHash['download_url'] = FALSE;
 		}
 
 		// if we are passed an object, we'll modify width and height according to our needs

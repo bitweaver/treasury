@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.34 2007/02/26 22:45:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.35 2007/02/26 23:03:29 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.34 $
+ * @version      $Revision: 1.35 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -97,8 +97,8 @@ class TreasuryItem extends TreasuryBase {
 					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 				}
 
-				if( !isset( $this->mInfo['download_url'] ) ) {
-					$this->mInfo['download_url'] = $this->getDownloadUrl();
+				if( !isset( $this->mInfo['download_url'] )) {
+					$this->mInfo['download_url'] = $this->getDownloadUrl( $this->mInfo );
 				}
 			}
 		}
@@ -179,7 +179,9 @@ class TreasuryItem extends TreasuryBase {
 			}
 			$aux['display_url']  = $this->getDisplayUrl( $aux['content_id'], $aux, $pStructureId );
 			$aux['display_link'] = $this->getDisplayLink( $aux['title'], $aux, $pStructureId );
-			$aux['download_url'] = $this->getDownloadUrl( $aux['content_id'] );
+			if( is_file( $aux['source_file'] )) {
+				$aux['download_url'] = $this->getDownloadUrl( $aux );
+			}
 			$ret[] = $aux;
 		}
 
@@ -478,24 +480,32 @@ class TreasuryItem extends TreasuryBase {
 	/**
 	 * Generate URL to view this item in detail
 	 * 
-	 * @param numeric $pContentId Content id of the item we want to create the url for
+	 * @param numeric $pFileHash['content_id'] Content id of the item we want to create the url for
+	 * @param numeric $pFileHash['source_file'] Relative path to file in question
 	 * @param array $pMixed Mixed hash of information
 	 * @access public
 	 * @return URL
 	 */
-	function getDownloadUrl( $pContentId=NULL ) {
+	function getDownloadUrl( $pFileHash = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		// try to get the correct content_id from anywhere possible
-		if( !@BitBase::verifyId( $pContentId ) && $this->isValid() ) {
-			$pContentId = $this->mContentId;
+		if( @BitBase::verifyId( $pFileHash['content_id'] )) {
+			$contentId = $pFileHash['content_id'];
+		} elseif( $this->isValid() ) {
+			$contentId = $this->mContentId;
 		}
 
-		if( @BitBase::verifyId( $pContentId ) ) {
+		// if we have a source_file to check and it doesn't exist, we don't return download url
+		if( !empty( $pFileHash['source_file'] ) && !is_file( $pFileHash['source_file'] )) {
+			$contentId = NULL;
+		}
+
+		if( @BitBase::verifyId( $contentId ) ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-				$ret = TREASURY_PKG_URL.'download/'.$pContentId;
+				$ret = TREASURY_PKG_URL.'download/'.$contentId;
 			} else {
-				$ret = TREASURY_PKG_URL.'download.php?content_id='.$pContentId;
+				$ret = TREASURY_PKG_URL.'download.php?content_id='.$contentId;
 			}
 		}
 		return $ret;
