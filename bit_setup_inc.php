@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.6 $
+ * @version  $Revision: 1.7 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -23,7 +23,7 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 	$gTreasurySystem = new TreasurySystem();
 	$plugin_status = $gBitSystem->getConfig( TREASURY_PKG_NAME.'_plugin_status_'.TREASURY_DEFAULT_MIME_HANDLER );
 	if( empty( $plugin_status ) || $plugin_status != 'y' ) {
-		$gTreasurySystem->scanAllPlugins( TREASURY_PKG_PATH.'plugins/' );
+		$gTreasurySystem->scanAllPlugins( NULL, "mime\." );
 	} else {
 		$gTreasurySystem->loadActivePlugins();
 	}

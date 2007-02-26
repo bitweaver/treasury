@@ -11,7 +11,7 @@ if( !empty( $_REQUEST['reset_all_plugins'] )) {
 	header( "Location: ".TREASURY_PKG_URL."admin/admin_plugins.php" );
 }
 
-$gTreasurySystem->scanAllPlugins( TREASURY_PKG_PATH.'plugins/' );
+$gTreasurySystem->scanAllPlugins( NULL, "mime\." );
 
 $feedback = array();
 if( !empty( $_REQUEST['pluginsave'] )) {
