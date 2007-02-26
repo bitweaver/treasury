@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.9 2006/12/18 21:05:26 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.10 2007/02/26 16:30:35 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -46,7 +46,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 	} else {
 		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
 		foreach( $_REQUEST['del_content_ids'] as $cid ) {
-			$item = new TreasuryItem( $cid );
+			$item = new TreasuryItem( NULL, $cid );
 			$itemInfo = $item->load();
 			$formHash['input'][] = '<input type="hidden" name="del_content_ids[]" value="'.$cid.'"/>'."<strong>{$item->mInfo['title']}</strong> - {$item->mInfo['mime_type']} - {$item->mInfo['file_size']} bytes";
 		}
