@@ -2,6 +2,16 @@
 	<div class="row" style="text-align:center;">
 		{include file="bitpackage:treasury/flv_player_inc.tpl" flv=$gContent->mInfo flvPrefs=$gContent->mPrefs}
 	</div>
+
+	<div class="pagination">
+		{tr}View other sizes{/tr}<br />
+		&nbsp;&bull;&nbsp;
+		<a href="{$gContent->mInfo.display_url}&size=small">{tr}Small{/tr}</a>&nbsp;&bull;&nbsp;
+		<a href="{$gContent->mInfo.display_url}&size=medium">{tr}Medium{/tr}</a>&nbsp;&bull;&nbsp;
+		<a href="{$gContent->mInfo.display_url}&size=large">{tr}Large{/tr}</a>&nbsp;&bull;&nbsp;
+		<a href="{$gContent->mInfo.display_url}&size=huge">{tr}Huge{/tr}</a>&nbsp;&bull;&nbsp;
+		<a href="{$gContent->mInfo.display_url}&size=original">{tr}Original{/tr}</a>&nbsp;&bull;&nbsp;
+	</div>
 {elseif $gContent->mInfo.status.processing}
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}
 		<div class="row" style="text-align:center;">

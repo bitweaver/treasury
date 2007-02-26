@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/item_lookup_inc.php,v 1.4 2007/02/26 16:30:35 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/item_lookup_inc.php,v 1.5 2007/02/26 18:02:27 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -17,7 +17,7 @@ if( !@BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 	header( "Location:".TREASURY_PKG_URL );
 } else {
 	$gContent = new TreasuryItem( NULL, $_REQUEST['content_id'] );
-	$gContent->load();
+	$gContent->load( $_REQUEST );
 }
 
 $gBitSmarty->assign_by_ref( 'gContent', $gContent );

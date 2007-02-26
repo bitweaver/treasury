@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.32 2007/02/26 15:36:06 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.33 2007/02/26 18:02:27 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.32 $
+ * @version      $Revision: 1.33 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -50,11 +50,11 @@ class TreasuryItem extends TreasuryBase {
 	/**
 	 * load the treasury item
 	 *
-	 * @param $pExtras boolean - if set to true, treasury content is added as well
+	 * @param $pPluginParameters parameters passed on to the plugin during laod
 	 * @return bool TRUE on success, FALSE if it's not valid
 	 * @access public
 	 **/
-	function load( $pExtras = FALSE ) {
+	function load( $pPluginParameters = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId ) ) {
 			global $gTreasurySystem;
 
@@ -93,7 +93,7 @@ class TreasuryItem extends TreasuryBase {
 
 				// load details using plugin
 				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-				if( empty( $load_function ) || !$load_function( $aux, $this ) ) {
+				if( empty( $load_function ) || !$load_function( $aux, $this, $pPluginParameters ) ) {
 					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 				}
 

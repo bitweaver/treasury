@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.7 2007/02/26 16:16:34 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.8 2007/02/26 18:02:27 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.7 $
+ * @version		$Revision: 1.8 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -116,10 +116,11 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
  * 
  * @param array $pFileHash contains all file information
  * @param array $pCommonObject is the full object loaded. only set when we are actually loading the object, not just listing items
+ * @param array $pPluginParameters is the full object loaded. only set when we are actually loading the object, not just listing items
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL ) {
+function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParameters = NULL ) {
 	global $gBitSmarty, $gBitSystem, $gLibertySystem;
 	if( $ret = treasury_default_load( $pFileHash, $pCommonObject )) {
 		// check for status of conversion
@@ -142,6 +143,8 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL ) {
 			if( !$pCommonObject->getPreference( 'flv_height' )) {
 				$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / 4 * 3 );
 			}
+
+			treasury_flv_calculate_videosize( $pPluginParameters, $pCommonObject->mPrefs );
 		}
 
 		// we can use a special plugin if active to include flvs in wiki pages
@@ -314,20 +317,21 @@ function treasury_flv_converter( &$pParamHash ) {
  * @access public
  * @return TRUE when there has been a video size change, FALSE if there has been no change
  */
-function treasury_flv_calculate_videosize( &$pParamHash ) {
+function treasury_flv_calculate_videosize( $pParamHash, &$pVideoInfo ) {
 	$ret = FALSE;
 
 	// if we want to display a different size
 	if( !empty( $pParamHash['size'] )) {
 		if( $pParamHash['size'] == 'small' ) {
 			$new_width = 160;
-			$pParamHash['digits'] = 'false';
+			$pVideoInfo['digits'] = 'false';
 		} elseif( $pParamHash['size'] == 'medium' ) {
 			$new_width = 320;
 		} elseif( $pParamHash['size'] == 'large' ) {
 			$new_width = 480;
 		} elseif( $pParamHash['size'] == 'huge' ) {
 			$new_width = 600;
+			$pVideoInfo['fullscreenmode'] = 'true';
 		}
 	}
 
@@ -340,14 +344,14 @@ function treasury_flv_calculate_videosize( &$pParamHash ) {
 	if( !empty( $new_width )) {
 		// if they set a custom height, we use that
 		if( @BitBase::verifyId( $pParamHash['height'] )) {
-			$pParamHash['flv_height'] = $pParamHash['height'];
+			$pVideoInfo['flv_height'] = $pParamHash['height'];
 		} else {
-			$ratio = $pParamHash['flv_width'] / $new_width;
-			$pParamHash['flv_height'] = round( $pParamHash['flv_height'] / $ratio );
+			$ratio = $pVideoInfo['flv_width'] / $new_width;
+			$pVideoInfo['flv_height'] = round( $pVideoInfo['flv_height'] / $ratio );
 		}
 
 		// now that all calculations are done, we apply the width
-		$pParamHash['flv_width']  = $new_width;
+		$pVideoInfo['flv_width']  = $new_width;
 
 		$ret = TRUE;
 	}
