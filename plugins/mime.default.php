@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.31 2007/02/26 15:36:06 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.32 2007/02/26 21:06:39 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.31 $
+ * @version     $Revision: 1.32 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -201,21 +201,7 @@ function treasury_default_load( &$pFileHash, &$pCommonObject = NULL ) {
 			INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 			WHERE la.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
-			//$canThumbFunc = liberty_get_function( 'can_thumbnail' );
-			if( file_exists( BIT_ROOT_PATH.dirname( $row['storage_path'] ).'/small.jpg' )) {
-				$pFileHash['thumbnail_url']['icon']   = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/icon.jpg';
-				$pFileHash['thumbnail_url']['avatar'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/avatar.jpg';
-				$pFileHash['thumbnail_url']['small']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/small.jpg';
-				$pFileHash['thumbnail_url']['medium'] = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/medium.jpg';
-				$pFileHash['thumbnail_url']['large']  = BIT_ROOT_URL.dirname( $row['storage_path'] ).'/large.jpg';
-			} else {
-				$mime_thumbnail = LibertySystem::getMimeThumbnailURL( $row['mime_type'], substr( $row['storage_path'], strrpos( $row['storage_path'], '.' ) + 1 ));
-				$pFileHash['thumbnail_url']['icon']   = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['avatar'] = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['small']  = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['medium'] = $mime_thumbnail;
-				$pFileHash['thumbnail_url']['large']  = $mime_thumbnail;
-			}
+			$pFileHash['thumbnail_url']    = liberty_fetch_thumbnails( $row['storage_path'] );
 			$pFileHash['filename']         = basename( $row['storage_path'] );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
 			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] )));
