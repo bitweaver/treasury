@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.33 2007/02/26 18:02:27 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.34 2007/02/26 22:45:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.33 $
+ * @version      $Revision: 1.34 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -97,7 +97,7 @@ class TreasuryItem extends TreasuryBase {
 					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
 				}
 
-				if( empty( $this->mInfo['download_url'] ) ) {
+				if( !isset( $this->mInfo['download_url'] ) ) {
 					$this->mInfo['download_url'] = $this->getDownloadUrl();
 				}
 			}
