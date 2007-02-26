@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.15 2007/01/07 21:06:06 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.16 2007/02/26 15:36:06 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.15 $
+ * @version     $Revision: 1.16 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -132,11 +132,12 @@ function treasury_theme_store( &$pStoreRow, &$pCommonObject ) {
 /**
  * Load file data from the database
  * 
- * @param array $pRow 
+ * @param array $pFileHash contains all file information
+ * @param array $pCommonObject is the full object loaded. only set when we are actually loading the object, not just listing items
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_theme_load( &$pFileHash ) {
+function treasury_theme_load( &$pFileHash, &$pCommonObject = NULL ) {
 	if( $ret = treasury_default_load( $pFileHash ) ) {
 		// get extra stuff such as screenshots and icons
 		if( $sshots = treasury_theme_get_screenshots( dirname( $pFileHash['source_file'] ) ) ) {

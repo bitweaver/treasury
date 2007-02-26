@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.5 2007/02/25 14:25:25 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.6 2007/02/26 15:36:06 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.5 $
+ * @version		$Revision: 1.6 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -114,13 +114,14 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
 /**
  * Load file data from the database
  * 
- * @param array $pRow 
+ * @param array $pFileHash contains all file information
+ * @param array $pCommonObject is the full object loaded. only set when we are actually loading the object, not just listing items
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_flv_load( &$pFileHash ) {
-	global $gBitSmarty, $gLibertySystem;
-	if( $ret = treasury_default_load( $pFileHash )) {
+function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL ) {
+	global $gBitSmarty, $gBitSystem, $gLibertySystem;
+	if( $ret = treasury_default_load( $pFileHash, $pCommonObject )) {
 		// check for status of conversion
 		if( is_file( dirname( $pFileHash['source_file'] ).'/error' )) {
 			$pFileHash['status']['error'] = TRUE;
@@ -130,6 +131,17 @@ function treasury_flv_load( &$pFileHash ) {
 			$pFileHash['flv_url'] = dirname( $pFileHash['source_url'] ).'/flick.flv';
 			// we need some javascript for the flv player:
 			$gBitSmarty->assign( 'treasuryFlv', TRUE );
+		}
+
+		// if we are passed an object, we'll modify width and height according to our needs
+		if( is_object( $pCommonObject )) {
+			if( !$pCommonObject->getPreference( 'flv_width' )) {
+				$pCommonObject->setPreference( 'flv_width', $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
+			}
+
+			if( !$pCommonObject->getPreference( 'flv_height' )) {
+				$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / 4 * 3 );
+			}
 		}
 
 		// we can use a special plugin if active to include flvs in wiki pages
@@ -205,7 +217,7 @@ function treasury_flv_converter( &$pParamHash ) {
 			// we can do some nice stuff if ffmpeg-php is available
 			if( extension_loaded( 'ffmpeg' )) {
 				$movie = new ffmpeg_movie( $source );
-				$info['duration']   = $movie->getDuration();
+				$info['duration']   = round( $movie->getDuration() );
 				$info['width']      = $movie->getFrameWidth();
 				$info['height']     = $movie->getFrameHeight();
 
@@ -225,7 +237,7 @@ function treasury_flv_converter( &$pParamHash ) {
 					$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
 
 					// screenshot offset is relative to flick length - we'll pick a frame somewhere in the middle
-					// if we're dealing with a wmv file, we things get wonky - as to be expected with m$ in the game - gah!
+					// if we're dealing with a wmv file, things might get wonky - as to be expected with M$ in the game - gah!
 					if( preg_match( "!\.wmv$!i", $source )) {
 						if( $info['duration'] >= 240 ) {
 							$info['offset'] = '00:01:00';
@@ -254,12 +266,16 @@ function treasury_flv_converter( &$pParamHash ) {
 			$debug = shell_exec( "{$convert['ffmpeg']} -i '$source' -acodec mp3 -ar {$convert['video_rate']} -ab {$convert['audio_rate']} -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file' 2>&1" );
 
 			if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
-				// we store the video size as a content preference
-				$prefNames = array( 'flv_height', 'flv_width', 'duration' );
-				foreach( $prefNames as $name ) {
-					if( !empty( $info[$name] )) {
-						$item->storePreference( $name, $info[$name] );
-					}
+
+				// store duration of video
+				if( !empty( $info['duration'] )) {
+					$item->storePreference( 'duration', $info['duration'] );
+				}
+
+				// only store height if aspect is different to 4:3
+				$default = 4 / 3;
+				if( !empty( $info['flv_height'] ) && !( $info['aspect'] != '4:3' || $info['aspect'] != $default )) {
+					$item->storePreference( 'flv_height', $info['flv_height'] );
 				}
 
 				// since the flv conversion worked, we will create a preview screenshots to show.

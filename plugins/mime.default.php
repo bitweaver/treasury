@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.30 2007/02/12 15:37:50 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.31 2007/02/26 15:36:06 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.30 $
+ * @version     $Revision: 1.31 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -187,11 +187,12 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 /**
  * Load file data from the database
  * 
- * @param array $pRow 
+ * @param array $pFileHash contains all file information
+ * @param array $pCommonObject is the full object loaded. only set when we are actually loading the object, not just listing items
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_default_load( &$pFileHash ) {
+function treasury_default_load( &$pFileHash, &$pCommonObject = NULL ) {
 	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {

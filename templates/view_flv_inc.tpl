@@ -1,6 +1,6 @@
 {if $gContent->mInfo.flv_url}
 	<div class="row" style="text-align:center;">
-		{include file="bitpackage:treasury/flv_player_inc.tpl" flv=$gContent->mInfo flv_prefs=$gContent->mPrefs}
+		{include file="bitpackage:treasury/flv_player_inc.tpl" flv=$gContent->mInfo flvPrefs=$gContent->mPrefs}
 	</div>
 {elseif $gContent->mInfo.status.processing}
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}

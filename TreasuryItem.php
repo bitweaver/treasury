@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.31 2007/02/15 21:25:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.32 2007/02/26 15:36:06 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.31 $
+ * @version      $Revision: 1.32 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -83,21 +83,26 @@ class TreasuryItem extends TreasuryBase {
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
-				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-				if( empty( $load_function ) || !$load_function( $aux ) ) {
-					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
-				}
-				$this->mInfo                 = $aux;
+				// this is passed by reference as it's updated by the load function
+				$this->mInfo                 = &$aux;
 				$this->mInfo['title']        = $this->getTitle( $aux );
 				$this->mInfo['display_url']  = $this->getDisplayUrl();
+
+				// we might have content preferences set by some plugin
+				LibertyContent::load();
+
+				// load details using plugin
+				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
+				if( empty( $load_function ) || !$load_function( $aux, $this ) ) {
+					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
+				}
+
 				if( empty( $this->mInfo['download_url'] ) ) {
 					$this->mInfo['download_url'] = $this->getDownloadUrl();
 				}
 			}
-
-			// we might have content preferences set by some plugin
-			LibertyContent::load();
 		}
+
 		return( count( $this->mInfo ) );
 	}
 
