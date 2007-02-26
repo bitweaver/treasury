@@ -7,7 +7,6 @@
 		file={$flv.flv_url}&
 		showdigits={$flvPrefs.digits|default:'true'}&
 		image={$flv.thumbnail_url.medium}&
-		fullscreenmode={$flvPrefs.fullscreenmode|default:'false'}&
 		repeat=false
 	" {rdelim};
 	UFO.create( FO, "flv_player_{$flv.content_id}");

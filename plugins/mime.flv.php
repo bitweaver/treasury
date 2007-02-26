@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.8 2007/02/26 18:02:27 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.9 2007/02/26 18:24:51 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.8 $
+ * @version		$Revision: 1.9 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -331,7 +331,6 @@ function treasury_flv_calculate_videosize( $pParamHash, &$pVideoInfo ) {
 			$new_width = 480;
 		} elseif( $pParamHash['size'] == 'huge' ) {
 			$new_width = 600;
-			$pVideoInfo['fullscreenmode'] = 'true';
 		}
 	}
 
