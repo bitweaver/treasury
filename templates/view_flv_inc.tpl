@@ -42,12 +42,14 @@
 		{/if}
 	{/if}
 
-	<div class="row">
-		{formlabel label="Duration" for=""}
-		{forminput}
-			{$gContent->mPrefs.duration|display_duration}
-		{/forminput}
-	</div>
+	{if $gContent->mPrefs.duration}
+		<div class="row">
+			{formlabel label="Duration" for=""}
+			{forminput}
+				{$gContent->mPrefs.duration|display_duration}
+			{/forminput}
+		</div>
+	{/if}
 
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_desc' )}
 		{if $gContent->mInfo.data}
