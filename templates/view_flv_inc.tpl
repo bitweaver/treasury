@@ -67,7 +67,7 @@
 				{forminput}
 					<a href="{$gContent->mInfo.download_url}">{$gContent->mInfo.filename|escape}</a>
 					&nbsp; <small>({$gContent->mInfo.mime_type})</small>
-					{if $gContent->isOwner() || $gBitUser->isAdmin()}
+					{if ($gContent->isOwner() || $gBitUser->isAdmin()) && $gContent->mInfo.flv_url}
 						<br /><input type="submit" name="remove_original" value="{tr}Remove Original{/tr}" />
 						{formhelp note="This will remove the original file from the server. The falsh video will remain and you can still view the video but you cannot download the original anymore."}
 					{/if}
