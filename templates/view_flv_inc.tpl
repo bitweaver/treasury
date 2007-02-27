@@ -110,7 +110,7 @@
 
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_hits' )}
 		<div class="row">
-			{formlabel label="Downloads" for=""}
+			{formlabel label="Views" for=""}
 			{forminput}
 				{$gContent->mInfo.hits|default:"{tr}none{/tr}"}
 			{/forminput}
