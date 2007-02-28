@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.11 2007/02/26 23:03:30 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.12 2007/02/28 09:21:40 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.11 $
+ * @version		$Revision: 1.12 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -68,7 +68,7 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 				touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
 			}
 		} else {
-			if( !treasury_flv_converter( $pStoreRow )) {
+			if( !treasury_flv_converter( $pStoreRow, $pCommonObject )) {
 				$pStoreRow['errors'] = $pStoreRow['log'];
 				$ret = FALSE;
 			}
@@ -102,7 +102,7 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
 			if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
 				treasury_flv_add_process( $pStoreRow['content_id'] );
 			} else {
-				if( !treasury_flv_converter( $pStoreRow )) {
+				if( !treasury_flv_converter( $pStoreRow, $pCommonObject )) {
 					$pStoreRow['errors'] = $pStoreRow['log']['message'];
 				}
 			}
@@ -189,7 +189,7 @@ function treasury_flv_add_process( $pContentId ) {
  * @access public
  * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
  */
-function treasury_flv_converter( &$pParamHash ) {
+function treasury_flv_converter( &$pParamHash, &$pCommonObject = NULL ) {
 	global $gBitSystem;
 
 	// video conversion can take a while
@@ -293,19 +293,28 @@ function treasury_flv_converter( &$pParamHash ) {
 					$fileHash['dest_path']   = str_replace( BIT_ROOT_PATH, '', "$dest_path/" );
 					liberty_generate_thumbnails( $fileHash );
 				}
-				$log['message'] = 'SUCCESS: Video converted to flash video';
+				$log['message'] = 'SUCCESS: Converted to flash video';
+				$item->mLogs['flv_converter'] = "Converted to flashvideo in ".( date( 'U' ) - $begin )." seconds";
 				$ret = TRUE;
 			} else {
 				// remove badly converted file
 				@unlink( $dest_file );
-				touch( $dest_path."/error" );
 				$log['message'] = 'ERROR: The video you uploaded could not be converted by ffmpeg. DEBUG OUTPUT: '.nl2br( $debug );
+				$item->mErrors['flv_converter'] = "Video could not be converted to flashvideo. An error dump was saved to: ".$dest_path.'/error';
+
+				// write error message to error file
+				$h = fopen( $dest_path."/error", 'w' );
+				fwrite( $h, $debug );
+				fclose( $h );
 			}
 			@unlink( $dest_path.'/processing' );
 		}
 
 		$log['time']     = date( 'd/M/Y:H:i:s O' );
 		$log['duration'] = date( 'U' ) - $begin;
+
+		// we'll add an entry in the action logs
+		$item->storeActionLog();
 
 		// return the log
 		$pParamHash['log'] = $log;
