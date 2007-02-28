@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.12 2007/02/28 09:21:40 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.13 2007/02/28 10:52:29 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.12 $
+ * @version		$Revision: 1.13 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -68,7 +68,7 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 				touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
 			}
 		} else {
-			if( !treasury_flv_converter( $pStoreRow, $pCommonObject )) {
+			if( !treasury_flv_converter( $pStoreRow )) {
 				$pStoreRow['errors'] = $pStoreRow['log'];
 				$ret = FALSE;
 			}
@@ -102,7 +102,7 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
 			if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
 				treasury_flv_add_process( $pStoreRow['content_id'] );
 			} else {
-				if( !treasury_flv_converter( $pStoreRow, $pCommonObject )) {
+				if( !treasury_flv_converter( $pStoreRow )) {
 					$pStoreRow['errors'] = $pStoreRow['log']['message'];
 				}
 			}
@@ -189,7 +189,7 @@ function treasury_flv_add_process( $pContentId ) {
  * @access public
  * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
  */
-function treasury_flv_converter( &$pParamHash, &$pCommonObject = NULL ) {
+function treasury_flv_converter( &$pParamHash ) {
 	global $gBitSystem;
 
 	// video conversion can take a while
