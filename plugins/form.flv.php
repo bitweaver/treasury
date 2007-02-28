@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.2 2007/02/26 22:46:34 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.3 2007/02/28 06:58:12 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -36,7 +36,7 @@ if( $gContent->isOwner() || $gBitUser->isAdmin() || !empty( $_REQUEST['confirm']
 				'confirm_item' => $gContent->mInfo['title'].
 					'<br />'.tra( 'Filename' ).": ".$gContent->mInfo['filename'].
 					"<br /><small>(".$gContent->mInfo['mime_type']." ".smarty_modifier_display_bytes( $gContent->mInfo['file_size'] ).")</small>",
-				'warning'      => 'This will remove the original file and will leave the video file intact.',
+				'warning'      => 'This will remove the original file from the server. The falsh video will remain and you can still view the video but you cannot download the original anymore.',
 			);
 			$gBitSystem->confirmDialog( $formHash, $msgHash );
 die;
