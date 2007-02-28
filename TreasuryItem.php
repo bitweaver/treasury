@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.35 2007/02/26 23:03:29 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.36 2007/02/28 06:57:17 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.35 $
+ * @version      $Revision: 1.36 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -196,7 +196,6 @@ class TreasuryItem extends TreasuryBase {
 		$pListHash['cant'] = $this->mDb->getOne( $query, $bindVars );
 		LibertyContent::postGetList( $pListHash );
 
-		// TODO: do the cant query
 		return( count( $this->mErrors ) == 0 ) ? $ret : FALSE;
 	}
 
