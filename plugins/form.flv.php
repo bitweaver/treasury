@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.3 2007/02/28 06:58:12 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.4 2007/02/28 09:13:55 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -44,5 +44,5 @@ die;
 	}
 }
 
-header( "Location: ".$gContent->getDisplayUrl() );
+bit_redirect( $gContent->getDisplayUrl() );
 ?>
