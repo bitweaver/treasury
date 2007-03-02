@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.12 2007/02/25 15:37:18 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.13 2007/03/02 09:32:09 lugie Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -139,6 +139,11 @@ $itemViewing = array(
 	'treasury_item_view_attid' => array(
 		'label' => 'Attachment ID',
 		'note' => 'Display the syntax used to include the file in a wiki page.',
+		'type' => 'checkbox',
+	),
+	'treasury_item_view_comments' => array(
+		'label' => 'Comments',
+		'note' => 'Allow users to post and view comments when viewing files.',
 		'type' => 'checkbox',
 	),
 );

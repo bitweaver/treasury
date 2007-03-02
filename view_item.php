@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.9 2007/02/11 17:18:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.10 2007/03/02 09:32:09 lugie Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -41,6 +41,15 @@ if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
 $galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gGallery->mStructureId ) );
 $gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
 $gBitSmarty->assign_by_ref( 'gGallery', $gGallery );
+
+if( is_object( $gGallery ) && $gBitSystem->isFeatureActive('treasury_item_view_comments') == 'y' ) {
+	$commentsParentId = $gContent->mContentId;
+	$comments_vars = Array('treasuryitem');
+	$comments_prefix_var='treasuryitem:';
+	$comments_object_var='treasuryitem';
+	$comments_return_url = $_SERVER['PHP_SELF']."?content_id=".$gContent->mContentId;
+	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
+}
 
 $gBitSystem->display( "bitpackage:treasury/view_item.tpl", tra( "View File" ) );
 ?>
