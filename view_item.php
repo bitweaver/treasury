@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.10 2007/03/02 09:32:09 lugie Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.11 2007/03/02 10:59:17 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -42,12 +42,13 @@ $galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gGa
 $gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
 $gBitSmarty->assign_by_ref( 'gGallery', $gGallery );
 
-if( is_object( $gGallery ) && $gBitSystem->isFeatureActive('treasury_item_view_comments') == 'y' ) {
+if( is_object( $gGallery ) && $gBitSystem->isFeatureActive( "treasury_".$gContent->mInfo['plugin_guid']."_comments" )) {
 	$commentsParentId = $gContent->mContentId;
-	$comments_vars = Array('treasuryitem');
-	$comments_prefix_var='treasuryitem:';
-	$comments_object_var='treasuryitem';
-	$comments_return_url = $_SERVER['PHP_SELF']."?content_id=".$gContent->mContentId;
+	$comments_vars = Array( TREASURYITEM_CONTENT_TYPE_GUID );
+	$comments_prefix_var = TREASURYITEM_CONTENT_TYPE_GUID.':';
+	$comments_object_var = TREASURYITEM_CONTENT_TYPE_GUID;
+	$comments_return_url = $gContent->getDisplayUrl();
+	$gBitSmarty->assign( 'item_display_comments', TRUE );
 	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 }
 

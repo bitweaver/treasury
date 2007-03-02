@@ -78,7 +78,6 @@ $gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
 	array( TREASURY_PKG_NAME, 'treasury_item_view_date',         'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_item_view_creator',      'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_item_view_hits',         'y' ),
-	array( TREASURY_PKG_NAME, 'treasury_item_view_comments',	 'y' ),
 ) );
 
 // Default UserPermissions

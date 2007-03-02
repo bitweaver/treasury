@@ -21,7 +21,11 @@
 		{assign var=guid value=$gContent->mInfo.plugin_guid}
 		{include file=$gTreasurySystem->mPlugins.$guid.view_tpl}
 	</div><!-- end .body -->
-</div><!-- end .treasury -->
 
-{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
+	{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
+
+	{if $item_display_comments}
+		{include file="bitpackage:liberty/comments.tpl"}
+	{/if}
+</div><!-- end .treasury -->
 {/strip}

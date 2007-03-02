@@ -13,6 +13,7 @@
 				<tr>
 					<th style="width:70%;">{tr}Plugin{/tr}</th>
 					<th style="width:20%;">{tr}GUID{/tr}</th>
+					<th style="width:20%;">{tr}Comments{/tr}</th>
 					<th style="width:10%;">{tr}Active{/tr}</th>
 				</tr>
 
@@ -25,6 +26,10 @@
 							</label>
 						</td>
 						<td>{$guid}</td>
+						<td style="text-align:center;">
+							{assign var=comment value="treasury_`$guid`_comments"}
+							<input type="checkbox" name="comments[{$guid}]" value="y" {if $gBitSystem->isFeatureActive($comment)}checked="checked"{/if} />
+						</td>
 						<td align="center">
 							{if $plugin.is_active == 'x'}
 								{tr}Missing{/tr}

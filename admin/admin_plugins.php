@@ -16,6 +16,20 @@ $gTreasurySystem->scanAllPlugins( NULL, "mime\." );
 $feedback = array();
 if( !empty( $_REQUEST['pluginsave'] )) {
 	$gTreasurySystem->setActivePlugins( $_REQUEST['plugins'] );
+
+	// this will make sure we remove all kernel_config entries when no comments are desired
+	if( empty( $_REQUEST['comments'] )) {
+		$_REQUEST['comments'] = array();
+	}
+
+	foreach( array_keys( $gTreasurySystem->mPlugins ) as $guid ) {
+		if( in_array( $guid, array_keys( $_REQUEST['comments'] ))) {
+			$gBitSystem->storeConfig( "treasury_{$guid}_comments", 'y', TREASURY_PKG_NAME );
+		} else {
+			$gBitSystem->storeConfig( "treasury_{$guid}_comments", NULL, TREASURY_PKG_NAME );
+		}
+	}
+
 	$feedback['success'] = tra( 'The plugins were successfully updated' );
 }
 
