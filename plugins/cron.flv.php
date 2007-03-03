@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.1 2007/02/26 22:39:49 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.2 2007/03/03 15:10:37 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.1 $
+ * @version		$Revision: 1.2 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -97,7 +97,7 @@ if( !empty( $argc )) {
 
 // running from cron can cause us not to be in the right dir.
 chdir( dirname( __FILE__ ));
-require_once( '../bit_setup_inc.php' );
+require_once( '../../bit_setup_inc.php' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
 
 // add some protection for arbitrary thumbail execution.
@@ -110,21 +110,24 @@ $gBitSystem->mDb->StartTrans();
 
 $processLimit = ( !empty( $argv[1] )) ? $argv[1] : ( !empty( $_REQUEST['videos'] ) ? $_REQUEST['videos'] : 3 );
 $query = "
-	SELECT tpq.content_id AS hash_key, tpq.*
-	FROM `".BIT_DB_PREFIX."treasury_process_queue` tpq
-	WHERE tpq.begin_date IS NULL
-	ORDER BY tpq.queue_date";
-$result = $gBitSystem->mDb->query( $query, NULL, $processLimit );
+	SELECT lpq.`content_id` AS `hash_key`, lpq.*
+	FROM `".BIT_DB_PREFIX."liberty_process_queue` lpq
+	WHERE lpq.begin_date IS NULL AND lpq.`process_status`=?
+	ORDER BY lpq.`queue_date` ASC";
+$result = $gBitSystem->mDb->query( $query, array( 'pending' ), $processLimit );
 
 $processList = array();
 while( !$result->EOF ) {
 	$processList[$result->fields['content_id']] = $result->fields;
-	$query = "UPDATE `".BIT_DB_PREFIX."treasury_process_queue` SET `begin_date`=? WHERE `content_id`=?";
-	$gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $result->fields['content_id'] ));
+	$query = "UPDATE `".BIT_DB_PREFIX."liberty_process_queue` SET `process_status`=? WHERE `process_id`=?";
+	//$gBitSystem->mDb->query( $query, array( 'processing', $result->fields['process_id'] ));
 	$result->MoveNext();
 }
 
 $gBitSystem->mDb->CompleteTrans();
+
+vd($processList);
+die;
 
 $log   = array();
 $total = date( 'U' );
@@ -132,7 +135,7 @@ $total = date( 'U' );
 // we just zap through all these files and let the converter function worry about all the problems that might arise
 foreach( $processList as $item ) {
 	if( treasury_flv_converter( $item )) {
-		$query = "UPDATE `".BIT_DB_PREFIX."treasury_process_queue` SET `end_date`=? WHERE `content_id`=?";
+		$query = "UPDATE `".BIT_DB_PREFIX."liberty_process_queue` SET `end_date`=? WHERE `content_id`=?";
 		$result = $gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $contentId ));
 	}
 	$log[$item['content_id']] = $item['log'];

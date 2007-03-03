@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.13 2007/02/28 10:52:29 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.14 2007/03/03 15:10:37 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.13 $
+ * @version		$Revision: 1.14 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -63,7 +63,7 @@ function treasury_flv_store( &$pStoreRow, &$pCommonObject ) {
 	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject )) {
 		if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
 			// if we want to use cron, we add a process, otherwise we convert video right away
-			if( treasury_flv_add_process( $pStoreRow['content_id'] )) {
+			if( treasury_flv_add_process( $pStoreRow )) {
 				// add an indication that this file is being processed
 				touch( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path']."processing" );
 			}
@@ -100,7 +100,7 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
 
 			// if we want to use cron, we add a process, otherwise we convert video right away
 			if( $gBitSystem->isFeatureActive( 'treasury_use_cron' )) {
-				treasury_flv_add_process( $pStoreRow['content_id'] );
+				treasury_flv_add_process( $pStoreRow );
 			} else {
 				if( !treasury_flv_converter( $pStoreRow )) {
 					$pStoreRow['errors'] = $pStoreRow['log']['message'];
@@ -136,14 +136,24 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParamet
 
 		// if we are passed an object, we'll modify width and height according to our needs
 		if( is_object( $pCommonObject )) {
-			if( !$pCommonObject->getPreference( 'flv_width' )) {
-				$pCommonObject->setPreference( 'flv_width', $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
+			// set the width of the video
+			$pCommonObject->setPreference( 'flv_width', $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
+
+			// TODO: remove this unneded condition. this is currently for backward compatibility. flv_height is not set in db anymore
+			//       this will only happen once per flick as the flv_height has been deprecated in favour of the aspect
+			if( $height = $pCommonObject->getPreference( 'flv_height' )) {
+				$aspect = $pCommonObject->getPreference( 'flv_width' ) / $pCommonObject->getPreference( 'flv_height' );
+				$default = 4 / 3;
+				if( $aspect != $default ) {
+					$pCommonObject->storePreference( 'aspect', $aspect );
+				}
+				$pCommonObject->storePreference( 'flv_height', NULL );
+				$pCommonObject->setPreference( 'flv_height', $height );
+			} else {
+				$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / $pCommonObject->getPreference( 'aspect', 4 / 3 ));
 			}
 
-			if( !$pCommonObject->getPreference( 'flv_height' )) {
-				$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / 4 * 3 );
-			}
-
+			// now that we have the original width and height, we can get the displayed values
 			treasury_flv_calculate_videosize( $pPluginParameters, $pCommonObject->mPrefs );
 
 			// since pCommonObject is only set when the file is fully loaded, we can add a hit - hardly anyone will download the original if they can view the flv...
@@ -165,18 +175,24 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParamet
  * @access public
  * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
  */
-function treasury_flv_add_process( $pContentId ) {
+function treasury_flv_add_process( $pStoreRow ) {
 	global $gBitSystem;
 	$ret = FALSE;
-	if( @BitBase::verifyId( $pContentId )) {
+	if( @BitBase::verifyId( $pStoreRow['content_id'] )) {
 		$query = "
-			DELETE FROM `".BIT_DB_PREFIX."treasury_process_queue`
-			WHERE `content_id`=?";
-		$gBitSystem->mDb->query( $query, array( $pContentId ));
-		$query = "
-			INSERT INTO `".BIT_DB_PREFIX."treasury_process_queue`
-			(`content_id`, `queue_date`) VALUES (?,?)";
-		$gBitSystem->mDb->query( $query, array( $pContentId, $gBitSystem->getUTCTime() ));
+			UPDATE `".BIT_DB_PREFIX."liberty_process_queue`
+			SET `process_status`=?
+			WHERE `content_id`=? AND `process_status`=?";
+		$gBitSystem->mDb->query( $query, array( 'defunkt', $pStoreRow['content_id'], 'pending' ));
+
+		$storeHash = array (
+			'content_id'           => $pStoreRow['content_id'],
+			'queue_date'           => $gBitSystem->getUTCTime(),
+			'process_status'       => 'pending',
+			'processor'            => dirname( __FILE__ ).'/mime.flv.php',
+			'processor_parameters' => treasury_flv_converter( $pStoreRow, TRUE ),
+		);
+		$gBitSystem->mDb->associateInsert( BIT_DB_PREFIX."liberty_process_queue", $storeHash );
 		$ret = TRUE;
 	}
 	return $ret;
@@ -189,7 +205,7 @@ function treasury_flv_add_process( $pContentId ) {
  * @access public
  * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
  */
-function treasury_flv_converter( &$pParamHash ) {
+function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 	global $gBitSystem;
 
 	// video conversion can take a while
@@ -199,16 +215,16 @@ function treasury_flv_converter( &$pParamHash ) {
 
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		// these are set in the treasury plugin admin screen
-		$convert['ffmpeg']     = $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' ));
-		$convert['video_rate'] = $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 );
-		$convert['audio_rate'] = $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 );
-		$convert['width']      = $gBitSystem->getConfig( 'treasury_flv_width', 320 );
+		$ffmpeg     = $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' ));
+		$video_rate = $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 );
+		$audio_rate = $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 );
+		$width      = $gBitSystem->getConfig( 'treasury_flv_width', 320 );
 
 		$begin = date( 'U' );
 		$log   = array();
 
 		// check to see if ffmpeg is available at all
-		if( !shell_exec( "{$convert['ffmpeg']} -h" )) {
+		if( !shell_exec( "$ffmpeg -h" )) {
 			$log['time']     = date( 'Y-M-d - H:i:s O' );
 			$log['duration'] = 0;
 			$log['message']  = 'ERROR: ffmpeg does not seem to be available on your system. Please set the path to ffmpeg in the treasury administration screen.';
@@ -232,9 +248,9 @@ function treasury_flv_converter( &$pParamHash ) {
 					// aspect ratio
 					$info['aspect']     = $info['width'] / $info['height'];
 
-					// size of flv - width is set to width
-					$ratio              = $convert['width'] / $info['width'];
-					$info['flv_width']  = $convert['width'];
+					// size of flv - width is set to default width
+					$ratio              = $width / $info['width'];
+					$info['flv_width']  = $width;
 					$info['flv_height'] = round( $ratio * $info['height'] );
 					// height of video needs to be an even number
 					if( $info['flv_height'] % 2 ) {
@@ -245,47 +261,51 @@ function treasury_flv_converter( &$pParamHash ) {
 					// screenshot offset is relative to flick length - we'll pick a frame somewhere in the middle
 					// if we're dealing with a wmv file, things might get wonky - as to be expected with M$ in the game - gah!
 					if( preg_match( "!\.wmv$!i", $source )) {
-						if( $info['duration'] >= 240 ) {
-							$info['offset'] = '00:01:00';
-						} else {
-							$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
-						}
+						$max_durartion = 240;
 					} else {
-						if( $info['duration'] >= 120 ) {
-							$info['offset'] = '00:01:00';
-						} else {
-							$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
-						}
+						$max_durartion = 124;
+					}
+
+					if( $info['duration'] >= $max_durartion ) {
+						$info['offset'] = '00:01:00';
+					} else {
+						$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
 					}
 				}
 			}
 
 			if( empty( $info['width'] )) {
 				// set some default values if ffmpeg isn't available or ffmpeg-php couldn't get the relevant information
-				$info['aspect']     = "4:3";
-				$info['flv_width']  = $convert['width'];
-				$info['flv_height'] = round( $convert['width'] / 4 * 3 );
+				$info['aspect']     = 4 / 3;
+				$info['flv_width']  = $width;
+				$info['flv_height'] = round( $width / 4 * 3 );
 				$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
 				$info['offset']     = '00:00:10';
 			}
 
-			$debug = shell_exec( "{$convert['ffmpeg']} -i '$source' -acodec mp3 -ar {$convert['video_rate']} -ab {$convert['audio_rate']} -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file' 2>&1" );
+			// we keep the output of this that we can store it to the error file if we need to do so
+			$parameters = "-i '$source' -acodec mp3 -ar $video_rate -ab $audio_rate -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file'";
+			if( $pGetParameters ) {
+				return $parameters;
+			} else {
+				$debug = shell_exec( "$ffmpeg $parameters 2>&1" );
+			}
 
+			// make sure the conversion was successfull
 			if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
-
 				// store duration of video
 				if( !empty( $info['duration'] )) {
 					$item->storePreference( 'duration', $info['duration'] );
 				}
 
-				// only store height if aspect is different to 4:3
+				// only store aspect if aspect is different to 4:3
 				$default = 4 / 3;
-				if( !empty( $info['flv_height'] ) && !( $info['aspect'] != '4:3' || $info['aspect'] != $default )) {
-					$item->storePreference( 'flv_height', $info['flv_height'] );
+				if( !empty( $info['aspect'] ) && $info['aspect'] != $default ) {
+					$item->storePreference( 'aspect', $info['aspect'] );
 				}
 
 				// since the flv conversion worked, we will create a preview screenshots to show.
-				shell_exec( "{$convert['ffmpeg']} -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
+				shell_exec( "$ffmpeg -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
 				if( is_file( "$dest_path/preview1.jpg" )) {
 					$fileHash['type']        = 'image/jpg';
 					$fileHash['thumbsizes']  = array( 'icon', 'avatar', 'small', 'medium' );
@@ -297,7 +317,7 @@ function treasury_flv_converter( &$pParamHash ) {
 				$item->mLogs['flv_converter'] = "Converted to flashvideo in ".( date( 'U' ) - $begin )." seconds";
 				$ret = TRUE;
 			} else {
-				// remove badly converted file
+				// remove unsuccessfully converted file
 				@unlink( $dest_file );
 				$log['message'] = 'ERROR: The video you uploaded could not be converted by ffmpeg. DEBUG OUTPUT: '.nl2br( $debug );
 				$item->mErrors['flv_converter'] = "Video could not be converted to flashvideo. An error dump was saved to: ".$dest_path.'/error';
