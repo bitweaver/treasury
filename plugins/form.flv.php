@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.4 2007/02/28 09:13:55 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.5 2007/03/03 21:43:09 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -24,6 +24,8 @@ if( $gContent->isOwner() || $gBitUser->isAdmin() || !empty( $_REQUEST['confirm']
 
 			if( !empty( $_REQUEST['confirm'] ) ) {
 				@unlink( $gContent->mInfo['source_file'] );
+				$gContent->mLogs['original'] = tra( 'Source file removed' );
+				$gContent->storeActionLog();
 				bit_redirect( $gContent->getDisplayUrl() );
 			}
 
