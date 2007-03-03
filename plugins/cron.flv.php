@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.2 2007/03/03 15:10:37 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.3 2007/03/03 15:13:37 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.2 $
+ * @version		$Revision: 1.3 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -119,15 +119,12 @@ $result = $gBitSystem->mDb->query( $query, array( 'pending' ), $processLimit );
 $processList = array();
 while( !$result->EOF ) {
 	$processList[$result->fields['content_id']] = $result->fields;
-	$query = "UPDATE `".BIT_DB_PREFIX."liberty_process_queue` SET `process_status`=? WHERE `process_id`=?";
-	//$gBitSystem->mDb->query( $query, array( 'processing', $result->fields['process_id'] ));
+	$query = "UPDATE `".BIT_DB_PREFIX."liberty_process_queue` SET `process_status`=?, `begin_date`=? WHERE `process_id`=?";
+	$gBitSystem->mDb->query( $query, array( 'processing', $gBitSystem->getUTCTime(), $result->fields['process_id'] ));
 	$result->MoveNext();
 }
 
 $gBitSystem->mDb->CompleteTrans();
-
-vd($processList);
-die;
 
 $log   = array();
 $total = date( 'U' );
