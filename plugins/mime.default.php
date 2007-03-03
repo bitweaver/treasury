@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.32 2007/02/26 21:06:39 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.33 2007/03/03 15:08:53 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.32 $
+ * @version     $Revision: 1.33 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -293,7 +293,7 @@ function treasury_default_expunge( &$pParamHash ) {
 			WHERE la.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pParamHash['content_id'] ))) {
 			// Make sure the storage path is pointing to a valid file
-			if( is_file( BIT_ROOT_PATH.$row['storage_path'] )) {
+			if( is_dir( dirname( BIT_ROOT_PATH.$row['storage_path'] ))) {
 				unlink_r( dirname( BIT_ROOT_PATH.$row['storage_path'] ));
 			}
 
