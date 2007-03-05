@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.14 2007/03/03 15:10:37 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.15 2007/03/05 07:13:07 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.14 $
+ * @version		$Revision: 1.15 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -263,7 +263,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					if( preg_match( "!\.wmv$!i", $source )) {
 						$max_durartion = 240;
 					} else {
-						$max_durartion = 124;
+						$max_durartion = 120;
 					}
 
 					if( $info['duration'] >= $max_durartion ) {
