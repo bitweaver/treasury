@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.7 $
+ * @version  $Revision: 1.8 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -37,6 +37,11 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 			'menu_template' => 'bitpackage:treasury/menu_treasury.tpl',
 		);
 		$gBitSystem->registerAppMenu( $menuHash );
+	}
+
+	// use this as a temp solution until we can work out how to allow firefox to download files even with gzip enabled
+	if( ACTIVE_PACKAGE == 'treasury' && preg_match( '/download\.php/', $_SERVER['PHP_SELF'] )) {
+		$gBitSystem->setConfig( 'site_output_obzip', NULL );
 	}
 }
 ?>
