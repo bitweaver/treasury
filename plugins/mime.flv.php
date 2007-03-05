@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.15 2007/03/05 07:13:07 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.16 2007/03/05 11:56:26 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.15 $
+ * @version		$Revision: 1.16 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -120,7 +120,7 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_flv_load( &$pFileHash, &$pCommonObject = NULL, $pPluginParameters = NULL ) {
+function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = NULL ) {
 	global $gBitSmarty, $gBitSystem, $gLibertySystem;
 	if( $ret = treasury_default_load( $pFileHash, $pCommonObject )) {
 		// check for status of conversion

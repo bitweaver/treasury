@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.33 2007/03/03 15:08:53 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.34 2007/03/05 11:56:26 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.33 $
+ * @version     $Revision: 1.34 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -192,7 +192,7 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
  * @access public
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
-function treasury_default_load( &$pFileHash, &$pCommonObject = NULL ) {
+function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
@@ -248,7 +248,7 @@ function treasury_default_download( &$pFileHash ) {
 		} else {
 			// make sure we close off obzip compression if it's on
 			//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] )) {
-			@ob_end_clean();
+			//	@ob_end_clean();
 			//}
 
 			// this will get the browser to open the download dialogue - even when the 

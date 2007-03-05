@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.36 2007/02/28 06:57:17 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.37 2007/03/05 11:56:25 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.36 $
+ * @version      $Revision: 1.37 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -171,7 +171,9 @@ class TreasuryItem extends TreasuryBase {
 		while( $aux = $result->fetchRow() ) {
 			$aux['title'] = $this->getTitle( $aux );
 			if( $load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' )) {
-				if( !$load_function( $aux )) {
+				// this is needed for php < 5
+				$dummy = array();
+				if( !$load_function( $aux, $dummy )) {
 					$this->mErrors['plugin_load'] = tra( 'There was a ploblem loading the file data.' );
 				}
 			} else {
