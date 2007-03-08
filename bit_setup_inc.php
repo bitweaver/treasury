@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.11 $
+ * @version  $Revision: 1.12 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -40,8 +40,9 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 	}
 
 	// use this as a temp solution until we can work out how to allow firefox to download files even with gzip enabled
-	if( strpos( $_SERVER['PHP_SELF'], TREASURY_PKG_URL.'download' ) !== FALSE ) {
-		$gBitSystem->setConfig( 'site_output_obzip', FALSE );
-	}
+	// this currently has no effect since gzip compression is set before scanPackages() in setup_inc.php
+//	if( strpos( $_SERVER['PHP_SELF'], TREASURY_PKG_URL.'download' ) !== FALSE ) {
+//		$gBitSystem->setConfig( 'site_output_obzip', FALSE );
+//	}
 }
 ?>

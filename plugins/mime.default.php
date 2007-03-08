@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.34 2007/03/05 11:56:26 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.35 2007/03/08 08:36:35 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.34 $
+ * @version     $Revision: 1.35 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -231,6 +231,7 @@ function treasury_default_download( &$pFileHash ) {
 	// Check to see if the file actually exists
 	if( is_readable( $pFileHash['source_file'] )) {
 		// if we have PEAR HTTP/Download installed, we make use of it since it allows download resume and download manager access
+		// read the docs if you want to enable download throttling and the like
 		if( @include_once( 'HTTP/Download.php' )) {
 			$dl = new HTTP_Download();
 			$dl->setLastModified( $pFileHash['last_modified'] );
@@ -247,9 +248,9 @@ function treasury_default_download( &$pFileHash ) {
 			}
 		} else {
 			// make sure we close off obzip compression if it's on
-			//if( $gBitSystem->isFeatureActive( 'site_output_obzip' ) && preg_match( "/tar/", $pFileHash['mime_type'] )) {
-			//	@ob_end_clean();
-			//}
+			if( $gBitSystem->isFeatureActive( 'site_output_obzip' )) {
+				@ob_end_clean();
+			}
 
 			// this will get the browser to open the download dialogue - even when the 
 			// browser could deal with the content type - not perfect, but works
