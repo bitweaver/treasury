@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.11 2007/01/06 12:19:16 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.12 2007/03/29 08:50:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -42,7 +42,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
 if( !empty( $_REQUEST['treasury_store'] ) ) {
 	// $rootStructure is created in edit_structure_inc.php
 	$_REQUEST['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
-	$galleryStore = new TreasuryGallery( !empty( $_REQUEST['structure_id'] ) ? $_REQUEST['structure_id'] : NULL, !empty( $_REQUEST['content_id'] ) ? $_REQUEST['content_id'] : NULL );
+	$galleryStore = new TreasuryGallery( NULL, !empty( $_REQUEST['gallery_content_id'] ) ? $_REQUEST['gallery_content_id'] : NULL );
 	$galleryStore->load();
 	if( $galleryStore->store( $_REQUEST ) ) {
 		// process image upload

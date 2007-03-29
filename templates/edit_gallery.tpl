@@ -13,7 +13,7 @@
 					{legend legend="Edit Gallery"}
 						{if $gContent->mStructureId}
 							<input type="hidden" name="structure_id" value="{$gContent->mStructureId}" />
-							<input type="hidden" name="content_id" value="{$galInfo.content_id}" />
+							<input type="hidden" name="gallery_content_id" value="{$galInfo.content_id}" />
 							<input type="hidden" name="action" value="{$smarty.request.action}" />
 
 							{if !$galInfo.structure_id || $galInfo.structure_id != $galInfo.root_structure_id}

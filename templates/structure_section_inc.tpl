@@ -24,9 +24,7 @@
 {if $checkbox}
 	<label><input type="checkbox" value="{$subtree[ix].content_id}" name="galleryContentIds[]"
 		{foreach from=$galleryContentIds item=galid}
-			{if $galid == $subtree[ix].content_id}
-				checked="checked"
-			{/if}
+			{if $galid == $subtree[ix].content_id} checked="checked" {/if}
 		{/foreach}
 	/>&nbsp;&nbsp;
 {/if}

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.25 2007/01/27 12:53:54 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.26 2007/03/29 08:50:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.25 $
+ * @version      $Revision: 1.26 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -326,8 +326,8 @@ class TreasuryGallery extends TreasuryBase {
 
 		// make sure we know this is an update
 		if( @BitBase::verifyId( $this->mContentId ) ) {
-			$pParamHash['content_store']['content_id'] = $this->mContentId;
-			$pParamHash['update'] = TRUE;
+			$pParamHash['content_id'] = $this->mContentId;
+			$pParamHash['update']     = TRUE;
 		}
 
 		// ---------- Gallery Store
@@ -337,9 +337,9 @@ class TreasuryGallery extends TreasuryBase {
 		// check for name issues, truncate length if too long
 		if( !empty( $pParamHash['title'] ) )  {
 			if( !@BitBase::verifyId( $this->mContentId ) ) {
-				$pParamHash['content_store']['title'] = substr( $pParamHash['title'], 0, 160 );
+				$pParamHash['content_store']['title'] = substr( $pParamHash['title'], 0, BIT_CONTENT_MAX_TITLE_LEN );
 			} else {
-				$pParamHash['content_store']['title'] = ( isset( $pParamHash['title'] ) ) ? substr( $pParamHash['title'], 0, 160 ) : $this->mInfo['title'];
+				$pParamHash['content_store']['title'] = ( isset( $pParamHash['title'] ) ) ? substr( $pParamHash['title'], 0, BIT_CONTENT_MAX_TITLE_LEN ) : $this->mInfo['title'];
 			}
 		} else {
 			$this->mErrors['title'] = 'You must enter a name for this gallery.';
