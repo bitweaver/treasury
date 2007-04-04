@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.14 2006/12/18 13:13:15 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.15 2007/04/04 18:45:16 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -21,8 +21,6 @@ require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
 
 // when we're uploading a file, permissions are taken care of in the store() function
 if( empty( $_REQUEST['treasury_store'] ) ) {
-	// replace any user permissions with custom ones if we have set them
-	$gContent->updateUserPermissions();
 	$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
 }
 

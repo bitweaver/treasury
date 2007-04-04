@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.37 2007/03/05 11:56:25 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.38 2007/04/04 18:45:16 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.37 $
+ * @version      $Revision: 1.38 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -379,11 +379,7 @@ class TreasuryItem extends TreasuryBase {
 		// make sure we have the correct permissions to upload to this gallery
 		foreach( $pStoreHash['galleryContentIds'] as $gcid ) {
 			$gallery = new TreasuryGallery( NULL, $gcid );
-			if( $gallery->loadPermissions() ) {
-				if( $gBitUser->isAdmin() || ( !empty( $gallery->mPerms['p_treasury_upload_item']['group_id'] ) && $gBitUser->isInGroup( $gallery->mPerms['p_treasury_upload_item']['group_id'] ))) {
-					$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
-				}
-			} else {
+			if( $gallery->hasUserPermission( 'p_treasury_upload_item' ) ) {
 				$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
 			}
 		}
@@ -427,13 +423,14 @@ class TreasuryItem extends TreasuryBase {
 		return( count( $this->mErrors ) == 0 );
 	}
 
-	function hasGalleryPermissions( $pPermName, $pFatalIfFalse = FALSE, $pFatalMessage = NULL ) {
+	function hasGalleryPermissions( $pPermName ) {
 		global $gBitSystem, $gBitUser;
+		vd($pPermName);
 		$ret = FALSE;
 		if( $this->isValid() && !empty( $pPermName ) ) {
 			// get all gallery content ids
 			$galleryContentIds = $this->getGalleriesFromItemContentId();
-			if( @is_array( $galleryContentIds ) ) {
+			if( !empty( $galleryContentIds ) && is_array( $galleryContentIds ) ) {
 				$gallery = new TreasuryGallery();
 				foreach( $galleryContentIds as $gcid ) {
 					// reduce load: we don't need to fully load the gallery to load the permissions
@@ -446,9 +443,7 @@ class TreasuryItem extends TreasuryBase {
 			}
 		}
 
-		if( !$ret && $pFatalIfFalse ) {
-			$gBitSystem->fatalPermission( $pPermName, $pFatalMessage );
-		}
+		$gBitSystem->fatalPermission( $pPermName, $pFatalMessage );
 		return $ret;
 	}
 

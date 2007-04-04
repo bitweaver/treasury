@@ -15,13 +15,6 @@
 		{if $gBitUser->hasPermission('p_treasury_create_gallery')}
 			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
 		{/if}
-		{if $gBitUser->isAdmin()}
-			{if $gContent->mPerms}
-				{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-readonly" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
-			{else}
-				{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$gContent->mContentId}
-			{/if}
-		{/if}
 		{if $gContent->isOwner() || $gBitUser->hasPermission('p_treasury_create_gallery')}
 			{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
 		{/if}
@@ -140,9 +133,6 @@
 									<input type="checkbox" name="del_content_ids[]" value="{$item.content_id}" />
 									{assign var=checks value=true}
 								{/if}
-								{*if $gBitUser->isAdmin()}
-									{smartlink ititle="Assign Permissions" ibiticon="icons/emblem-shared" ipackage=liberty ifile="content_permissions.php" content_id=$item.content_id}
-								{/if*}
 							</td>
 						</tr>
 					{/foreach}

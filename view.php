@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.10 2007/02/26 16:30:35 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.11 2007/04/04 18:45:17 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -21,8 +21,6 @@ require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
 
 $feedback = array();
 
-// replace any user permissions with custom ones if we have set them
-$gContent->updateUserPermissions();
 $gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
@@ -66,7 +64,7 @@ if( !empty( $_REQUEST['refresh'] ) ) {
 }
 
 // services
-$displayHash = array( 'perm_name' => 'p_treasury_gallery_view' );
+$displayHash = array( 'perm_name' => 'p_treasury_view_gallery' );
 $gContent->invokeServices( 'content_display_function', $displayHash );
 
 // set up structure related stuff
