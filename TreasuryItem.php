@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.38 2007/04/04 18:45:16 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.39 2007/04/15 19:25:48 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.38 $
+ * @version      $Revision: 1.39 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -70,7 +70,7 @@ class TreasuryItem extends TreasuryBase {
 				SELECT
 					tri.`plugin_guid`,
 					lct.`content_description`,
-					uu.`login`, uu.`real_name`, la.`attachment_id`,
+					uu.`login`, uu.`real_name`, lam.`attachment_id`,
 					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
 					$selectSql
@@ -80,7 +80,7 @@ class TreasuryItem extends TreasuryBase {
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
-					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				// this is passed by reference as it's updated by the load function
@@ -156,12 +156,12 @@ class TreasuryItem extends TreasuryBase {
 			SELECT tri.`plugin_guid`,
 				lct.`content_description`,
 				uu.`login`, uu.`real_name`,
-				la.`attachment_id`,
+				lam.`attachment_id`,
 				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 				lch.`hits` $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
@@ -190,7 +190,7 @@ class TreasuryItem extends TreasuryBase {
 		$query = "SELECT COUNT( trm.`item_content_id` )
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = tri.`content_id` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
