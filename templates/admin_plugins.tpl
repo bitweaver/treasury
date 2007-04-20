@@ -1,7 +1,7 @@
 {strip}
 <div class="admin treasury">
 	<div class="header">
-		<h1>{tr}Admin Tresaury Plugins{/tr}</h1>
+		<h1>{tr}Admin Tresury Plugins{/tr}</h1>
 	</div>
 
 	<div class="body">
