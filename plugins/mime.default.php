@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.35 2007/03/08 08:36:35 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.36 2007/04/23 07:19:18 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.35 $
+ * @version     $Revision: 1.36 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -174,8 +174,10 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 				$gLibertySystem->setActivePlugin( 'treasury' );
 			}
 
-			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `content_id`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['content_id'], $pStoreRow['file_id'], $pStoreRow['user_id'] ));
+			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ? )";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
+			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments_map` ( `attachment_id`, `content_id` ) VALUES ( ?, ? )";
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], $pStoreRow['content_id'] ));
 		}
 		$ret = TRUE;
 	} else {
@@ -198,8 +200,9 @@ function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
 		$query = "SELECT *
 			FROM `".BIT_DB_PREFIX."liberty_attachments` la
-			INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
-			WHERE la.`content_id` = ?";
+				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`attachment_id` = la.`attachment_id` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
+			WHERE lam.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
 			$pFileHash['thumbnail_url']    = liberty_fetch_thumbnails( $row['storage_path'] );
 			$pFileHash['filename']         = basename( $row['storage_path'] );
