@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.12 2007/04/16 07:20:56 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.13 2007/04/23 09:36:32 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -22,7 +22,7 @@ require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 $gContent->hasGalleryPermissions( 'p_treasury_view_item' );
 
 if( empty( $gContent->mInfo ) ) {
-	$gBitSystem->fatalError( "The requested file could not be found" );
+	$gBitSystem->fatalError( tra( "The requested file could not be found" ));
 }
 
 // load the parent gallery as well

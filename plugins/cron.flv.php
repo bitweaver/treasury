@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.3 2007/03/03 15:13:37 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.4 2007/04/23 09:36:32 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.3 $
+ * @version		$Revision: 1.4 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -103,7 +103,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
 // add some protection for arbitrary thumbail execution.
 // if argc is present, we will trust it was exec'ed command line.
 if( empty( $argc ) && !$gBitUser->isAdmin() ) {
-	$gBitSystem->fatalError( 'You cannot run the video converter' );
+	$gBitSystem->fatalError( tra( 'You cannot run the video converter' ));
 }
 
 $gBitSystem->mDb->StartTrans();

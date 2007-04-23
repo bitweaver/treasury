@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.11 2007/04/04 18:45:17 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.12 2007/04/23 09:36:32 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -78,7 +78,7 @@ $gStructure->load();
 
 // confirm that structure is valid
 if( empty( $gStructure ) || !$gStructure->isValid() ) {
-	$gBitSystem->fatalError( 'Invalid structure' );
+	$gBitSystem->fatalError( tra( 'Invalid structure' ));
 }
 
 $gBitSmarty->assign_by_ref( 'gStructure', $gStructure );
