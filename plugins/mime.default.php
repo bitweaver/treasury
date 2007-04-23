@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.36 2007/04/23 07:19:18 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.37 2007/04/23 09:17:51 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.36 $
+ * @version     $Revision: 1.37 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -84,8 +84,9 @@ function treasury_default_verify( &$pStoreRow ) {
 			$fileInfo = $gBitSystem->mDb->getRow( "
 				SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
 				FROM `".BIT_DB_PREFIX."liberty_attachments` la
+					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON( la.`attachment_id`=lam.`attachment_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( la.`foreign_id`=lf.`file_id` )
-				WHERE `content_id`=?", array( $pStoreRow['content_id'] ));
+				WHERE lam.`content_id`=?", array( $pStoreRow['content_id'] ));
 			$pStoreRow = array_merge( $pStoreRow, $fileInfo );
 			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 		}
@@ -198,12 +199,16 @@ function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
-		$query = "SELECT *
+		$query = "
+			SELECT lam.`content_id`,
+				la.`attachment_id`, la.`attachment_plugin_guid`, la.`foreign_id`, la.`user_id`,
+				lf.`file_id`, lf.`storage_path`, lf.`file_size`, lf.`mime_type`
 			FROM `".BIT_DB_PREFIX."liberty_attachments` la
 				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`attachment_id` = la.`attachment_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 			WHERE lam.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
+			$pFileHash = array_merge( $row, $pFileHash );
 			$pFileHash['thumbnail_url']    = liberty_fetch_thumbnails( $row['storage_path'] );
 			$pFileHash['filename']         = basename( $row['storage_path'] );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
@@ -292,20 +297,24 @@ function treasury_default_expunge( &$pParamHash ) {
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		$ret = TRUE;
 
-		$query = "SELECT *
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
-			WHERE la.`content_id` = ?";
-		if( $row = $gBitSystem->mDb->getRow( $query, array( $pParamHash['content_id'] ))) {
-			// Make sure the storage path is pointing to a valid file
-			if( is_dir( dirname( BIT_ROOT_PATH.$row['storage_path'] ))) {
-				unlink_r( dirname( BIT_ROOT_PATH.$row['storage_path'] ));
-			}
-
+		$dummy = array();
+		if( treasury_default_load( $pParamHash, $dummy )) {
+			$gBitSystem->mDb->StartTrans();
 			// Now remove all entries we made in the database - liberty_files and liberty_attachments
 			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_files` WHERE `file_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['foreign_id'] ));
+			$gBitSystem->mDb->query( $sql, array( $pParamHash['foreign_id'] ));
+			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments_map` WHERE `content_id`=?";
+			$gBitSystem->mDb->query( $sql, array( $pParamHash['content_id'] ));
 			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $row['attachment_id'] ));
+			if( $gBitSystem->mDb->query( $sql, array( $pParamHash['attachment_id'] ))) {
+				$gBitSystem->mDb->CompleteTrans();
+				// Make sure the storage path is pointing to a valid file
+				if( !empty( $pParamHash['storage_path'] ) && is_dir( dirname( BIT_ROOT_PATH.$pParamHash['storage_path'] ))) {
+					unlink_r( dirname( BIT_ROOT_PATH.$pParamHash['storage_path'] ));
+				}
+			} else {
+				$gBitSystem->mDb->RollbackTrans();
+			}
 		}
 	} else {
 		$pParamHash['errors']['content_id'] = tra( 'No valid content_id given.' );
