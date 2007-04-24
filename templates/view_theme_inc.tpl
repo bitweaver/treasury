@@ -8,15 +8,10 @@
 	</div>
 {/if}
 
-{if $gBitSystem->isFeatureActive( 'treasury_item_view_desc' )}
-	{if $gContent->mInfo.data}
-		<div class="row">
-			{formlabel label="Description" for=""}
-			{forminput}
-				{$gContent->mInfo.data|escape|nl2br}
-			{/forminput}
-		</div>
-	{/if}
+{if $gBitSystem->isFeatureActive( 'treasury_item_view_desc' ) && $gContent->mInfo.data}
+	<p class="description">
+		{$gContent->mInfo.data|escape|nl2br}
+	</p>
 {/if}
 
 <div class="row">
