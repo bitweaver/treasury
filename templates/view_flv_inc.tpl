@@ -115,12 +115,8 @@
 		</div>
 	{/if}
 
-	<div class="row">
-		{formlabel label="Wiki attachment" for=""}
-		{forminput}
-			{$gContent->mInfo.wiki_plugin_link}
-			{formhelp note="To include this file in a wiki page, blog post, article &hellip;, use the above text."}
-		{/forminput}
-	</div>
+	{if $gBitSystem->isFeatureActive( 'treasury_item_view_attid' )}
+		{attachhelp legend=1 hash=$gContent->mInfo}
+	{/if}
 {/form}
 {/strip}
