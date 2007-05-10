@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.27 2007/04/04 18:45:16 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.28 2007/05/10 20:01:50 gravyface Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.27 $
+ * @version      $Revision: 1.28 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -12,13 +12,13 @@
 
 /**
  * Setup
- */ 
+ */
 define( 'TREASURYGALLERY_CONTENT_TYPE_GUID', 'treasurygallery' );
 require_once( TREASURY_PKG_PATH.'TreasuryBase.php' );
 
 /**
- *   TreasuryGallery 
- * 
+ *   TreasuryGallery
+ *
  * @package treasury
  * @uses TreasuryBase
  */
@@ -100,7 +100,7 @@ class TreasuryGallery extends TreasuryBase {
 
 	/**
 	 * Load all uploaded items in this gallery
-	 * 
+	 *
 	 * @param array $pListHash ListHash is passed on to TreasuryItem::getList();
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - populates $this->mItems
@@ -375,8 +375,8 @@ class TreasuryGallery extends TreasuryBase {
 
 	/**
 	 * expunge a gallery
-	 * 
-	 * @param array $pParamHash 
+	 *
+	 * @param array $pParamHash
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
@@ -398,6 +398,7 @@ class TreasuryGallery extends TreasuryBase {
 			$galleryContentIds = array_unique( $galleryContentIds );
 
 			// Create Item Object
+			require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 			$itemObject = new TreasuryItem();
 
 			// Go through all galleries we want to remove
@@ -520,7 +521,7 @@ class TreasuryGallery extends TreasuryBase {
 
 	/**
 	 * Get the base path to where the gallery thumbnail is stored - create directory if needed
-	 * 
+	 *
 	 * @param numeric $pContentId Content ID of gallery in question
 	 * @access public
 	 * @return Path to thumbnail directory on success, FALSE on failure
@@ -539,7 +540,7 @@ class TreasuryGallery extends TreasuryBase {
 
 	/**
 	 * Get the full URL to the needed thumbnail
-	 * 
+	 *
 	 * @param numeric $pContentId Content ID of gallery in question
 	 * @access public
 	 * @return Path to thumbnail, FALSE on failure
