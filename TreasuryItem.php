@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.40 2007/04/16 07:20:56 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.41 2007/05/31 21:10:30 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.40 $
+ * @version      $Revision: 1.41 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -442,7 +442,7 @@ class TreasuryItem extends TreasuryBase {
 			}
 		}
 
-		$gBitSystem->fatalPermission( $pPermName, $pFatalMessage );
+		$gBitSystem->fatalPermission( $pPermName );
 		return $ret;
 	}
 
