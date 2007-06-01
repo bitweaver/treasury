@@ -1,13 +1,13 @@
 <?php
-global $gQueryUser, $module_rows, $module_params;
+global $gQueryUser, $moduleParams;
 
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
-$gTi = new TreasuryItem();
+$ti = new TreasuryItem();
 
 $listHash = $_REQUEST;
 
-if( !empty( $module_rows )) {
-	$listHash['max_records'] = $module_rows;
+if( !empty( $moduleParams['module_rows'] )) {
+	$listHash['max_records'] = $moduleParams['module_rows'];
 }
 if( empty( $listHash['sort_mode'] )) {
 	$listHash['sort_mode'] = 'random';
@@ -18,7 +18,7 @@ if( !empty( $gQueryUser ) && $gQueryUser->mUserId ) {
 	$listHash['user_id'] = $gQueryUser->mUserId;
 }
 
-$centerItemList = $gTi->getList( $listHash );
+$centerItemList = $ti->getList( $listHash );
 $gBitSmarty->assign( 'centerItemList', $centerItemList );
-$gBitSmarty->assign( 'treasury_center_params', $module_params );
+$gBitSmarty->assign( 'treasury_center_params', $moduleParams['module_params'] );
 ?>
