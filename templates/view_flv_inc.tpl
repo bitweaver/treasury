@@ -7,6 +7,12 @@
 			{include file="bitpackage:treasury/flv_player_inc.tpl" flv=$gContent->mInfo flvPrefs=$gContent->mPrefs}
 		</div>
 
+		{if $gBitSystem->isFeatureActive( 'treasury_item_view_desc' ) && $gContent->mInfo.data}
+			<p class="description">
+				{$gContent->mInfo.data|escape|nl2br}
+			</p>
+		{/if}
+
 		<div class="pagination">
 			{tr}View other sizes{/tr}<br />
 			&nbsp;&bull;&nbsp;
@@ -51,13 +57,6 @@
 		</div>
 	{/if}
 
-	{if $gBitSystem->isFeatureActive( 'treasury_item_view_desc' ) && $gContent->mInfo.data}
-		<p class="description">
-			{$gContent->mInfo.data|escape|nl2br}
-		</p>
-	{/if}
-
-
 	{if $gContent->mInfo.download_url}
 		{if $gBitSystem->isFeatureActive( 'treasury_item_view_name' )}
 			<div class="row">
@@ -69,6 +68,23 @@
 						<br /><input type="submit" name="remove_original" value="{tr}Remove Original{/tr}" />
 						{formhelp note="This will remove the original file from the server. The falsh video will remain and you can still view the video but you cannot download the original anymore."}
 					{/if}
+				{/forminput}
+			</div>
+		{/if}
+
+		{if $gContent->isOwner() || $gBitUser->isAdmin()}
+			<div class="row">
+				{formlabel label="New Aspect Ratio" for="aspect"}
+				{forminput}
+					{* there doesn't seem to be a way to select the correct aspect - especially if it's not a common one *}
+					<select name="aspect" id="aspect">
+						<option value="{math equation="x/y" x=4  y=3 }">4:3 ({tr}TV{/tr})</option>
+						<option value="{math equation="x/y" x=14 y=9 }">14:9 ({tr}Anamorphic{/tr})</option>
+						<option value="{math equation="x/y" x=16 y=9 }">16:9 ({tr}Widescreen{/tr})</option>
+						<option value="{math equation="x/y" x=16 y=10}">16:10 ({tr}Computer Widescreen{/tr})</option>
+					</select>
+					<input type="submit" name="aspect_ratio" value="{tr}Set Aspect{/tr}" />
+					{formhelp note="Here you can override the initially set aspect ratio. Please note that the displayed aspect aspect ratio might not correspond to the set value."}
 				{/forminput}
 			</div>
 		{/if}
