@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.37 2007/04/23 09:17:51 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.38 2007/06/08 09:36:25 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.37 $
+ * @version     $Revision: 1.38 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -307,11 +307,18 @@ function treasury_default_expunge( &$pParamHash ) {
 			$gBitSystem->mDb->query( $sql, array( $pParamHash['content_id'] ));
 			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id`=?";
 			if( $gBitSystem->mDb->query( $sql, array( $pParamHash['attachment_id'] ))) {
-				$gBitSystem->mDb->CompleteTrans();
 				// Make sure the storage path is pointing to a valid file
-				if( !empty( $pParamHash['storage_path'] ) && is_dir( dirname( BIT_ROOT_PATH.$pParamHash['storage_path'] ))) {
-					unlink_r( dirname( BIT_ROOT_PATH.$pParamHash['storage_path'] ));
+				if( !empty( $pParamHash['storage_path'] )) {
+					$absolutePath = BIT_ROOT_PATH.$pParamHash['storage_path'];
+					if( is_file( $absolutePath )) {
+					   if( preg_match( '!/users/\d+/\d+/\w+/\d+/.+!', $pParamHash['storage_path'] )) {
+						   unlink_r( dirname( $absolutePath ));
+					   } else {
+						   unlink( $absolutePath );
+					   }
+					}
 				}
+				$gBitSystem->mDb->CompleteTrans();
 			} else {
 				$gBitSystem->mDb->RollbackTrans();
 			}
