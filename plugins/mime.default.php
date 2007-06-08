@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.38 2007/06/08 09:36:25 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.39 2007/06/08 19:59:56 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.38 $
+ * @version     $Revision: 1.39 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -38,7 +38,7 @@ $pluginParams = array (
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
-	'title'              => 'Default Mime Handler',
+	'title'              => 'Default File Handler',
 	'description'        => 'This mime handler can handle any file type, creates thumbnails when possible and will make the file available as an attachment.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_item_inc.tpl',

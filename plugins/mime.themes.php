@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.17 2007/03/05 11:56:26 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.18 2007/06/08 19:59:56 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.17 $
+ * @version     $Revision: 1.18 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -31,7 +31,7 @@ $pluginParams = array (
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
-	'title'              => 'Theme Mime Handler',
+	'title'              => 'Themes for bitweaver',
 	'description'        => 'This plugin will extract any archive and will search for a file called <style>/style_info/preview.<ext> and will try to create a thumbnail from it.',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_theme_inc.tpl',

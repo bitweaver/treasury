@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.6 2007/03/05 11:56:26 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.video.php,v 1.7 2007/06/08 19:59:56 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.6 $
+ * @version		$Revision: 1.7 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -31,7 +31,7 @@ $pluginParams = array (
 	'download_function'  => 'treasury_default_download',
 	'expunge_function'   => 'treasury_default_expunge',
 	// Brief description of what the plugin does
-	'title'              => 'Video Mime Handler',
+	'title'              => 'Video Handler',
 	'description'        => 'This plugin will extract a few images from the uploaded video and display them as preview. This plugin requires mplayer to be installed on the server ( does not work with all video types ).',
 	// Template used when viewing the item
 	'view_tpl'           => 'bitpackage:treasury/view_video_inc.tpl',
