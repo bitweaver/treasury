@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.4 2007/04/23 09:36:32 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.5 2007/06/08 20:06:30 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.4 $
+ * @version		$Revision: 1.5 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -133,7 +133,7 @@ $total = date( 'U' );
 foreach( $processList as $item ) {
 	if( treasury_flv_converter( $item )) {
 		$query = "UPDATE `".BIT_DB_PREFIX."liberty_process_queue` SET `end_date`=? WHERE `content_id`=?";
-		$result = $gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $contentId ));
+		$result = $gBitSystem->mDb->query( $query, array( $gBitSystem->getUTCTime(), $item['content_id'] ));
 	}
 	$log[$item['content_id']] = $item['log'];
 }
