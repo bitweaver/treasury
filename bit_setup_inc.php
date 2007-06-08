@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.13 $
+ * @version  $Revision: 1.14 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -28,7 +28,7 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 		$gTreasurySystem->loadActivePlugins();
 	}
 
-	$gBitSmarty->assign( 'gTreasurySystem', $gTreasurySystem );
+	$gBitSmarty->assign_by_ref( 'gTreasurySystem', $gTreasurySystem );
 
 	if( $gBitUser->hasPermission( 'p_treasury_view_gallery' ) ) {
 		$menuHash = array(
