@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.16 2007/03/05 11:56:26 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.17 2007/06/08 21:22:30 nickpalmer Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.16 $
+ * @version		$Revision: 1.17 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -224,14 +224,13 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 		$log   = array();
 
 		// check to see if ffmpeg is available at all
+		$item = new TreasuryItem( NULL, $pParamHash['content_id'] );
 		if( !shell_exec( "$ffmpeg -h" )) {
 			$log['time']     = date( 'Y-M-d - H:i:s O' );
 			$log['duration'] = 0;
-			$log['message']  = 'ERROR: ffmpeg does not seem to be available on your system. Please set the path to ffmpeg in the treasury administration screen.';
+			$log['message']  = 'ERROR: ffmpeg does not seem to be available on your system at: '.$ffmpeg.' Please set the path to ffmpeg in the treasury administration screen.';
 		} else {
-			$item = new TreasuryItem( NULL, $pParamHash['content_id'] );
 			$item->load();
-
 			$source = $item->mInfo['source_file'];
 			$dest_path = dirname( $item->mInfo['source_file'] );
 			$dest_file = $dest_path.'/flick.flv';
@@ -332,7 +331,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 		$log['time']     = date( 'd/M/Y:H:i:s O' );
 		$log['duration'] = date( 'U' ) - $begin;
-
+		
 		// we'll add an entry in the action logs
 		$item->storeActionLog();
 
