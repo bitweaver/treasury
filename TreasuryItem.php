@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.41 2007/05/31 21:10:30 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.42 2007/06/10 15:52:50 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.41 $
+ * @version      $Revision: 1.42 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -56,7 +56,7 @@ class TreasuryItem extends TreasuryBase {
 	 **/
 	function load( $pPluginParameters = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId ) ) {
-			global $gTreasurySystem;
+			global $gTreasurySystem, $gBitSystem;
 
 			$ret = array();
 
@@ -84,9 +84,10 @@ class TreasuryItem extends TreasuryBase {
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				// this is passed by reference as it's updated by the load function
-				$this->mInfo                 = &$aux;
-				$this->mInfo['title']        = $this->getTitle( $aux );
-				$this->mInfo['display_url']  = $this->getDisplayUrl();
+				$this->mInfo                   = &$aux;
+				$this->mInfo['title']          = $this->getTitle( $aux );
+				$this->mInfo['display_url']    = $this->getDisplayUrl();
+				$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['plugin_guid']."_comments" );
 
 				// we might have content preferences set by some plugin
 				LibertyContent::load();

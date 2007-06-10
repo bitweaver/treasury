@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.13 2007/04/23 09:36:32 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.14 2007/06/10 15:52:50 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -42,7 +42,7 @@ $galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gGa
 $gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
 $gBitSmarty->assign_by_ref( 'gGallery', $gGallery );
 
-if( is_object( $gGallery ) && $gBitSystem->isFeatureActive( "treasury_".$gContent->mInfo['plugin_guid']."_comments" )) {
+if( is_object( $gGallery ) && $gContent->isCommentable() ) {
 	$commentsParentId = $gContent->mContentId;
 	$comments_vars = Array( TREASURYITEM_CONTENT_TYPE_GUID );
 	$comments_prefix_var = TREASURYITEM_CONTENT_TYPE_GUID.':';
