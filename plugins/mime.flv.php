@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.18 2007/06/11 10:11:25 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.19 2007/06/11 15:27:47 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.18 $
+ * @version		$Revision: 1.19 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -215,10 +215,10 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		// these are set in the treasury plugin admin screen
-		$ffmpeg     = $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' ));
-		$video_rate = $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 );
-		$audio_rate = $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 );
-		$width      = $gBitSystem->getConfig( 'treasury_flv_width', 320 );
+		$ffmpeg     = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
+		$video_rate = trim( $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 ));
+		$audio_rate = trim( $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 ));
+		$width      = trim( $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
 
 		$begin = date( 'U' );
 		$log   = array();
