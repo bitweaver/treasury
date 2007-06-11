@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.19 2007/06/11 15:27:47 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.20 2007/06/11 17:38:31 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.19 $
+ * @version		$Revision: 1.20 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -136,22 +136,9 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = N
 
 		// if we are passed an object, we'll modify width and height according to our needs
 		if( is_object( $pCommonObject )) {
-			// set the width of the video
+			// set the width and height of the video
 			$pCommonObject->setPreference( 'flv_width', $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
-
-			// TODO: remove this unneded condition. this is currently for backward compatibility. flv_height is not set in db anymore
-			//       this will only happen once per flick as the flv_height has been deprecated in favour of the aspect
-			if( $height = $pCommonObject->getPreference( 'flv_height' )) {
-				$aspect = $pCommonObject->getPreference( 'flv_width' ) / $pCommonObject->getPreference( 'flv_height' );
-				$default = 4 / 3;
-				if( $aspect != $default ) {
-					$pCommonObject->storePreference( 'aspect', $aspect );
-				}
-				$pCommonObject->storePreference( 'flv_height', NULL );
-				$pCommonObject->setPreference( 'flv_height', $height );
-			} else {
-				$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / $pCommonObject->getPreference( 'aspect', 4 / 3 ));
-			}
+			$pCommonObject->setPreference( 'flv_height', $gBitSystem->getConfig( 'treasury_flv_width', 320 ) / $pCommonObject->getPreference( 'aspect', 4 / 3 ));
 
 			// now that we have the original width and height, we can get the displayed values
 			treasury_flv_calculate_videosize( $pPluginParameters, $pCommonObject->mPrefs );
