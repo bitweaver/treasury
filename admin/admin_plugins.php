@@ -53,6 +53,9 @@ if( $gTreasurySystem->isPluginActive( 'mime_flv' )) {
 			'treasury_flv_width' => array(
 				'type'  => 'numeric',
 			),
+			'treasury_flv_default_size' => array(
+				'type'  => 'numeric',
+			),
 		);
 
 		$treasuries = array_merge( $flvSettings );

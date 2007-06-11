@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.17 2007/06/08 21:22:30 nickpalmer Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.18 2007/06/11 10:11:25 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.17 $
+ * @version		$Revision: 1.18 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -331,7 +331,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 		$log['time']     = date( 'd/M/Y:H:i:s O' );
 		$log['duration'] = date( 'U' ) - $begin;
-		
+
 		// we'll add an entry in the action logs
 		$item->storeActionLog();
 
@@ -349,6 +349,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
  * @return TRUE when there has been a video size change, FALSE if there has been no change
  */
 function treasury_flv_calculate_videosize( $pParamHash, &$pVideoInfo ) {
+	global $gBitSystem;
 	$ret = FALSE;
 
 	// if we want to display a different size
@@ -363,6 +364,8 @@ function treasury_flv_calculate_videosize( $pParamHash, &$pVideoInfo ) {
 		} elseif( $pParamHash['size'] == 'huge' ) {
 			$new_width = 600;
 		}
+	} else {
+		$new_width = $gBitSystem->getConfig( 'treasury_flv_default_size' );
 	}
 
 	// if they set a custom width, we use that

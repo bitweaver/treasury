@@ -104,6 +104,20 @@
 					{/forminput}
 				</div>
 
+				<div class="row">
+					{formlabel label="Default displayed size" for="treasury_flv_default_size"}
+					{forminput}
+						<select name="treasury_flv_default_size" id="treasury_flv_default_size">
+							<option value="0" >{tr}Same as encoded video{/tr}</option>
+							<option value="240" {if $gBitSystem->getConfig('treasury_flv_default_size') == 240}selected="selected"{/if}>{tr}Small{/tr}</option>
+							<option value="320" {if $gBitSystem->getConfig('treasury_flv_default_size') == 320}selected="selected"{/if}>{tr}Medium{/tr}</option>
+							<option value="480" {if $gBitSystem->getConfig('treasury_flv_default_size') == 480}selected="selected"{/if}>{tr}Large{/tr}</option>
+							<option value="640" {if $gBitSystem->getConfig('treasury_flv_default_size') == 640}selected="selected"{/if}>{tr}Huge{/tr}</option>
+						</select>
+						{formhelp note="If you are encoding small versions of the videos you can display larger versions. This will reduce video quality but make the encoded video smaller."}
+					{/forminput}
+				</div>
+
 				<div class="row submit">
 					<input type="submit" name="plugin_settings" value="{tr}Save Plugin Settings{/tr}" />
 				</div>
