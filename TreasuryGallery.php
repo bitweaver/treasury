@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.28 2007/05/10 20:01:50 gravyface Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.29 2007/06/15 21:17:52 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.28 $
+ * @version      $Revision: 1.29 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -556,7 +556,8 @@ class TreasuryGallery extends TreasuryBase {
 			if( empty( $pSize ) ) {
 				$pSize = $gBitSystem->getConfig( 'treasury_gallery_list_thumb' );
 			}
-			$ret = $this->getGalleryThumbBaseUrl( $pContentId ).$pSize.'.jpg';
+			if( $gBitSystem->isFeatureActive( 'liberty_png_thumbnails' )) { $ext = '.png'; } else { $ext = '.jpg'; }
+			$ret = $this->getGalleryThumbBaseUrl( $pContentId ).$pSize.$ext;
 			if( !is_file( BIT_ROOT_PATH.$ret ) ) {
 				$ret = FALSE;
 			}
