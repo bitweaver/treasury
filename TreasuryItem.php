@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.42 2007/06/10 15:52:50 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.43 2007/06/15 15:52:53 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.42 $
+ * @version      $Revision: 1.43 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -530,6 +530,31 @@ class TreasuryItem extends TreasuryBase {
 				$ret = TREASURY_PKG_URL.'file/'.$pContentId.( !empty( $pStructureId ) ? "/$pStructureId" : "" );
 			} else {
 				$ret = TREASURY_PKG_URL.'view_item.php?content_id='.$pContentId.( !empty( $pStructureId ) ? "&structure_id=$pStructureId" : "" );
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get the content_id of a given treasury item based on a given attachment_id
+	 * 
+	 * @param array $pAttachmentId Attachment id of the item in question
+	 * @access public
+	 * @return Content id on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function getContentId( $pAttachmentId ) {
+		$ret = FALSE;
+		if( @BitBase::verifyId( $pAttachmentId )) {
+			// get the content_id for this item
+			$sql = "SELECT lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` WHERE la.`primary_attachment_id` = ?";
+			if( !( $ret = $gBitSystem->mDb->getOne( $sql, array( $pAttachmentId )))) {
+				// TODO: This optional method will work. it's more cumbersome and can be removed if we have primary_attachment_id in place everywhere
+				$sql = "
+					SELECT lam.`content_id`
+					FROM `".BIT_DB_PREFIX."liberty_attachments_map`
+					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`attachment_id` = lam.`attachment_id` )
+					WHERE la.`attachment_id` = ? AND lam.`attachment_plugin_guid` = ?";
+				$ret = $gBitSystem->mDb->getOne( $sql, array( $pAttachmentId, PLUGIN_GUID_TREASURY_FILE ));
 			}
 		}
 		return $ret;
