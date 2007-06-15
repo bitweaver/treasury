@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.39 2007/06/08 19:59:56 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.40 2007/06/15 10:06:34 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.39 $
+ * @version     $Revision: 1.40 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -179,6 +179,8 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments_map` ( `attachment_id`, `content_id` ) VALUES ( ?, ? )";
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], $pStoreRow['content_id'] ));
+			$pStoreRow['primary_attachment_id'] = $pStoreRow['attachment_id'];
+			LibertyAttachable::storePrimaryAttachmentId( $pStoreRow );
 		}
 		$ret = TRUE;
 	} else {
