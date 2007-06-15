@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.43 2007/06/15 15:52:53 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.44 2007/06/15 22:48:45 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.43 $
+ * @version      $Revision: 1.44 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -70,8 +70,8 @@ class TreasuryItem extends TreasuryBase {
 				SELECT
 					tri.`plugin_guid`,
 					lct.`content_description`,
-					uu.`login`, uu.`real_name`, lam.`attachment_id`,
-					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+					uu.`login`, uu.`real_name`,
+					lc.`primary_attachment_id` AS `attachment_id`, lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
 					$selectSql
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
@@ -80,7 +80,6 @@ class TreasuryItem extends TreasuryBase {
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
-					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				// this is passed by reference as it's updated by the load function
@@ -157,12 +156,10 @@ class TreasuryItem extends TreasuryBase {
 			SELECT tri.`plugin_guid`,
 				lct.`content_description`,
 				uu.`login`, uu.`real_name`,
-				lam.`attachment_id`,
-				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+				lc.`primary_attachment_id` AS `attachment_id`, lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 				lch.`hits` $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
@@ -191,7 +188,6 @@ class TreasuryItem extends TreasuryBase {
 		$query = "SELECT COUNT( trm.`item_content_id` )
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
@@ -546,7 +542,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = FALSE;
 		if( @BitBase::verifyId( $pAttachmentId )) {
 			// get the content_id for this item
-			$sql = "SELECT lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` WHERE la.`primary_attachment_id` = ?";
+			$sql = "SELECT lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` WHERE lc.`primary_attachment_id` = ?";
 			if( !( $ret = $gBitSystem->mDb->getOne( $sql, array( $pAttachmentId )))) {
 				// TODO: This optional method will work. it's more cumbersome and can be removed if we have primary_attachment_id in place everywhere
 				$sql = "

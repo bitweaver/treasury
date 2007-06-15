@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.41 2007/06/15 11:30:31 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.42 2007/06/15 22:48:46 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.41 $
+ * @version     $Revision: 1.42 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -83,16 +83,15 @@ function treasury_default_verify( &$pStoreRow ) {
 			// TODO: allow users to create personal galleries
 			$fileInfo = $gBitSystem->mDb->getRow( "
 				SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
-				FROM `".BIT_DB_PREFIX."liberty_attachments` la
-					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON( la.`attachment_id`=lam.`attachment_id` )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( la.`foreign_id`=lf.`file_id` )
-				WHERE lam.`content_id`=?", array( $pStoreRow['content_id'] ));
+				FROM `".BIT_DB_PREFIX."liberty_content` lc
+					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`attachment_id` = lc.`primary_attachment_id` )
+					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
+				WHERE lc.`content_id` = ?", array( $pStoreRow['content_id'] ));
 			$pStoreRow = array_merge( $pStoreRow, $fileInfo );
 			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 		}
 
 		$ret = TRUE;
-
 	} elseif( !empty( $pStoreRow['upload']['tmp_name'] ) && is_file( $pStoreRow['upload']['tmp_name'] )) {
 		// try to generate thumbnails for the upload
 		//$pStoreRow['upload']['thumbnail'] = !$gBitSystem->isFeatureActive( 'liberty_offline_thumbnailer' );
@@ -108,7 +107,6 @@ function treasury_default_verify( &$pStoreRow ) {
 		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 
 		$ret = TRUE;
-
 	} else {
 		$pStoreRow['errors']['upload'] = tra( 'There was a problem with the uploaded file.' );
 	}
@@ -203,13 +201,13 @@ function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
 		$query = "
-			SELECT lam.`content_id`,
+			SELECT lc.`content_id`,
 				la.`attachment_id`, la.`attachment_plugin_guid`, la.`foreign_id`, la.`user_id`,
 				lf.`file_id`, lf.`storage_path`, lf.`file_size`, lf.`mime_type`
-			FROM `".BIT_DB_PREFIX."liberty_attachments` la
-				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments_map` lam ON ( lam.`attachment_id` = la.`attachment_id` )
+			FROM `".BIT_DB_PREFIX."liberty_content` lc
+				INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`attachment_id` = lc.`primary_attachment_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
-			WHERE lam.`content_id` = ?";
+			WHERE lc.`content_id` = ?";
 		if( $row = $gBitSystem->mDb->getRow( $query, array( $pFileHash['content_id'] ))) {
 			$pFileHash = array_merge( $row, $pFileHash );
 			$pFileHash['thumbnail_url']    = liberty_fetch_thumbnails( $row['storage_path'] );
