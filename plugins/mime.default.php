@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.40 2007/06/15 10:06:34 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.41 2007/06/15 11:30:31 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.40 $
+ * @version     $Revision: 1.41 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -175,10 +175,11 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 				$gLibertySystem->setActivePlugin( 'treasury' );
 			}
 
+			// first we add the data into liberty_attachments to make this file available as attachment
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ? )";
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
-			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments_map` ( `attachment_id`, `content_id` ) VALUES ( ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], $pStoreRow['content_id'] ));
+
+			// now we store the attachment_id as the primary_attachment_id. this will allow listings and the like to display a nice image of the file
 			$pStoreRow['primary_attachment_id'] = $pStoreRow['attachment_id'];
 			LibertyAttachable::storePrimaryAttachmentId( $pStoreRow );
 		}
