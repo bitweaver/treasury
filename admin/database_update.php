@@ -2,7 +2,6 @@
 require_once( '../../bit_setup_inc.php' );
 $gBitSystem->verifyPermission( 'p_admin' );
 
-vd('test');
 echo "<pre>";
 echo "     Treasury Primary Attachment IDs\n";
 echo "     -------------------------\n";
@@ -30,5 +29,29 @@ $query = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `attachment_plugin_g
 $gBitSystem->mDb->query( $query, array( 'bitfile', 'treasury' ));
 
 echo "     -------------------------\n\n\n";
+echo "     Content that uses {attachment id=123} where the attachment_id is a treasury attachment_id\n";
+echo "     -------------------------\n";
 echo "</pre>";
+
+$query = "SELECT lc.`primary_attachment_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`content_type_guid` = ?";
+$attIds = $gBitSystem->mDb->getCol( $query, array( 'treasuryitem' ));
+$query = "SELECT lc.`data`, lc.`title`, lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`data` <> ''";
+$content = $gBitSystem->mDb->getAll( $query );
+echo '<ul>';
+echo '<li><a href="?update_content=1">Try to replace all occurances of {attachment id=123} with {file id=123} where appropriate.</a></li>';
+foreach( $attIds as $attId ) {
+	foreach( $content as $c ) {
+		if( preg_match( "!\{attachment[^\}]*id\s*=\s*{$attId}[^\d]*?\}!i", $c['data'] )) {
+			if( !empty( $_GET['update_content'] )) {
+				$data = preg_replace( "!\{attachment([^\}]+)id\s*=\s*{$attId}([^\d]*?)\}!i", "{file$1id={$attId}$2}", $c['data'] );
+				$query = "UPDATE `".BIT_DB_PREFIX."liberty_content` SET `data` = ? WHERE `content_id` = ?";
+				$gBitSystem->mDb->query( $query, array( $data, $c['content_id'] ));
+				echo "<li>Updated: <a href=\"/index.php?content_id={$c['content_id']}\">{$c['title']}</a> <small>uses: {file id=$attId}</small></li>";
+			} else {
+				echo "<li><a href=\"/index.php?content_id={$c['content_id']}\">{$c['title']}</a> <small>uses: {attachment id=$attId}</small></li>";
+			}
+		}
+	}
+}
+echo '</ul>';
 ?>
