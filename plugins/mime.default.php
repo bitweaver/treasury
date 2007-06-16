@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.42 2007/06/15 22:48:46 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.43 2007/06/16 10:15:10 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.42 $
+ * @version     $Revision: 1.43 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -166,16 +166,10 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ));
 
 		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
-		// hardcode this for now
-		if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' )) {
-			// since we're using this plugin, make sure it's enabled in liberty
-			if( !$gLibertySystem->isPluginActive( 'treasury' )) {
-				$gLibertySystem->setActivePlugin( 'treasury' );
-			}
-
+		if( $gLibertySystem->isPluginActive( 'bitfile' )) {
 			// first we add the data into liberty_attachments to make this file available as attachment
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_TREASURY_FILE, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
+			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
 
 			// now we store the attachment_id as the primary_attachment_id. this will allow listings and the like to display a nice image of the file
 			$pStoreRow['primary_attachment_id'] = $pStoreRow['attachment_id'];
@@ -197,7 +191,7 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_default_load( &$pFileHash, &$pCommonObject ) {
-	global $gBitSystem;
+	global $gBitSystem, $gLibertySystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pFileHash['content_id'] )) {
 		$query = "
@@ -217,7 +211,11 @@ function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 			$pFileHash['mime_type']        = $row['mime_type'];
 			$pFileHash['file_size']        = $row['file_size'];
 			$pFileHash['attachment_id']    = $row['attachment_id'];
-			$pFileHash['wiki_plugin_link'] = "{attachment id=".$row['attachment_id']."}";
+			if( $gLibertySystem->isPluginActive( 'datafile' )) {
+				$pFileHash['wiki_plugin_link'] = "{file id=".$row['attachment_id']."}";
+			} else {
+				$pFileHash['wiki_plugin_link'] = "{attachment id=".$row['attachment_id']."}";
+			}
 
 			$ret = TRUE;
 		}
