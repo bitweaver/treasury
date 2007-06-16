@@ -27,7 +27,7 @@ echo "     Treasury File Storage GUID update\n";
 echo "     -------------------------\n";
 echo ">>>> Success\n";
 $query = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `attachment_plugin_guid` = ? WHERE `attachment_plugin_guid` = ?";
-$gBitSystem->mDb->getCol( $query, array( 'bitfile', 'treasury' ));
+$gBitSystem->mDb->query( $query, array( 'bitfile', 'treasury' ));
 
 echo "     -------------------------\n\n\n";
 echo "</pre>";
