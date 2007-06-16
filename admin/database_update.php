@@ -33,6 +33,11 @@ echo "     Content that uses {attachment id=123} where the attachment_id is a tr
 echo "     -------------------------\n";
 echo "</pre>";
 
+// make sure the {file} plugin is enabled
+if( !empty( $_GET['update_content'] )) {
+	$gLibertySystem->setActivePlugin( 'datafile' );
+}
+
 $query = "SELECT lc.`primary_attachment_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`content_type_guid` = ?";
 $attIds = $gBitSystem->mDb->getCol( $query, array( 'treasuryitem' ));
 $query = "SELECT lc.`data`, lc.`title`, lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`data` <> ''";
