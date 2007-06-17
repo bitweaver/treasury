@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.45 2007/06/17 07:13:00 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.46 2007/06/17 08:27:10 lsces Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.45 $
+ * @version     $Revision: 1.46 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -161,7 +161,7 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 	if( $storagePath = liberty_process_upload( $pStoreRow )) {
 		// add row to liberty_files
 		// this is where we store any additional data - we don't need more info for regular uploads
-		$pStoreRow['file_id'] =  $gBitSystem->isFeatureActive('liberty_linked_attachments') ? $pStoreRow['content_id'] : $gBitSystem->mDb->GenID( 'liberty_files_id_seq' );
+		$pStoreRow['file_id'] =  defined( 'LINKED_ATTACHMENTS' ) ? $pStoreRow['content_id'] : $gBitSystem->mDb->GenID( 'liberty_files_id_seq' );
 		$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_files` ( `storage_path`, `file_id`, `mime_type`, `file_size`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
 		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ));
 
