@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.15 2007/04/04 18:45:16 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.16 2007/06/18 06:51:30 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -41,6 +41,9 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
+	// first of all set the execution time for this process to unlimited
+	set_time_limit( 0 );
+
 	$i = 0;
 	foreach( $_FILES as $upload ) {
 		if( !empty( $upload['tmp_name'] ) ) {
