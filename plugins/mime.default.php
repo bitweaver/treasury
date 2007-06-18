@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.46 2007/06/17 08:27:10 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.47 2007/06/18 21:53:55 nickpalmer Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.46 $
+ * @version     $Revision: 1.47 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -301,29 +301,10 @@ function treasury_default_expunge( &$pParamHash ) {
 
 		$dummy = array();
 		if( treasury_default_load( $pParamHash, $dummy )) {
+			$la = new LibertyAttachable();
 			$gBitSystem->mDb->StartTrans();
-			// Now remove all entries we made in the database - liberty_files and liberty_attachments
-			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_files` WHERE `file_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $pParamHash['foreign_id'] ));
-			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments_map` WHERE `content_id`=?";
-			$gBitSystem->mDb->query( $sql, array( $pParamHash['content_id'] ));
-			$sql = "DELETE FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id`=?";
-			if( $gBitSystem->mDb->query( $sql, array( $pParamHash['attachment_id'] ))) {
-				// Make sure the storage path is pointing to a valid file
-				if( !empty( $pParamHash['storage_path'] )) {
-					$absolutePath = BIT_ROOT_PATH.$pParamHash['storage_path'];
-					if( is_file( $absolutePath )) {
-					   if( preg_match( '!/users/\d+/\d+/\w+/\d+/.+!', $pParamHash['storage_path'] )) {
-						   unlink_r( dirname( $absolutePath ));
-					   } else {
-						   unlink( $absolutePath );
-					   }
-					}
-				}
-				$gBitSystem->mDb->CompleteTrans();
-			} else {
-				$gBitSystem->mDb->RollbackTrans();
-			}
+			$la->expungeAttachment($pParamHash['attachment_id']);
+			$gBitSystem->mDb->CompleteTrans();
 		}
 	} else {
 		$pParamHash['errors']['content_id'] = tra( 'No valid content_id given.' );
