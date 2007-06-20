@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.47 2007/06/18 21:53:55 nickpalmer Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.48 2007/06/20 23:17:03 nickpalmer Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.47 $
+ * @version     $Revision: 1.48 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -293,14 +293,14 @@ function treasury_default_download( &$pFileHash ) {
  * @access public
  * @return TRUE on success, FALSE on failure - $pParamHash['errors'] will contain reason for failure
  */
-function treasury_default_expunge( &$pParamHash ) {
+function treasury_default_expunge( &$pParamHash, $pDeleteAttachment ) {
 	global $gBitSystem;
 	$ret = FALSE;
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		$ret = TRUE;
 
 		$dummy = array();
-		if( treasury_default_load( $pParamHash, $dummy )) {
+		if( $pDeleteAttachment && treasury_default_load( $pParamHash, $dummy )) {
 			$la = new LibertyAttachable();
 			$gBitSystem->mDb->StartTrans();
 			$la->expungeAttachment($pParamHash['attachment_id']);

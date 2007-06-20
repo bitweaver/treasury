@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.45 2007/06/16 10:15:09 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.46 2007/06/20 23:17:02 nickpalmer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.45 $
+ * @version      $Revision: 1.46 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -551,10 +551,11 @@ class TreasuryItem extends TreasuryBase {
 	 * Expunge data associated with an uploaded file
 	 * 
 	 * @access public
+	 * @param should the attachment be expunged. Defaults to true.
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 * TODO: make it possible to remove only items when they are not part of other galleries
 	 */
-	function expunge() {
+	function expunge($pExpungeAttachment=TRUE) {
 		global $gTreasurySystem;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
@@ -568,7 +569,7 @@ class TreasuryItem extends TreasuryBase {
 
 			// let the plugin do its thing
 			$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
-			if( !empty( $expunge_function ) && $expunge_function( $this->mInfo ) ) {
+			if( !empty( $expunge_function ) && $expunge_function( $this->mInfo, $pExpungeAttachment ) ) {
 				// remove the remaining entries in liberty tables
 				if( LibertyContent::expunge() ) {
 					$this->mDb->CompleteTrans();
@@ -581,6 +582,24 @@ class TreasuryItem extends TreasuryBase {
 			}
 		}
 		return( count( $this->mErrors ) == 0 );
+	}
+
+	/**
+	 * Notification sent by LibertyAttachable that an attachment is being expunged.
+	 * 
+	 * @param  numeric $pAttachmentId ID of the attachmnet being deleted.
+	 * @param  array $pContentIdArray IDs of the content that are attached to the attachment
+	 * @access private
+	 * @return void
+	 */
+	function expungingAttachment($pAttachmentId, $pContentIdArray){
+		foreach($pContentIdArray as $id){
+			$this->mContentId = $id;
+			// Unfortunately we have to load in order to get some info in place. :(
+			$this->load();
+			// It is important that we not delete the attachment since it is already being deleted.
+			$this->expunge(FALSE);
+		}
 	}
 
 	/**
