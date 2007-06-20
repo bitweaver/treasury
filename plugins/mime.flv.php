@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.21 2007/06/18 09:13:23 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.22 2007/06/20 10:58:16 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.21 $
+ * @version		$Revision: 1.22 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -145,6 +145,9 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = N
 
 			// since pCommonObject is only set when the file is fully loaded, we can add a hit - hardly anyone will download the original if they can view the flv...
 			$pCommonObject->addHit();
+		} else {
+			// so far this is the only plugin that can make use of the prefs being loaded in a list.
+			$pFileHash['prefs'] = LibertyContent::loadPreferences( $pFileHash['content_id'] );
 		}
 
 		// we can use a special plugin if active to include flvs in wiki pages
