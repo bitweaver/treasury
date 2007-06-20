@@ -81,9 +81,6 @@
 										<a href="{$item.display_url}">
 									{/if}
 									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title|escape}" title="{$item.title|escape}" />
-									{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
-										<br />{$item.filename}
-									{/if}
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 										</a>
 									{/if}
@@ -91,11 +88,22 @@
 							{/if}
 							<td>
 								<h3><a href="{$item.display_url}">{$item.title|escape}</a></h3>
-								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' )}
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' ) && $item.data}
 									<p>{$item.data|escape|nl2br}</p>
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
 									<small>{$item.wiki_plugin_link}</small>
+									{assign var=br value=1}
+								{/if}
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
+									{if $br}<br />{/if}
+									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+										<a href="{$item.display_url}">
+									{/if}
+									{$item.filename} <small>({$item.mime_type})</small>
+									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
+										</a>
+									{/if}
 								{/if}
 							</td>
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
