@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.14 $
+ * @version  $Revision: 1.15 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -32,9 +32,10 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 
 	if( $gBitUser->hasPermission( 'p_treasury_view_gallery' ) ) {
 		$menuHash = array(
-			'package_name'  => TREASURY_PKG_NAME,
-			'index_url'     => TREASURY_PKG_URL.'index.php',
-			'menu_template' => 'bitpackage:treasury/menu_treasury.tpl',
+			'package_name'       => TREASURY_PKG_NAME,
+			'index_url'          => TREASURY_PKG_URL.'index.php',
+			'menu_template'      => 'bitpackage:treasury/menu_treasury.tpl',
+			'admin_comments_url' => TREASURY_PKG_URL.'admin/admin_plugins.php',
 		);
 		$gBitSystem->registerAppMenu( $menuHash );
 	}
