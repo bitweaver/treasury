@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.17 2007/02/23 15:06:25 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.18 2007/06/21 09:45:54 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -30,10 +30,10 @@ if( !empty( $_REQUEST['refresh'] ) ) {
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
-		if( !empty( $_REQUEST['confirm'] ) ) {
-			if( $gContent->expunge( !empty( $_REQUEST['force_item_delete'] ) ) ) {
-				header( "Location: ".TREASURY_PKG_URL );
-				die;
+		if( !empty( $_REQUEST['confirm'] )) {
+			// now we are sure that we want to remove this item
+			if( $gContent->expunge( TRUE )) {
+				bit_redirect( TREASURY_PKG_URL );
 			} else {
 				$feedback['error'] = $gContent->mErrors;
 			}

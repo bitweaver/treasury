@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.46 2007/06/20 23:17:02 nickpalmer Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.47 2007/06/21 09:45:54 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.46 $
+ * @version      $Revision: 1.47 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -555,7 +555,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 * TODO: make it possible to remove only items when they are not part of other galleries
 	 */
-	function expunge($pExpungeAttachment=TRUE) {
+	function expunge( $pExpungeAttachment = TRUE ) {
 		global $gTreasurySystem;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
@@ -565,21 +565,28 @@ class TreasuryItem extends TreasuryBase {
 
 			// Remove item entry
 			$query = "DELETE FROM `".BIT_DB_PREFIX."treasury_item` WHERE `content_id` = ?";
-			$rs = $this->mDb->query( $query, array( $this->mContentId ) );
+			$rs = $this->mDb->query( $query, array( $this->mContentId ));
 
-			// let the plugin do its thing
-			$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
-			if( !empty( $expunge_function ) && $expunge_function( $this->mInfo, $pExpungeAttachment ) ) {
-				// remove the remaining entries in liberty tables
-				if( LibertyContent::expunge() ) {
-					$this->mDb->CompleteTrans();
-				} else {
-					$this->mDb->RollbackTrans();
+			// deal with the attachments if needed
+			if( $pExpungeAttachment ) {
+				// let the plugin do its thing
+				$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
+				if( empty( $expunge_function ) || !$expunge_function( $this->mInfo )) {
+					// plugin passes errors into [errors] by reference
+					$this->mErrors['expunge_plugin'] = $this->mInfo['errors'];
 				}
+			}
+
+			// now we can deal with the entry in liberty_content
+			if( count( $this->mErrors ) == 0 && LibertyContent::expunge() ) {
+				$this->mDb->CompleteTrans();
 			} else {
-				$this->mErrors['expunge'] = $this->mInfo['errors'];
+				$this->mErrors['expunge'] = tra( 'The item could not be removed completely' );
 				$this->mDb->RollbackTrans();
 			}
+		}
+		if( count( $this->mErrors ) != 0 ) {
+			vd($this->mErrors);
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -592,13 +599,14 @@ class TreasuryItem extends TreasuryBase {
 	 * @access private
 	 * @return void
 	 */
-	function expungingAttachment($pAttachmentId, $pContentIdArray){
-		foreach($pContentIdArray as $id){
+	function expungingAttachment( $pAttachmentId, $pContentIdArray = FALSE ) {
+		foreach( $pContentIdArray as $id ) {
 			$this->mContentId = $id;
 			// Unfortunately we have to load in order to get some info in place. :(
-			$this->load();
-			// It is important that we not delete the attachment since it is already being deleted.
-			$this->expunge(FALSE);
+			if( $this->load() ) {
+				// It is important that we not delete the attachment since it is already being deleted.
+				$this->expunge( FALSE );
+			}
 		}
 	}
 
