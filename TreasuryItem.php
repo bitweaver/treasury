@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.47 2007/06/21 09:45:54 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.48 2007/06/29 18:56:50 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.47 $
+ * @version      $Revision: 1.48 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -94,7 +94,7 @@ class TreasuryItem extends TreasuryBase {
 				// load details using plugin
 				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
 				if( empty( $load_function ) || !$load_function( $aux, $this, $pPluginParameters ) ) {
-					$this->mErrors['load'] = tra( 'There was a ploblem loading the file data.' );
+					$this->mErrors['load'] = tra( 'There was a problem loading the file data.' );
 				}
 
 				if( !isset( $this->mInfo['download_url'] )) {
@@ -172,7 +172,7 @@ class TreasuryItem extends TreasuryBase {
 				// this is needed for php < 5
 				$dummy = array();
 				if( !$load_function( $aux, $dummy )) {
-					$this->mErrors['plugin_load'] = tra( 'There was a ploblem loading the file data.' );
+					$this->mErrors['plugin_load'] = tra( 'There was a problem loading the file data.' );
 				}
 			} else {
 				$this->mErrors['load_function'] = tra( 'No suitable load function found.' );
