@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.49 2007/06/21 09:45:54 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.50 2007/06/29 18:59:39 lsces Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.49 $
+ * @version     $Revision: 1.50 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -166,7 +166,7 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ));
 
 		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
-		if( $gLibertySystem->isPluginActive( 'bitfile' )) {
+//		if( $gLibertySystem->isPluginActive( 'bitfile' )) {
 			// first we add the data into liberty_attachments to make this file available as attachment
 			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `attachment_plugin_guid`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ? )";
 			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
@@ -177,7 +177,7 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 			// now we store the attachment_id as the primary_attachment_id. this will allow listings and the like to display a nice image of the file
 			$pStoreRow['primary_attachment_id'] = $pStoreRow['attachment_id'];
 			LibertyAttachable::storePrimaryAttachmentId( $pStoreRow );
-		}
+//		}
 		$ret = TRUE;
 	} else {
 		$pStoreRow['errors']['liberty_process'] = "There was a problem processing the file.";
