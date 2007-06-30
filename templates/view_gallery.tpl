@@ -118,10 +118,11 @@
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
 								<td style="text-align:right;">
-									{if $item.prefs.duration}
-										{$item.prefs.duration|display_duration}
-									{elseif $item.download_url}
+									{if $item.download_url}
 										{$item.file_size|display_bytes}
+									{/if}
+									{if $item.prefs.duration}
+										{if $item.download_url} / {/if}{$item.prefs.duration|display_duration}
 									{/if}
 								</td>
 							{/if}
