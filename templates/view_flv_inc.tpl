@@ -72,7 +72,7 @@
 		</div>
 	{/if}
 
-	{if $gContent->isOwner() || $gBitUser->isAdmin()}
+	{if ( $gContent->isOwner() || $gBitUser->isAdmin() ) && $gContent->mInfo.flv_url}
 		<div class="row">
 			{formlabel label="New Aspect Ratio" for="aspect"}
 			{forminput}
