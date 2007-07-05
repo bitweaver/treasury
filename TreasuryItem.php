@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.50 2007/07/05 06:10:53 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.51 2007/07/05 06:14:21 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.50 $
+ * @version      $Revision: 1.51 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -536,22 +536,6 @@ class TreasuryItem extends TreasuryBase {
 			} else {
 				$ret = TREASURY_PKG_URL.'view_item.php?content_id='.$pContentId.( !empty( $pStructureId ) ? "&structure_id=$pStructureId" : "" );
 			}
-		}
-		return $ret;
-	}
-
-	/**
-	 * Get the content_id of a given treasury item based on a given attachment_id
-	 * 
-	 * @param array $pAttachmentId Attachment id of the item in question
-	 * @access public
-	 * @return Content id on success, FALSE on failure - mErrors will contain reason for failure
-	 */
-	function getContentIdFromAttachmentId( $pAttachmentId ) {
-		global $gBitSystem;
-		$ret = FALSE;
-		if( @BitBase::verifyId( $pAttachmentId )) {
-			$ret = $gBitSystem->mDb->getOne( "SELECT lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`primary_attachment_id` = ?", array( $pAttachmentId ));
 		}
 		return $ret;
 	}
