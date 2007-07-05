@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.49 2007/07/05 05:50:42 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.50 2007/07/05 06:10:53 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.49 $
+ * @version      $Revision: 1.50 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -91,6 +91,8 @@ class TreasuryItem extends TreasuryBase {
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				// this is passed by reference as it's updated by the load function
 				$this->mInfo                   = &$aux;
+				$this->mContentId              = $aux['content_id'];
+				$this->mPrimaryAttachmentId    = $aux['attachment_id'];
 				$this->mInfo['title']          = $this->getTitle( $aux );
 				$this->mInfo['display_url']    = $this->getDisplayUrl();
 				$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['plugin_guid']."_comments" );
