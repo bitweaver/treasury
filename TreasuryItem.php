@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.48 2007/06/29 18:56:50 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.49 2007/07/05 05:50:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.48 $
+ * @version      $Revision: 1.49 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -31,7 +31,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return none
 	 * @access public
 	 **/
-	function TreasuryItem( $pDummy=NULL, $pContentId=NULL ) {
+	function TreasuryItem( $pDummy = NULL, $pContentId = NULL, $pPrimaryAttachmentId = NULL ) {
 		TreasuryBase::TreasuryBase();
 		$this->registerContentType(
 			TREASURYITEM_CONTENT_TYPE_GUID, array(
@@ -44,6 +44,7 @@ class TreasuryItem extends TreasuryBase {
 			)
 		);
 		$this->mContentId = !empty( $pDummy ) ? $pDummy : $pContentId;
+		$this->mPrimaryAttachmentId = $pPrimaryAttachmentId;
 		$this->mContentTypeGuid = TREASURYITEM_CONTENT_TYPE_GUID;
 	}
 
@@ -55,14 +56,20 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 **/
 	function load( $pPluginParameters = NULL ) {
-		if( @BitBase::verifyId( $this->mContentId ) ) {
+		if( @BitBase::verifyId( $this->mContentId ) || @BitBase::verifyId( $this->mPrimaryAttachmentId )) {
 			global $gTreasurySystem, $gBitSystem;
 
 			$ret = array();
 
 			$selectSql = $joinSql = $orderSql = '';
-			$whereSql = " WHERE tri.`content_id` = ? ";
-			$bindVars[] = $this->mContentId;
+			if( @BitBase::verifyId( $this->mContentId )) {
+				$whereSql = " WHERE tri.`content_id` = ? ";
+				$bindVars[] = $this->mContentId;
+			} elseif( @BitBase::verifyId( $this->mPrimaryAttachmentId )) {
+				$whereSql = " WHERE lc.`primary_attachment_id` = ? AND lc.`content_type_guid` = ?";
+				$bindVars[] = $this->mPrimaryAttachmentId;
+				$bindVars[] = TREASURYITEM_CONTENT_TYPE_GUID;
+			}
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$ret = array();
