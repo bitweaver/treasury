@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.12 2007/04/23 09:36:32 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view.php,v 1.13 2007/07/06 17:02:29 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -20,8 +20,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
 
 $feedback = array();
-
-$gBitSystem->verifyPermission( 'p_treasury_view_gallery' );
+$gContent->verifyPermission( 'p_treasury_view_gallery' );
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
 	if( !empty( $_REQUEST['confirm'] ) ) {
