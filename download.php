@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.11 2007/04/23 09:36:32 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.12 2007/07/06 15:43:23 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -18,9 +18,6 @@ $gBitSystem->verifyPackage( 'treasury' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
-// Make sure we have the correct permissions for this item to download it
-// file specific permissions are not yet available
-//$gContent->updateUserPermissions();
 $gContent->hasGalleryPermissions( 'p_treasury_download_item' );
 
 // TODO: make sure this works reliably - not sure what is better:
