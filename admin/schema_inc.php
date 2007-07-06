@@ -77,7 +77,7 @@ $gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
 $gBitInstaller->registerUserPermissions( TREASURY_PKG_NAME, array(
 	// gallery permissions
 	array( 'p_treasury_view_gallery',   'Can view file galleries',                      'basic',       TREASURY_PKG_NAME ),
-	array( 'p_treasury_create_gallery', 'Can create file galleries',                    'editors',     TREASURY_PKG_NAME ),
+	array( 'p_treasury_create_gallery', 'Can create and remove file galleries',         'editors',     TREASURY_PKG_NAME ),
 	array( 'p_treasury_edit_gallery',   'Can edit existing file galleries',             'editors',     TREASURY_PKG_NAME ),
 	// item permissions
 	array( 'p_treasury_view_item',      'Can view a downloadable file',                  'basic',      TREASURY_PKG_NAME ),
