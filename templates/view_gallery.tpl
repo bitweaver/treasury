@@ -14,9 +14,9 @@
 		{/if}
 		{if $gContent->hasUserPermission('p_treasury_create_gallery')}
 			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
-			{if $gContent->isOwner()}
-				{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
-			{/if}
+		{/if}
+		{if $gContent->isOwner() || $gBitUser->isAdmin()}
+			{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
 		{/if}
 	</div>
 
