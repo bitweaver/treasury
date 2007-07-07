@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.51 2007/07/05 06:14:21 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.52 2007/07/07 21:46:37 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.51 $
+ * @version      $Revision: 1.52 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -429,7 +429,7 @@ class TreasuryItem extends TreasuryBase {
 		return( count( $this->mErrors ) == 0 );
 	}
 
-	function hasGalleryPermissions( $pPermName ) {
+	function verifyGalleryPermissions( $pPermName ) {
 		global $gBitSystem, $gBitUser;
 		$ret = FALSE;
 		if( $this->isValid() && !empty( $pPermName ) ) {

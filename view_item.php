@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.16 2007/07/06 17:02:29 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.17 2007/07/07 21:46:37 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -20,7 +20,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 // check view permission as set for the gallery
-$gContent->hasGalleryPermissions( 'p_treasury_view_item' );
+$gContent->verifyGalleryPermissions( 'p_treasury_view_item' );
 $gContent->verifyPermission( 'p_treasury_view_item' );
 
 if( empty( $gContent->mInfo ) ) {
