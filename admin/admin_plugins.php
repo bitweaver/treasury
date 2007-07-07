@@ -8,7 +8,7 @@ include_once( KERNEL_PKG_PATH.'simple_form_functions_lib.php' );
 if( !empty( $_REQUEST['reset_all_plugins'] )) {
 	$gTreasurySystem->resetAllPluginSettings();
 	// reload page that everything is displayed as it actually is
-	header( "Location: ".TREASURY_PKG_URL."admin/admin_plugins.php" );
+	bit_redirect( TREASURY_PKG_URL."admin/admin_plugins.php" );
 }
 
 $gTreasurySystem->scanAllPlugins( NULL, "mime\." );
