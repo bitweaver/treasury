@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.4 2007/01/14 15:29:25 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.5 2007/07/08 07:56:40 squareing Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -32,7 +32,8 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	);
 
 	// check if we want to use the cache file
-	$cacheFile = TEMP_PKG_PATH.RSS_PKG_NAME.'/'.TREASURY_PKG_NAME.'_'."g{$listHash['gallery_content_id']}_u{$listHash['user_id']}_".$rss_version_name.'.xml';
+	// we'll use groups to cache rss feeds with different permissions
+	$cacheFile = TEMP_PKG_PATH.RSS_PKG_NAME.'/'.TREASURY_PKG_NAME.'/'."g{$listHash['gallery_content_id']}u{$listHash['user_id']}".$cacheFileTail;
 	$rss->useCached( $rss_version_name, $cacheFile, $gBitSystem->getConfig( 'rssfeed_cache_time' ));
 
 	// if we have a gallery we can work with - load it
