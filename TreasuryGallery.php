@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.31 2007/06/24 07:10:33 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.32 2007/07/08 10:37:37 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.31 $
+ * @version      $Revision: 1.32 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -210,16 +210,16 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		while( $aux = $result->fetchRow() ) {
-//			$hasUserPerm = TRUE;
-//			// this is quite expensive (3 database calls per gallery)... wonder how else we could do this.
-//			if( !empty( $pListHash['object_permission'] ) ) {
-//				$gal = new TreasuryGallery( NULL, $aux['content_id'] );
-//				if( !$gal->hasUserPermission( $pListHash['object_permission'] ) ) {
-//					$hasUserPerm = FALSE;
-//				}
-//			}
+			$hasUserPerm = TRUE;
+			// check to see if we have premissions to do someing specific with this gallery
+			if( !empty( $pListHash['content_permission'] ) ) {
+				$gal = new TreasuryGallery( NULL, $aux['content_id'] );
+				if( !$gal->hasUserPermission( $pListHash['content_permission'] ) ) {
+					$hasUserPerm = FALSE;
+				}
+			}
 
-//			if( $hasUserPerm ) {
+			if( $hasUserPerm ) {
 				$content_ids[]             = $aux['content_id'];
 				$aux['user']               = $aux['creator_user'];
 				$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
@@ -243,7 +243,7 @@ class TreasuryGallery extends TreasuryBase {
 				}
 				$ret[$aux['content_id']]   = $aux;
 			}
-//		}
+		}
 
 		$query = "SELECT COUNT( lc.`title` )
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg

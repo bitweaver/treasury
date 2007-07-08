@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.16 2007/06/18 06:51:30 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.17 2007/07/08 10:37:37 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -18,22 +18,21 @@ $gBitSystem->verifyPackage( 'treasury' );
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
-
-// when we're uploading a file, permissions are taken care of in the store() function
-if( empty( $_REQUEST['treasury_store'] ) ) {
-	$gBitSystem->verifyPermission( 'p_treasury_upload_item' );
-}
-
 require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
 
 // turn the max_file_size value into megabytes
 $gBitSmarty->assign_by_ref( 'feedback', $feedback = array() );
 
-$listHash['get_sub_tree']      = TRUE;
-$listHash['max_records']       = -1;
-$listHash['object_permission'] = 'p_treasury_upload_item';
+$listHash['get_sub_tree']       = TRUE;
+$listHash['max_records']        = -1;
+$listHash['content_permission'] = 'p_treasury_upload_item';
 $galleryList = $gContent->getList( $listHash );
 $gBitSmarty->assign( 'galleryList', $galleryList );
+
+// if we have no gallery we can upload our stuff into and we can't create a new one, we can't upload a file
+if( empty( $galleryList ) && !$gBitUser->hasPermission( 'p_treasury_create_gallery' )) {
+	$gBitSystem->fatalPermission( 'p_treasury_upload_item' );
+}
 
 if( !empty( $_REQUEST['content_id'] ) ) {
 	$galleryContentIds[] = $_REQUEST['content_id'];
