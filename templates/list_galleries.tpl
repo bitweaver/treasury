@@ -1,5 +1,5 @@
 {strip}
-<div class="display treasury">
+<div class="listing treasury">
 	<div class="header">
 		<h1>{tr}File Galleries{/tr}</h1>
 	</div>
