@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.14 2007/03/02 10:59:18 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.15 2007/07/12 14:47:41 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -143,16 +143,7 @@ $itemViewing = array(
 	),
 );
 $gBitSmarty->assign( 'itemViewing', $itemViewing );
-
-$imageSizes = array(
-	'0'      => tra( 'Disable this feature' ),
-	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),
-	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
-	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
-	'medium' => tra( 'Medium ( 400 x 300 pixels )' ),
-	'large'  => tra( 'Large ( 800 x 600 pixels )' ),
-);
-$gBitSmarty->assign( 'imageSizes', $imageSizes );
+$gBitSmarty->assign( 'imageSizes', get_image_size_options() );
 
 if( !empty( $_REQUEST['treasury_settings'] ) ) {
 	$treasuries = array_merge( $treasurySettings, $galleryListing, $itemListing, $itemViewing );
