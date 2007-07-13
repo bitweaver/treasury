@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.12 2007/03/29 08:50:42 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.13 2007/07/13 07:03:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -51,7 +51,6 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 			if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 				if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
 					$fileHash = $_FILES['icon'];
-					$fileHash['thumbsizes'] = array( 'icon', 'avatar', 'small', 'medium' );
 					$fileHash['dest_path'] = $galleryStore->getGalleryThumbBaseUrl();
 					$fileHash['source_file'] = $fileHash['tmp_name'];
 					liberty_clear_thumbnails( $fileHash );
