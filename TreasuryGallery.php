@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.33 2007/07/13 07:42:06 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.34 2007/07/13 08:19:36 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.33 $
+ * @version      $Revision: 1.34 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -314,7 +314,7 @@ class TreasuryGallery extends TreasuryBase {
 						liberty_clear_thumbnails( $fileHash );
 						liberty_generate_thumbnails( $fileHash );
 					} else {
-						$feedback['error'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$pParamHash['thumb']['type'];
+						$this->mErrors['thumb'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$pParamHash['thumb']['type'];
 					}
 				}
 			}
