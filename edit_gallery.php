@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.13 2007/07/13 07:03:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.14 2007/07/13 07:42:06 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -14,10 +14,11 @@
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );
-$gBitSystem->verifyPermission( 'p_treasury_edit_gallery' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
+
+$gContent->verifyPermission( 'p_treasury_edit_gallery' );
 
 // include edit structure file only when structure_id is known
 if( !empty( $gContent->mStructureId ) ) {
@@ -44,25 +45,12 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 	$_REQUEST['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
 	$galleryStore = new TreasuryGallery( NULL, !empty( $_REQUEST['gallery_content_id'] ) ? $_REQUEST['gallery_content_id'] : NULL );
 	$galleryStore->load();
+	// pass thumbnail upload on to storage hash
+	if( !empty( $_FILES['icon']['tmp_name'] )) {
+		$_REQUEST['thumb'] = $_FILES['icon'];
+	}
 	if( $galleryStore->store( $_REQUEST ) ) {
-		// process image upload
-		if( $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) ) {
-			// now deal with the uploaded image
-			if( !empty( $_FILES['icon']['tmp_name'] ) ) {
-				if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
-					$fileHash = $_FILES['icon'];
-					$fileHash['dest_path'] = $galleryStore->getGalleryThumbBaseUrl();
-					$fileHash['source_file'] = $fileHash['tmp_name'];
-					liberty_clear_thumbnails( $fileHash );
-					liberty_generate_thumbnails( $fileHash );
-					$gBitSmarty->assign( 'refresh', '?refresh='.time() );
-				} else {
-					$feedback['error'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$_FILES['icon']['type'];
-				}
-			}
-		}
-
-		header( 'Location: '.$galleryStore->getDisplayUrl()."&refresh=1" );
+		bit_redirect( $galleryStore->getDisplayUrl()."&refresh=1" );
 	} else {
 		$feedback['error'] = $galleryStore->mErrors;
 	}
@@ -74,8 +62,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || 
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		if( $_REQUEST['action'] == 'remove_gallery' && !empty( $_REQUEST['confirm'] ) ) {
 			if( $gContent->expunge( !empty( $_REQUEST['force_item_delete'] ) ) ) {
-				header( "Location: ".TREASURY_PKG_URL );
-				die;
+				bit_redirect( TREASURY_PKG_URL );
 			} else {
 				$feedback['error'] = $gContent->mErrors;
 			}
@@ -101,17 +88,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || 
 }
 
 $gContent->invokeServices( 'content_edit_function' );
-
-$imageSizes = array(
-	'0'      => tra( 'Disable this feature' ),
-	'icon'   => tra( 'Icon ( 48 x 48 pixels )' ),
-	'avatar' => tra( 'Avatar ( 100 x 75 pixels )' ),
-	'small'  => tra( 'Small ( 160 x 120 pixels )' ),
-	'medium' => tra( 'Medium ( 400 x 300 pixels )' ),
-	'large'  => tra( 'Large ( 800 x 600 pixels )' ),
-);
-$gBitSmarty->assign( 'imageSizes', $imageSizes );
-
+$gBitSmarty->assign( 'imageSizes', get_image_size_options() );
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 
 $gBitSystem->display( 'bitpackage:treasury/edit_gallery.tpl', tra( 'Edit File Gallery' ) );

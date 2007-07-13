@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.32 2007/07/08 10:37:37 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.33 2007/07/13 07:42:06 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.32 $
+ * @version      $Revision: 1.33 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -278,7 +278,7 @@ class TreasuryGallery extends TreasuryBase {
 			// probably has to do with not null default nextval('public.liberty_structures_id_seq'::text)
 			if( !empty( $pParamHash['update'] ) ) {
 				if( !empty( $pParamHash['gallery_store'] ) ) {
-					$result = $this->mDb->associateUpdate( $table, $pParamHash['gallery_store'], array("content_id" => $this->mContentId ) );
+					$result = $this->mDb->associateUpdate( $table, $pParamHash['gallery_store'], array( "content_id" => $this->mContentId ));
 				}
 				$pParamHash['structure_location_id'] = $this->mStructureId;
 			} else {
@@ -301,6 +301,24 @@ class TreasuryGallery extends TreasuryBase {
 			}
 
 			$this->mDb->CompleteTrans();
+
+			// process image upload
+			if( empty( $this->mErrors )) {
+				// now deal with the uploaded image
+				if( !empty( $pParamHash['thumb']['tmp_name'] )) {
+					$checkFunc = liberty_get_function( 'can_thumbnail' );
+					if( $checkFunc( $pParamHash['thumb']['type'] )) {
+						$fileHash = $pParamHash['thumb'];
+						$fileHash['dest_path'] = $this->getGalleryThumbBaseUrl();
+						$fileHash['source_file'] = $fileHash['tmp_name'];
+						liberty_clear_thumbnails( $fileHash );
+						liberty_generate_thumbnails( $fileHash );
+					} else {
+						$feedback['error'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$pParamHash['thumb']['type'];
+					}
+				}
+			}
+
 			$this->load();
 		}
 		return( count( $this->mErrors ) == 0 );
