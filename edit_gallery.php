@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.14 2007/07/13 07:42:06 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.15 2007/07/15 11:46:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -57,7 +57,7 @@ if( !empty( $_REQUEST['treasury_store'] ) ) {
 }
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || !empty( $_REQUEST['confirm'] ) ) {
-	$gBitSystem->verifyPermission( 'p_treasury_edit_gallery' );
+	$gContent->verifyPermission( 'p_treasury_edit_gallery' );
 
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 		if( $_REQUEST['action'] == 'remove_gallery' && !empty( $_REQUEST['confirm'] ) ) {

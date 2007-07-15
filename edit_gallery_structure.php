@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery_structure.php,v 1.2 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery_structure.php,v 1.3 2007/07/15 11:46:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -14,10 +14,11 @@
 require_once( '../bit_setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );
-$gBitSystem->verifyPermission( 'p_treasury_edit_gallery' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php' );
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
+
+$gContent->verifyPermission( 'p_treasury_edit_gallery' );
 
 $verifyStructurePermission = 'p_treasury_edit_gallery';
 require_once( LIBERTY_PKG_PATH.'edit_structure_inc.php' );
