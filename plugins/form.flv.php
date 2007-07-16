@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.6 2007/06/01 08:10:09 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/form.flv.php,v 1.7 2007/07/16 15:59:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -18,7 +18,7 @@ $gBitSystem->verifyPackage( 'treasury' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
-if( $gContent->isOwner() || $gBitUser->isAdmin() || !empty( $_REQUEST['confirm'] ) && @BitBase::verifyId( $_REQUEST['content_id'] )) {
+if( $gContent->hasEditPermission() || !empty( $_REQUEST['confirm'] ) && @BitBase::verifyId( $_REQUEST['content_id'] )) {
 	if( !empty( $_REQUEST['aspect'] )) {
 		if( $_REQUEST['aspect'] == 4 / 3 ) {
 			$gContent->storePreference( 'aspect', NULL );

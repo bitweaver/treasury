@@ -6,7 +6,7 @@
 
 	<div class="floaticon">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
-		{if $gContent->isOwner() || $gBitUser->isAdmin()}
+		{if $gContent->hasEditPermission()}
 			{smartlink ifile="edit_item.php" ibiticon="icons/accessories-text-editor" ititle="Edit File" content_id=$gContent->mContentId action=edit}
 			{smartlink ifile="edit_item.php" ibiticon="icons/edit-delete" ititle="Remove File" content_id=$gContent->mContentId action=remove}
 		{/if}

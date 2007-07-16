@@ -40,7 +40,7 @@
 			</a>
 		</div>
 	{/if}
-	{if $gContent->isOwner() || $gBitUser->isAdmin()}
+	{if $gContent->hasEditPermission()}
 		{formfeedback error="{tr}The Video could not be processed. You can upload a different version of the film or simply leave as is.{/tr}"}
 	{/if}
 {/if}
@@ -61,7 +61,7 @@
 			{forminput}
 				<a href="{$gContent->mInfo.download_url}">{$gContent->mInfo.filename|escape}</a>
 				&nbsp; <small>({$gContent->mInfo.mime_type})</small>
-				{if ($gContent->isOwner() || $gBitUser->isAdmin()) && $gContent->mInfo.flv_url}
+				{if $gContent->hasEditPermission() && $gContent->mInfo.flv_url}
 					{form ipackage=treasury ifile="plugins/form.flv.php"}
 						<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 						<input type="submit" name="remove_original" value="{tr}Remove Original{/tr}" />
@@ -72,7 +72,7 @@
 		</div>
 	{/if}
 
-	{if ( $gContent->isOwner() || $gBitUser->isAdmin() ) && $gContent->mInfo.flv_url}
+	{if $gContent->hasEditPermission() && $gContent->mInfo.flv_url}
 		<div class="row">
 			{formlabel label="New Aspect Ratio" for="aspect"}
 			{forminput}

@@ -9,13 +9,13 @@
 		{if $gContent->hasUserPermission('p_treasury_upload_item')}
 			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
 		{/if}
-		{if $gContent->isOwner() || $gContent->hasUserPermission('p_treasury_edit_gallery')}
+		{if $gContent->hasEditPermission() || $gContent->hasUserPermission('p_treasury_edit_gallery')}
 			{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
 		{/if}
 		{if $gContent->hasUserPermission('p_treasury_create_gallery')}
 			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
 		{/if}
-		{if $gContent->isOwner() || $gBitUser->isAdmin()}
+		{if $gContent->hasAdminPermission()}
 			{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
 		{/if}
 	</div>
