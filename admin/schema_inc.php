@@ -71,6 +71,7 @@ $gBitInstaller->registerPreferences( TREASURY_PKG_NAME, array(
 	array( TREASURY_PKG_NAME, 'treasury_item_view_creator',      'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_item_view_hits',         'y' ),
 	array( TREASURY_PKG_NAME, 'treasury_menu_text',              'File Galleries' ),
+	array( TREASURY_PKG_NAME, 'treasury_extended_upload_slots',  'y' ),
 ));
 
 // Default UserPermissions
