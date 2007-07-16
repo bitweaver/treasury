@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.34 2007/07/13 08:19:36 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.35 2007/07/16 15:27:21 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.34 $
+ * @version      $Revision: 1.35 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -44,6 +44,11 @@ class TreasuryGallery extends TreasuryBase {
 		$this->mContentId = $pContentId;
 		$this->mStructureId = $pStructureId;
 		$this->mContentTypeGuid = TREASURYGALLERY_CONTENT_TYPE_GUID;
+
+		// Permission setup
+		$this->mViewContentPerm  = 'p_treasury_view_gallery';
+		$this->mEditContentPerm  = 'p_treasury_edit_gallery';
+		$this->mAdminContentPerm = 'p_treasury_admin';
 	}
 
 	/**

@@ -86,7 +86,7 @@ $gBitInstaller->registerUserPermissions( TREASURY_PKG_NAME, array(
 	//array( 'p_treasury_edit_item',      'Can edit already uploaded files',               'editors',    TREASURY_PKG_NAME ),
 	//array( 'p_treasury_delete_item',    'Can delete files other than his own',           'editors',    TREASURY_PKG_NAME ),
 	// admin permission
-	//array( 'p_treasury_admin',          'Can admin file galleries',                      'admin',      TREASURY_PKG_NAME ),
+	array( 'p_treasury_admin',          'Can admin file galleries and the uploaded files', 'admin',      TREASURY_PKG_NAME ),
 ));
 
 if( defined( 'RSS_PKG_NAME' )) {

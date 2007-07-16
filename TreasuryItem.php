@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.52 2007/07/07 21:46:37 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.53 2007/07/16 15:27:21 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.52 $
+ * @version      $Revision: 1.53 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -46,6 +46,11 @@ class TreasuryItem extends TreasuryBase {
 		$this->mContentId = !empty( $pDummy ) ? $pDummy : $pContentId;
 		$this->mPrimaryAttachmentId = $pPrimaryAttachmentId;
 		$this->mContentTypeGuid = TREASURYITEM_CONTENT_TYPE_GUID;
+
+		// Permission setup
+		$this->mViewContentPerm  = 'p_treasury_view_item';
+		$this->mEditContentPerm  = 'p_treasury_admin';
+		$this->mAdminContentPerm = 'p_treasury_admin';
 	}
 
 	/**
