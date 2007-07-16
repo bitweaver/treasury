@@ -31,62 +31,7 @@
 							{elseif $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' )}
 								<br />
 								<h2>{tr}Upload Files{/tr}</h2>
-
-								<div id="slot0">
-									<div class="row">
-										{formlabel label="Title" for="title0"}
-										{forminput}
-											<input type="text" name="filedata[0][title]" id="title0" size="50" />
-											<br />
-											<input type="file" name="upload0" id="upload0" size="35" />
-										{/forminput}
-									</div>
-
-									<div class="row">
-										{formlabel label="Description" for="edit0"}
-										{forminput}
-											<textarea rows="2" cols="50" name="filedata[0][edit]" id="edit0"></textarea>
-										{/forminput}
-									</div>
-
-									<script type="text/javascript">/* <![CDATA[ */
-										document.write( "<input id=\"button1\" type=\"button\" onclick=\"javascript:showById('slot1');hideById('button1')\" value=\"{tr}Add slot{/tr}\" />" );
-									/* ]]> */</script>
-								</div>
-
-								{foreach from=$uploadSlots item=dummy key=key}
-									{assign var=slot value=$key+1}
-
-									<script type="text/javascript">/* <![CDATA[ */
-										document.write( "<div id=\"slot{$slot}\" style=\"display:none;\">" );
-									/* ]]> */</script>
-
-									<hr />
-
-									<div class="row">
-										{formlabel label="Title" for="title$slot"}
-										{forminput}
-											<input type="text" name="filedata[{$slot}][title]" id="title{$slot}" size="50" />
-											<br />
-											<input type="file" name="upload{$slot}" id="upload{$slot}" size="35" />
-										{/forminput}
-									</div>
-
-									<div class="row">
-										{formlabel label="Description" for="edit$slot"}
-										{forminput}
-											<textarea rows="2" cols="50" name="filedata[{$slot}][edit]" id="edit{$slot}"></textarea>
-										{/forminput}
-									</div>
-
-									<script type="text/javascript">/* <![CDATA[ */
-										{if count($uploadSlots) gt $slot}
-											document.write( "<input id=\"button{$slot+1}\" type=\"button\" onclick=\"javascript:showById('slot{$slot+1}');hideById('button{$slot+1}')\" value=\"{tr}Add slot{/tr}\" />" );
-										{else}
-											document.write( "</div>" );
-										{/if}
-									/* ]]> */</script>
-								{/foreach}
+								{include file="bitpackage:kernel/upload_slot_inc.tpl"}
 							{else}
 								<div class="row">
 									{formlabel label="Select File(s)"}
@@ -109,6 +54,44 @@
 									{/forminput}
 								</div>
 							{/if}
+
+							<div class="row">
+								{formlabel label="Add File(s) to these Galleries"}
+								{forminput}
+									{foreach from=$galleryList item=gallery}
+										{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
+									{foreachelse}
+										<p class="norecords">
+											{tr}No Galleries Found{/tr}.<br />
+											{tr}The following gallery will automatically be created for you{/tr}: <strong>File Gallery</strong>
+										</p>
+									{/foreach}
+								{/forminput}
+							</div>
+
+							{capture assign=processingOptions}
+								{foreach from=$gTreasurySystem->mPlugins item=plugin key=guid}
+									{if $gTreasurySystem->isPluginActive( $guid ) && $plugin.processing_options}
+										<div class="row">
+											{formlabel label=$plugin.title for=$guid}
+											{forminput}
+												{$plugin.processing_options}
+											{/forminput}
+										</div>
+									{/if}
+								{/foreach}
+							{/capture}
+
+							{if $processingOptions}
+								<h3>{tr}Processing Options{/tr}</h3>
+								{$processingOptions}
+							{/if}
+
+							{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+
+							{if $gBitSystem->isPackageActive( 'gigaupload' )}
+								{include file="bitpackage:gigaupload/progress_container_inc.tpl"}
+							{/if}
 						{/legend}
 					{/jstab}
 
@@ -116,45 +99,6 @@
 
 					{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_upload_tab_tpl}
 				{/jstabs}
-
-				<div class="row">
-					{formlabel label="Add File(s) to these Galleries"}
-					{forminput}
-						{foreach from=$galleryList item=gallery}
-							{include file="bitpackage:treasury/structure_inc.tpl" subtree=$gallery.subtree ifile="view.php" checkbox=1}
-						{foreachelse}
-							<p class="norecords">
-								{tr}No Galleries Found{/tr}.<br />
-								{tr}The following gallery will automatically be created for you{/tr}: <strong>File Gallery</strong>
-							</p>
-						{/foreach}
-					{/forminput}
-				</div>
-
-				{capture assign=processingOptions}
-					{foreach from=$gTreasurySystem->mPlugins item=plugin key=guid}
-						{if $gTreasurySystem->isPluginActive( $guid ) && $plugin.processing_options}
-							<div class="row">
-								{formlabel label=$plugin.title for=$guid}
-								{forminput}
-									{$plugin.processing_options}
-								{/forminput}
-							</div>
-						{/if}
-					{/foreach}
-				{/capture}
-
-				{if $processingOptions}
-					<h3>{tr}Processing Options{/tr}</h3>
-					{$processingOptions}
-				{/if}
-
-				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
-
-				{if $gBitSystem->isPackageActive( 'gigaupload' )}
-					{include file="bitpackage:gigaupload/progress_container_inc.tpl"}
-				{/if}
-
 			</div> <!-- end #uploadblock -->
 
 			<div class="row submit">

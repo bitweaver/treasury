@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.17 2007/07/08 10:37:37 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.18 2007/07/16 19:41:22 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -50,7 +50,7 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 			$treasuryItem = new TreasuryItem();
 
 			// transfer the form data to a store hash
-			$storeHash = !empty( $_REQUEST['filedata'][$i] ) ? $_REQUEST['filedata'][$i] : array();
+			$storeHash = !empty( $_REQUEST['file'][$i] ) ? $_REQUEST['file'][$i] : array();
 
 			// transfer galleryContentIds as well
 			$storeHash['galleryContentIds'] = !empty( $_REQUEST['galleryContentIds'] ) ? $_REQUEST['galleryContentIds'] : array();
@@ -61,27 +61,22 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 			// add the file details to the store hash
 			$storeHash['upload'] = $upload;
 
-			if( $treasuryItem->store( $storeHash ) ) {
-				$success = TRUE;
-			} else {
+			if( !$treasuryItem->store( $storeHash ) ) {
 				$feedback['error'] = $treasuryItem->mErrors;
 			}
 			$i++;
 		}
 	}
 
-	if( empty( $feedback['error'] ) && !empty( $success ) ) {
-		header( 'Location: '.TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ) );
-die;
+	if( empty( $feedback['error'] )) {
+		bit_redirect( TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ) );
 	}
 }
 
 if( $gBitSystem->isPackageActive( 'gigaupload' ) ) {
 	gigaupload_smarty_setup( TREASURY_PKG_URL.'upload.php' );
 } elseif( $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' ) ) {
-	$uploadSlots = array();
-	$uploadSlots = array_pad( $uploadSlots, 9, 0 );
-	$gBitSmarty->assign( 'uploadSlots', $uploadSlots );
+	$gBitThemes->loadAjax( 'prototype' );
 } else {
 	$gBitSmarty->assign( 'loadMultiFile', TRUE );
 }
