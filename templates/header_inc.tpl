@@ -7,8 +7,8 @@
 	{/if}
 {/if}
 
-{* we load the ufo.js if the flashvideo plugin is active since it could be included in any page and there is no way to inform this file of the use of the plugin *}
-{if $treasuryFlv || $gLibertySystem->mPlugins.dataflashvideo}
-	<script type="text/javascript" src="{$smarty.const.TREASURY_PKG_URL}libs/flv_player/ufo.js"></script>
+{* we load the js if the flashvideo plugin is active since it could be included in any page and there is no way to inform this file of the use of the plugin *}
+{if $treasuryFlv || $gLibertySystem->isPluginActive( 'dataflashvideo' )}
+	<script type="text/javascript" src="{$smarty.const.TREASURY_PKG_URL}libs/flv_player/swfobject.js"></script>
 {/if}
 {/strip}

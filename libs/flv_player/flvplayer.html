@@ -2,45 +2,43 @@
 <head>
 
 
-	<script type="text/javascript" src="ufo.js"></script>
+<script type="text/javascript" src="swfobject.js"></script>
 
 
 </head>
-<body style="margin:50px;">
+<body>
 
 
-<h2>playing a single media file:</h2>
+<h3>single file, with preview image:</h3>
 
 
 <p id="player1"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
 <script type="text/javascript">
-	var FO = {	movie:"flvplayer.swf",width:"240",height:"140",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
-				flashvars:"file=video.flv&showdigits=false&autostart=false&showfsbutton=true&repeat=true" };
-	UFO.create(	FO, "player1");
+	var s1 = new SWFObject("flvplayer.swf","single","300","170","7");
+	s1.addParam("allowfullscreen","true");
+	s1.addVariable("file","video.flv");
+	s1.addVariable("image","preview.jpg");
+	s1.write("player1");
 </script>
 
 
-<h2>with logo and preview image:</h2>
+<h3>playlist file, with different colors:</h3>
 
 
 <p id="player2"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
 <script type="text/javascript">
-	var FO = {	movie:"/treasury/libs/flv_player/flvplayer.swf",width:"240",height:"140",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
-				flashvars:"file=/treasury/libs/flv_player/video.flv&showdigits=false&image=preview.jpg&logo=logo.png&showicons=false&volume=100" };
-	UFO.create(	FO, "player2");
+	var s2 = new SWFObject("flvplayer.swf","playlist","300","312","7");
+	s2.addParam("allowfullscreen","true");
+	s2.addVariable("file","playlist.xml");
+	s2.addVariable("displayheight","200");
+	s2.addVariable("backcolor","0x000000");
+	s2.addVariable("frontcolor","0xCCCCCC");
+	s2.addVariable("lightcolor","0x557722");
+	s2.write("player2");
 </script>
 
 
-
-<h2>playing a  playlist file:</h2>
-
-
-<p id="player3"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.</p>
-<script type="text/javascript">
-	var FU = { 	movie:"flvplayer.swf",width:"300",height:"250",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
-				flashvars:"file=playlist.xml&displayheight=160&repeat=true&lightcolor=0x557722&backcolor=0x000000&frontcolor=0xCCCCCC" };
-	UFO.create(	FU, "player3");
-</script>
+<p><a href="http://www.jeroenwijering.com/extras/wizard.html">online configuration wizard</a></p>
 
 
 </body>

@@ -1,14 +1,12 @@
 {strip}
-<span id="flv_player_{$flv.content_id}"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this video.</span>
+<p id="flv_player_{$flv.content_id}"><a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this video.</p>
 <script type="text/javascript">/* <![CDATA[ */
-	var FO = {ldelim} movie:"{$smarty.const.TREASURY_PKG_URL}libs/flv_player/flvplayer.swf",width:"{$flvPrefs.flv_width}",height:"{$flvPrefs.flv_height+20}",majorversion:"7",build:"0",bgcolor:"#FFFFFF",
-	flashvars:"
-		autostart=false&
-		file={$flv.flv_url}&
-		showdigits={$flvPrefs.digits|default:'true'}&
-		image={$flv.thumbnail_url.medium}&
-		repeat=false
-	" {rdelim};
-	UFO.create( FO, "flv_player_{$flv.content_id}");
+	var so = new SWFObject('{$smarty.const.TREASURY_PKG_URL}libs/flv_player/flvplayer.swf','player','{$flvPrefs.flv_width}','{$flvPrefs.flv_height+20}','7');
+	so.addVariable("file","{$flv.flv_url}");
+	so.addVariable("image","{$flv.thumbnail_url.medium}");
+	so.addVariable("overstretch","fit");
+	so.addVariable("frontcolor","0x{$gBitSystem->getConfig('treasury_flv_frontcolor','FFFFFF')}");
+	so.addVariable("backcolor","0x{$gBitSystem->getConfig('treasury_flv_backcolor','000000')}");
+	so.write('flv_player_{$flv.content_id}');
 /* ]]> */</script>
 {/strip}

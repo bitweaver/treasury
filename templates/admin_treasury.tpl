@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.5 2007/04/20 20:46:25 laetzer Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.6 2007/07/18 16:14:31 squareing Exp $ *}
 {strip}
 {form}
 	<input type="hidden" name="page" value="{$page}" />
@@ -31,7 +31,7 @@
 						{formhelp note="This is the size of the gallery image if one is uploaded."}
 					{/forminput}
 				</div>
-		
+
 				{foreach from=$galleryListing key=feature item=output}
 					<div class="row">
 						{formlabel label=`$output.label` for=$feature}
@@ -53,7 +53,7 @@
 						{formhelp note="The size of icons displayed in the item list."}
 					{/forminput}
 				</div>
-    		
+
 				{foreach from=$itemListing key=feature item=output}
 					<div class="row">
 						{formlabel label=`$output.label` for=$feature}
@@ -75,7 +75,7 @@
 						{formhelp note="Size of the image displyed when viewing an item."}
 					{/forminput}
 				</div>
-    		
+
 				{foreach from=$itemViewing key=feature item=output}
 					<div class="row">
 						{formlabel label=`$output.label` for=$feature}
