@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.23 2007/07/21 09:56:09 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.24 2007/07/21 10:56:48 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.23 $
+ * @version		$Revision: 1.24 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -244,18 +244,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 				// if we have a width, ffmpeg-php was successful
 				if( !empty( $info['width'] )) {
 					$info['aspect'] = $info['width'] / $info['height'];
-
-					if( preg_match( "!\.wmv$!i", $source )) {
-						$max_durartion = 240;
-					} else {
-						$max_durartion = 120;
-					}
-
-					if( $info['duration'] >= $max_durartion ) {
-						$info['offset'] = '00:01:00';
-					} else {
-						$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
-					}
+					$info['offset'] = strftime( "%T", round( $info['duration'] / 5 - ( 60 * 60 )));
 				} else {
 					$info = $default;
 				}
@@ -276,7 +265,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					$info['height']   = $movie->getFrameHeight();
 				}
 
-					// if the video can be processed by ffmpeg-php, width and height are greater than 1
+				// if the video can be processed by ffmpeg-php, width and height are greater than 1
 				if( !empty( $info['width'] )) {
 					// aspect ratio
 					$info['aspect']     = $info['width'] / $info['height'];
@@ -290,20 +279,6 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 						$info['flv_height']++;
 					}
 					$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
-
-					// screenshot offset is relative to flick length - we'll pick a frame somewhere in the middle
-					// if we're dealing with a wmv file, things might get wonky - as to be expected with M$ in the game - gah!
-					if( preg_match( "!\.wmv$!i", $source )) {
-						$max_durartion = 240;
-					} else {
-						$max_durartion = 120;
-					}
-
-					if( $info['duration'] >= $max_durartion ) {
-						$info['offset'] = '00:01:00';
-					} else {
-						$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
-					}
 				} else {
 					$info = $default;
 				}
@@ -318,6 +293,15 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 				// make sure the conversion was successfull
 				if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
+					// try to work out a reasonable timepoint where to extract a screenshot
+					if( preg_match( '!Duration: ([\d:\.]*)!', $debug, $time )) {
+						list( $h, $m, $s ) = explode( ':', $time[1] );
+						$seconds = round( 60 * 60 * (int)$h + 60 * (int)$m + (float)$s );
+						// we need to subract one hour from our time for strftime to return the correct value
+						$info['offset'] = strftime( "%T", round( $seconds / 5 - ( 60 * 60 )));
+					} else {
+						$info['offset'] = "00:00:10";
+					}
 					// store some video specific settings
 					treasury_flv_store_preferences( $info, $item );
 
