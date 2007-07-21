@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.18 2007/07/16 19:41:22 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.19 2007/07/21 09:30:13 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -69,7 +69,11 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 	}
 
 	if( empty( $feedback['error'] )) {
-		bit_redirect( TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ) );
+		if( $i > 1 ) {
+			bit_redirect( TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ));
+		} else {
+			bit_redirect( TreasuryItem::getDisplayUrl( $treasuryItem->mContentId ));
+		}
 	}
 }
 
