@@ -12,6 +12,7 @@ if( !empty( $_REQUEST['reset_all_plugins'] )) {
 }
 
 $gTreasurySystem->scanAllPlugins( NULL, "mime\." );
+ksort( $gTreasurySystem->mPlugins );
 
 $feedback = array();
 if( !empty( $_REQUEST['pluginsave'] )) {
