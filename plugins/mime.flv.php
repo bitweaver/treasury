@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.22 2007/06/20 10:58:16 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.23 2007/07/21 09:56:09 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.22 $
+ * @version		$Revision: 1.23 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -151,7 +151,7 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = N
 		}
 
 		// we can use a special plugin if active to include flvs in wiki pages
-		if( defined( 'PLUGIN_GUID_DATAFLASHVIDEO' ) && !empty( $gLibertySystem->mPlugins['dataflashvideo'] )) {
+		if( $gLibertySystem->isPluginActive( 'dataflashvideo' )) {
 			$pFileHash['wiki_plugin_link'] = "{flashvideo id={$pFileHash['attachment_id']}}";
 		}
 	}
@@ -225,14 +225,58 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 			$dest_path = dirname( $item->mInfo['source_file'] );
 			$dest_file = $dest_path.'/flick.flv';
 
-			// we can do some nice stuff if ffmpeg-php is available
-			if( extension_loaded( 'ffmpeg' )) {
-				$movie = new ffmpeg_movie( $source );
-				$info['duration']   = round( $movie->getDuration() );
-				$info['width']      = $movie->getFrameWidth();
-				$info['height']     = $movie->getFrameHeight();
+			// set some default values if ffpeg-php isn't available or fails
+			$default['aspect']     = 4 / 3;
+			$default['flv_width']  = $width;
+			$default['flv_height'] = round( $width / 4 * 3 );
+			$default['size']       = "{$default['flv_width']}x{$default['flv_height']}";
+			$default['offset']     = '00:00:10';
 
-				// if the video can be processed by ffmpeg, width and height are greater than 1
+			if( $pParamHash['upload']['type'] == 'video/x-flv' ) {
+				// this is already an flv file - we'll just extract some information and store the video
+				if( extension_loaded( 'ffmpeg' )) {
+					$movie = new ffmpeg_movie( $source );
+					$info['duration'] = round( $movie->getDuration() );
+					$info['width']    = $movie->getFrameWidth();
+					$info['height']   = $movie->getFrameHeight();
+				}
+
+				// if we have a width, ffmpeg-php was successful
+				if( !empty( $info['width'] )) {
+					$info['aspect'] = $info['width'] / $info['height'];
+
+					if( preg_match( "!\.wmv$!i", $source )) {
+						$max_durartion = 240;
+					} else {
+						$max_durartion = 120;
+					}
+
+					if( $info['duration'] >= $max_durartion ) {
+						$info['offset'] = '00:01:00';
+					} else {
+						$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
+					}
+				} else {
+					$info = $default;
+				}
+
+				// store prefs and create thumbnails
+				treasury_flv_store_preferences( $info, $item );
+				treasury_flv_create_thumbnail( $source, $info['offset'] );
+				rename( $source, $dest_file );
+				$log['message'] = 'SUCCESS: Converted to flash video';
+				$item->mLogs['flv_converter'] = "Flv video file was successfully uploaded and thumbnails extracted.";
+				$ret = TRUE;
+			} else {
+				// we can do some nice stuff if ffmpeg-php is available
+				if( extension_loaded( 'ffmpeg' )) {
+					$movie = new ffmpeg_movie( $source );
+					$info['duration'] = round( $movie->getDuration() );
+					$info['width']    = $movie->getFrameWidth();
+					$info['height']   = $movie->getFrameHeight();
+				}
+
+					// if the video can be processed by ffmpeg-php, width and height are greater than 1
 				if( !empty( $info['width'] )) {
 					// aspect ratio
 					$info['aspect']     = $info['width'] / $info['height'];
@@ -260,63 +304,42 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					} else {
 						$info['offset'] = '00:00:'.floor( $info['duration'] / 4 );
 					}
-				}
-			}
-
-			if( empty( $info['width'] )) {
-				// set some default values if ffmpeg isn't available or ffmpeg-php couldn't get the relevant information
-				$info['aspect']     = 4 / 3;
-				$info['flv_width']  = $width;
-				$info['flv_height'] = round( $width / 4 * 3 );
-				$info['size']       = "{$info['flv_width']}x{$info['flv_height']}";
-				$info['offset']     = '00:00:10';
-			}
-
-			// we keep the output of this that we can store it to the error file if we need to do so
-			$parameters = "-i '$source' -acodec mp3 -ar $video_rate -ab $audio_rate -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file'";
-			if( $pGetParameters ) {
-				return $parameters;
-			} else {
-				$debug = shell_exec( "$ffmpeg $parameters 2>&1" );
-			}
-
-			// make sure the conversion was successfull
-			if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
-				// store duration of video
-				if( !empty( $info['duration'] )) {
-					$item->storePreference( 'duration', $info['duration'] );
+				} else {
+					$info = $default;
 				}
 
-				// only store aspect if aspect is different to 4:3
-				$default = 4 / 3;
-				if( !empty( $info['aspect'] ) && $info['aspect'] != $default ) {
-					$item->storePreference( 'aspect', $info['aspect'] );
+				// we keep the output of this that we can store it to the error file if we need to do so
+				$parameters = "-i '$source' -acodec mp3 -ar $video_rate -ab $audio_rate -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file'";
+				if( $pGetParameters ) {
+					return $parameters;
+				} else {
+					$debug = shell_exec( "$ffmpeg $parameters 2>&1" );
 				}
 
-				// since the flv conversion worked, we will create a preview screenshots to show.
-				shell_exec( "$ffmpeg -i '$dest_file' -an -ss {$info['offset']} -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
-				if( is_file( "$dest_path/preview1.jpg" )) {
-					$fileHash['type']        = 'image/jpg';
-					$fileHash['thumbsizes']  = array( 'icon', 'avatar', 'small', 'medium' );
-					$fileHash['source_file'] = "$dest_path/preview1.jpg";
-					$fileHash['dest_path']   = str_replace( BIT_ROOT_PATH, '', "$dest_path/" );
-					liberty_generate_thumbnails( $fileHash );
-				}
-				$log['message'] = 'SUCCESS: Converted to flash video';
-				$item->mLogs['flv_converter'] = "Converted to flashvideo in ".( date( 'U' ) - $begin )." seconds";
-				$ret = TRUE;
-			} else {
-				// remove unsuccessfully converted file
-				@unlink( $dest_file );
-				$log['message'] = 'ERROR: The video you uploaded could not be converted by ffmpeg. DEBUG OUTPUT: '.nl2br( $debug );
-				$item->mErrors['flv_converter'] = "Video could not be converted to flashvideo. An error dump was saved to: ".$dest_path.'/error';
+				// make sure the conversion was successfull
+				if( is_file( $dest_file ) && filesize( $dest_file ) > 1 ) {
+					// store some video specific settings
+					treasury_flv_store_preferences( $info, $item );
 
-				// write error message to error file
-				$h = fopen( $dest_path."/error", 'w' );
-				fwrite( $h, $debug );
-				fclose( $h );
+					// since the flv conversion worked, we will create a preview screenshots to show.
+					treasury_flv_create_thumbnail( $dest_file, $info['offset'] );
+
+					$log['message'] = 'SUCCESS: Converted to flash video';
+					$item->mLogs['flv_converter'] = "Converted to flashvideo in ".( date( 'U' ) - $begin )." seconds";
+					$ret = TRUE;
+				} else {
+					// remove unsuccessfully converted file
+					@unlink( $dest_file );
+					$log['message'] = 'ERROR: The video you uploaded could not be converted by ffmpeg. DEBUG OUTPUT: '.nl2br( $debug );
+					$item->mErrors['flv_converter'] = "Video could not be converted to flashvideo. An error dump was saved to: ".$dest_path.'/error';
+
+					// write error message to error file
+					$h = fopen( $dest_path."/error", 'w' );
+					fwrite( $h, $debug );
+					fclose( $h );
+				}
+				@unlink( $dest_path.'/processing' );
 			}
-			@unlink( $dest_path.'/processing' );
 		}
 
 		$log['time']     = date( 'd/M/Y:H:i:s O' );
@@ -327,6 +350,79 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 		// return the log
 		$pParamHash['log'] = $log;
+	}
+	return $ret;
+}
+
+/**
+ * This function will create a thumbnail for a given video
+ * 
+ * @param string $pFile path to video file
+ * @param numric $pOffset Offset in seconds to use to create thumbnail from
+ * @access public
+ * @return TRUE on success, FALSE on failure
+ */
+function treasury_flv_create_thumbnail( $pFile, $pOffset = 60 ) {
+	global $gBitSystem;
+	$ret = FALSE;
+	if( !empty( $pFile )) {
+		$dest_path = dirname( $pFile );
+
+		// try to use an app designed specifically to extract a thumbnail
+		if( shell_exec( shell_exec( 'which ffmpegthumbnailer' ).' -h' )) {
+			$thumbnailer = trim( shell_exec( 'which ffmpegthumbnailer' ));
+		} elseif( shell_exec( shell_exec( 'which ffmpegvideothumbnailer' ).' -h' )) {
+			$thumbnailer = trim( shell_exec( 'which ffmpegvideothumbnailer' ));
+		}
+
+		if( !empty( $thumbnailer )) {
+			shell_exec( "$thumbnailer -i '$pFile' -o '$dest_path/medium.jpg' -s 600" );
+			if( is_file( "$dest_path/medium.jpg" )) {
+				$fileHash['type']            = 'image/jpg';
+				$fileHash['thumbnail_sizes'] = array( 'icon', 'avatar', 'small' );
+				$fileHash['source_file']     = "$dest_path/medium.jpg";
+				$fileHash['dest_path']       = str_replace( BIT_ROOT_PATH, '', "$dest_path/" );
+				liberty_generate_thumbnails( $fileHash );
+				$ret = TRUE;
+			}
+		} else {
+			// fall back to using ffmepg
+			$ffmpeg    = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
+			shell_exec( "$ffmpeg -i '$pFile' -an -ss $pOffset -t 00:00:01 -r 1 -y '$dest_path/preview%d.jpg'" );
+			if( is_file( "$dest_path/preview1.jpg" )) {
+				$fileHash['type']            = 'image/jpg';
+				$fileHash['thumbnail_sizes'] = array( 'icon', 'avatar', 'small', 'medium' );
+				$fileHash['source_file']     = "$dest_path/preview1.jpg";
+				$fileHash['dest_path']       = str_replace( BIT_ROOT_PATH, '', "$dest_path/" );
+				liberty_generate_thumbnails( $fileHash );
+				$ret = TRUE;
+			}
+		}
+	}
+	return $ret;
+}
+
+/**
+ * treasury_flv_store_preferences 
+ * 
+ * @param array $pVideoInfo Video information
+ * @access public
+ * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+ */
+function treasury_flv_store_preferences( $pVideoInfo, $pObject ) {
+	$ret = FALSE;
+	if( !empty( $pObject ) && $pObject->isValid() ) {
+		// store duration of video
+		if( !empty( $pVideoInfo['duration'] )) {
+			$pObject->storePreference( 'duration', $pVideoInfo['duration'] );
+		}
+
+		// only store aspect if aspect is different to 4:3
+		$default = 4 / 3;
+		if( !empty( $pVideoInfo['aspect'] ) && $pVideoInfo['aspect'] != $default ) {
+			$pObject->storePreference( 'aspect', $pVideoInfo['aspect'] );
+		}
+		$ret = TRUE;
 	}
 	return $ret;
 }
