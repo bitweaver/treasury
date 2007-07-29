@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.26 2007/07/29 15:24:23 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.27 2007/07/29 21:20:47 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.26 $
+ * @version		$Revision: 1.27 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -205,10 +205,8 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		// these are set in the treasury plugin admin screen
-		$ffmpeg     = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
-		$video_rate = trim( $gBitSystem->getConfig( 'treasury_flv_video_rate', 22050 ));
-		$audio_rate = trim( $gBitSystem->getConfig( 'treasury_flv_audio_rate', 32 ));
-		$width      = trim( $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
+		$ffmpeg           = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
+		$width            = trim( $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
 
 		$begin = date( 'U' );
 		$log   = array();
@@ -283,11 +281,21 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					$info = $default;
 				}
 
-				// we keep the output of this that we can store it to the error file if we need to do so
-				$parameters = "-i '$source' -acodec mp3 -ar $video_rate -ab $audio_rate -f flv -s {$info['size']} -aspect {$info['aspect']} -y '$dest_file'";
+				// set up parameters to convert video
+				$parameters =
+					" -i '$source'".
+					" -acodec mp3".
+					" -b ".trim( $gBitSystem->getConfig( 'treasury_flv_video_bitrate', 160000 )).
+					" -ab ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_bitrate', 32 )).
+					" -ar ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_samplerate', 22050 )).
+					" -f flv".
+					" -s ".$info['size'].
+					" -aspect ".$info['aspect'].
+					" -y '$dest_file'";
 				if( $pGetParameters ) {
 					return $parameters;
 				} else {
+					// we keep the output of this that we can store it to the error file if we need to do so
 					$debug = shell_exec( "$ffmpeg $parameters 2>&1" );
 				}
 
