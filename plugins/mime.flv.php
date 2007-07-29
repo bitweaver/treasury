@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.24 2007/07/21 10:56:48 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.25 2007/07/29 10:24:11 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.24 $
+ * @version		$Revision: 1.25 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -239,12 +239,8 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					$info['duration'] = round( $movie->getDuration() );
 					$info['width']    = $movie->getFrameWidth();
 					$info['height']   = $movie->getFrameHeight();
-				}
-
-				// if we have a width, ffmpeg-php was successful
-				if( !empty( $info['width'] )) {
-					$info['aspect'] = $info['width'] / $info['height'];
-					$info['offset'] = strftime( "%T", round( $info['duration'] / 5 - ( 60 * 60 )));
+					$info['aspect']   = $info['width'] / $info['height'];
+					$info['offset']   = strftime( "%T", round( $info['duration'] / 5 - ( 60 * 60 )));
 				} else {
 					$info = $default;
 				}
