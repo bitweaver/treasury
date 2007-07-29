@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.51 2007/07/29 15:15:16 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.52 2007/07/29 16:41:14 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.51 $
+ * @version     $Revision: 1.52 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -143,12 +143,6 @@ function treasury_default_update( &$pStoreRow, &$pCommonObject ) {
 			if( $storagePath = liberty_process_upload( $pStoreRow )) {
 				$sql = "UPDATE `".BIT_DB_PREFIX."liberty_files` SET `storage_path` = ?, `mime_type` = ?, `file_size` = ?, `user_id` = ? WHERE `file_id` = ?";
 				$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'], $pStoreRow['file_id'] ));
-			}
-
-			// in case the user has changed
-			if( @include_once( LIBERTY_PKG_PATH.'plugins/storage.treasury.php' )) {
-				$sql = "UPDATE `".BIT_DB_PREFIX."liberty_attachments` SET `user_id` = ? WHERE `foreign_id` = ?";
-				$gBitSystem->mDb->query( $sql, array( $pStoreRow['user_id'], $pStoreRow['file_id'] ));
 			}
 		}
 	}
