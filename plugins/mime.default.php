@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.50 2007/06/29 18:59:39 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.51 2007/07/29 15:15:16 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.50 $
+ * @version     $Revision: 1.51 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -130,6 +130,14 @@ function treasury_default_update( &$pStoreRow, &$pCommonObject ) {
 		if( $storage_path = $gBitSystem->mDb->getOne( $query, array( $pStoreRow['file_id'] ))) {
 			// First we remove the old file
 			@unlink( BIT_ROOT_PATH.$storage_path );
+			// make sure we store the new file in the same place as before
+			$pStoreRow['upload']['dest_path'] = dirname( $storage_path ).'/';
+
+			// if we can create new thumbnails for this file, we remove the old ones first
+			$canThumbFunc = liberty_get_function( 'can_thumbnail' );
+			if( !empty( $canThumbFunc ) && $canThumbFunc( $pStoreRow['upload']['type'] )) {
+				liberty_clear_thumbnails( $pStoreRow['upload'] );
+			}
 
 			// Now we process the uploaded file
 			if( $storagePath = liberty_process_upload( $pStoreRow )) {
