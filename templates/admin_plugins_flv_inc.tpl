@@ -55,7 +55,7 @@
 					values=$rates.audio_bitrate
 					name=treasury_flv_audio_bitrate
 					id=treasury_flv_audio_bitrate
-					selected=$gBitSystem->getConfig('treasury_flv_audio_bitrate')|default:32} bits/s
+					selected=$gBitSystem->getConfig('treasury_flv_audio_bitrate')|default:32000} kbits/s
 				{formhelp note="Set the audio bitrate. The higher the bitrate the higher the quality but also the larger the file."}
 			{/forminput}
 		</div>
