@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.28 2007/07/30 08:32:41 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.29 2007/07/30 08:59:30 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.28 $
+ * @version		$Revision: 1.29 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -213,7 +213,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 		// check to see if ffmpeg is available at all
 		$item = new TreasuryItem( NULL, $pParamHash['content_id'] );
-		if( !shell_exec( "$ffmpeg -h" )) {
+		if( !( $ff = shell_exec( "$ffmpeg 2>&1" ))) {
 			$log['time']     = date( 'Y-M-d - H:i:s O' );
 			$log['duration'] = 0;
 			$log['message']  = 'ERROR: ffmpeg does not seem to be available on your system at: '.$ffmpeg.' Please set the path to ffmpeg in the treasury administration screen.';
@@ -304,12 +304,21 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					$info = $default;
 				}
 
+				// annoyingly, ffmpeg can take kbits or bits ( does this depend on configure flags, version ??? )
+				$vd = $ad = 1;
+				if( preg_match( "!\n-b\b.*in kbits/s!", $ff )) {
+					$vd = 1000;
+				}
+				if( preg_match( "!\n-ab\b.*in kbits/s!", $ff )) {
+					$ad = 1000;
+				}
+
 				// set up parameters to convert video
 				$parameters =
 					" -i '$source'".
 					" -acodec mp3".
-					" -b ".trim( $gBitSystem->getConfig( 'treasury_flv_video_bitrate', 160000 )).
-					" -ab ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_bitrate', 32000 )).
+					" -b ".trim( $gBitSystem->getConfig( 'treasury_flv_video_bitrate', 160000 ) / $vd ).
+					" -ab ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_bitrate', 32000 ) / $ad ).
 					" -ar ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_samplerate', 22050 )).
 					" -f flv".
 					" -s ".$info['size'].
