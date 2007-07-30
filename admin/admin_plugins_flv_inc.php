@@ -21,17 +21,17 @@ if( $gTreasurySystem->isPluginActive( 'mime_flv' )) {
 			640 => 640,
 		),
 		'display_size' => array(
-			0 => tra( 'Same as encoded video' ),
+			0   => tra( 'Same as encoded video' ),
 			240 => tra( 'Small' ),
 			320 => tra( 'Medium' ),
 			480 => tra( 'Large' ),
 			640 => tra( 'Huge' ),
 		),
 		'audio_bitrate' => array(
-			16 => 16,
-			32 => 32,
-			64 => 64,
-			96 => 96,
+			32000  => 32,
+			64000  => 64,
+			96000  => 96,
+			128000 => 128,
 		),
 		'audio_samplerate' => array(
 			11025 => 11025,
