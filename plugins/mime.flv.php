@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.30 2007/07/30 09:01:14 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.31 2007/07/30 09:05:17 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.30 $
+ * @version		$Revision: 1.31 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -306,10 +306,10 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 				// annoyingly, ffmpeg can take kbits or bits ( does this depend on configure flags, version ??? )
 				$vd = $ad = 1;
-				if( preg_match( "!\n-b\b.*in kbits/s!", $ff )) {
+				if( preg_match( "!\n-b\b.*in kbit/s!", $ff )) {
 					$vd = 1000;
 				}
-				if( preg_match( "!\n-ab\b.*in kbits/s!", $ff )) {
+				if( preg_match( "!\n-ab\b.*in kbit/s!", $ff )) {
 					$ad = 1000;
 				}
 
