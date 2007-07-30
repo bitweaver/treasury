@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.27 2007/07/29 21:20:47 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.28 2007/07/30 08:32:41 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.27 $
+ * @version		$Revision: 1.28 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -205,8 +205,8 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 	if( @BitBase::verifyId( $pParamHash['content_id'] )) {
 		// these are set in the treasury plugin admin screen
-		$ffmpeg           = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
-		$width            = trim( $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
+		$ffmpeg = trim( $gBitSystem->getConfig( 'treasury_flv_ffmpeg_path', shell_exec( 'which ffmpeg' )));
+		$width  = trim( $gBitSystem->getConfig( 'treasury_flv_width', 320 ));
 
 		$begin = date( 'U' );
 		$log   = array();
@@ -258,20 +258,43 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 				// we can do some nice stuff if ffmpeg-php is available
 				if( extension_loaded( 'ffmpeg' )) {
 					$movie = new ffmpeg_movie( $source );
-					$info['duration'] = round( $movie->getDuration() );
-					$info['width']    = $movie->getFrameWidth();
-					$info['height']   = $movie->getFrameHeight();
+					$info['duration']         = round( $movie->getDuration() );
+					$info['width']            = $movie->getFrameWidth();
+					$info['height']           = $movie->getFrameHeight();
+					$info['video_bitrate']    = $movie->getVideoBitRate();
+					$info['audio_bitrate']    = $movie->getAudioBitRate();
+					$info['audio_samplerate'] = $movie->getAudioSampleRate();
 				}
 
 				// if the video can be processed by ffmpeg-php, width and height are greater than 1
-				if( !empty( $info['width'] )) {
-					// aspect ratio
-					$info['aspect']     = $info['width'] / $info['height'];
+				if( !empty( $info['width'] ) && $info['width'] > 1 ) {
+					// reset some values to reduce video size
+					if( $info['width'] < $width ) {
+						$width = $info['width'];
+					}
 
-					// size of flv - width is set to default width
-					$ratio              = $width / $info['width'];
+					// make sure audio sample rate is valid
+					if( !in_array( $info['audio_samplerate'], array( 11025, 22050, 44100 ))) {
+						unset( $info['audio_samplerate'] );
+					}
+
+					$compare = array(
+						'video_bitrate'    => 160000,
+						'audio_bitrate'    => 32000,
+						'audio_samplerate' => 22050,
+					);
+
+					foreach( $compare as $comp => $default ) {
+						if( !empty( $info[$comp] ) && $info[$comp] < $gBitSystem->getConfig( 'treasury_flv_'.$comp, $default )) {
+							$gBitSystem->setConfig( 'treasury_flv_'.$comp, $info[$comp] );
+						}
+					}
+
+					// here we calculate the size and aspect ratio of the output video
+					$size_ratio         = $width / $info['width'];
+					$info['aspect']     = $info['width'] / $info['height'];
 					$info['flv_width']  = $width;
-					$info['flv_height'] = round( $ratio * $info['height'] );
+					$info['flv_height'] = round( $size_ratio * $info['height'] );
 					// height of video needs to be an even number
 					if( $info['flv_height'] % 2 ) {
 						$info['flv_height']++;
@@ -286,7 +309,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 					" -i '$source'".
 					" -acodec mp3".
 					" -b ".trim( $gBitSystem->getConfig( 'treasury_flv_video_bitrate', 160000 )).
-					" -ab ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_bitrate', 32 )).
+					" -ab ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_bitrate', 32000 )).
 					" -ar ".trim( $gBitSystem->getConfig( 'treasury_flv_audio_samplerate', 22050 )).
 					" -f flv".
 					" -s ".$info['size'].
