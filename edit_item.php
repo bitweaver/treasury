@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.19 2007/07/16 15:59:42 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.20 2007/07/30 20:32:46 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -19,9 +19,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 if( !$gContent->hasEditPermission() ) {
-	$gBitSmarty->assign( 'msg', tra( "You can not edit this file." ) );
-	$gBitSystem->display( "error.tpl" );
-	die;
+	$gBitSystem->fatalError( tra( "You can not edit this file." ));
 }
 
 if( !empty( $_REQUEST['refresh'] ) ) {
