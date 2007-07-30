@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.29 2007/07/30 08:59:30 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.30 2007/07/30 09:01:14 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.29 $
+ * @version		$Revision: 1.30 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -359,7 +359,7 @@ function treasury_flv_converter( &$pParamHash, $pGetParameters = FALSE ) {
 
 					// write error message to error file
 					$h = fopen( $dest_path."/error", 'w' );
-					fwrite( $h, $debug );
+					fwrite( $h, "$ffmpeg $parameters\n\n$debug" );
 					fclose( $h );
 				}
 				@unlink( $dest_path.'/processing' );
