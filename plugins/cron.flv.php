@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.5 2007/06/08 20:06:30 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.6 2007/07/30 07:20:57 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.5 $
+ * @version		$Revision: 1.6 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -15,7 +15,8 @@
  */
 /* ================================= FFMPEG =================================
 If you want to make use of the flv plugin, you need to install the svn version
-of ffmpeg. only the latest version of ffmpeg supports the flv format.
+of ffmpeg. only the latest version of ffmpeg supports the flv format. Your 
+distribution might already include a version that supports flv.
 
 
 --- INSTALL
@@ -24,14 +25,23 @@ yourself:
 
 some distros as examples:
 - Gentoo
-# emerge --sync
-# USE="lame" emerge ffmpeg
+these are my eix results with all the use flags
+# eix ffmpeg
+[I] media-video/ffmpeg
+	Installed versions:  0.4.9_p20070330(13:05:40 15/04/07)(X a52 aac -altivec 
+		-amr -debug -doc dts encode -ieee1394 imlib mmx -network ogg oss sdl 
+		-test theora -threads truetype -v4l vorbis -x264 xvid zlib)
+	Homepage:            http://ffmpeg.org/
+	Description:         Complete solution to record, convert and stream audio and video. Includes libavcodec. SVN revision 9330
 
 - Fedora Core 6
 at the time of writing this, the version in livna was faulty - i used the one 
 in freshrpms:
 # rpm -ihv http://ayo.freshrpms.net/fedora/linux/6/i386/RPMS.freshrpms/freshrpms-release-1.1-1.fc.noarch.rpm
 # yum install ffmpeg
+
+- Ubuntu
+http://blogger.rukker.org/2007/01/29/enable-mp3-and-amr-support-in-ffmpeg-ubuntu-edgy-eft/
 
 - generic instructions getting ffmpeg from svn for ubuntu or other distros
 $ svn checkout svn://svn.mplayerhq.hu/ffmpeg/trunk ffmpeg
