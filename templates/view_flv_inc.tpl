@@ -72,27 +72,6 @@
 		</div>
 	{/if}
 
-	{if $gContent->hasEditPermission() && $gContent->mInfo.flv_url}
-		<div class="row">
-			{formlabel label="New Aspect Ratio" for="aspect"}
-			{forminput}
-				{form ipackage=treasury ifile="plugins/form.flv.php"}
-					<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
-					{* there doesn't seem to be a way to select the correct aspect - especially if it's not a common one *}
-					<select name="aspect" id="aspect">
-						<option value="">{tr}No Change{/tr}</option>
-						<option value="{math equation="x/y" x=4  y=3 }">4:3 ({tr}TV{/tr})</option>
-						<option value="{math equation="x/y" x=14 y=9 }">14:9 ({tr}Anamorphic{/tr})</option>
-						<option value="{math equation="x/y" x=16 y=9 }">16:9 ({tr}Widescreen{/tr})</option>
-						<option value="{math equation="x/y" x=16 y=10}">16:10 ({tr}Computer Widescreen{/tr})</option>
-					</select>
-					<input type="submit" name="aspect_ratio" value="{tr}Set Aspect{/tr}" />
-					{formhelp note="Here you can override the initially set aspect ratio. Please note that the displayed aspect aspect ratio might not correspond to the set value."}
-				{/form}
-			{/forminput}
-		</div>
-	{/if}
-
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_size' )}
 		<div class="row">
 			{formlabel label="Filesize" for=""}
@@ -101,6 +80,27 @@
 			{/forminput}
 		</div>
 	{/if}
+{/if}
+
+{if $gContent->hasEditPermission() && $gContent->mInfo.flv_url}
+	<div class="row">
+		{formlabel label="New Aspect Ratio" for="aspect"}
+		{forminput}
+			{form ipackage=treasury ifile="plugins/form.flv.php"}
+				<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
+				{* there doesn't seem to be a way to select the correct aspect - especially if it's not a common one *}
+				<select name="aspect" id="aspect">
+					<option value="">{tr}No Change{/tr}</option>
+					<option value="{math equation="x/y" x=4  y=3 }">4:3 ({tr}TV{/tr})</option>
+					<option value="{math equation="x/y" x=14 y=9 }">14:9 ({tr}Anamorphic{/tr})</option>
+					<option value="{math equation="x/y" x=16 y=9 }">16:9 ({tr}Widescreen{/tr})</option>
+					<option value="{math equation="x/y" x=16 y=10}">16:10 ({tr}Computer Widescreen{/tr})</option>
+				</select>
+				<input type="submit" name="aspect_ratio" value="{tr}Set Aspect{/tr}" />
+				{formhelp note="Here you can override the initially set aspect ratio. Please note that the displayed aspect aspect ratio might not correspond to the set value."}
+			{/form}
+		{/forminput}
+	</div>
 {/if}
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_view_creator' )}
