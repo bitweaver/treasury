@@ -7,7 +7,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
 
-$gContent->verifyPermission( 'p_treasury_view_gallery' );
+$gContent->verifyViewPermission();
 
 $listHash = $_REQUEST;
 $listHash['get_sub_tree'] = TRUE;

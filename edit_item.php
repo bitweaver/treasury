@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.20 2007/07/30 20:32:46 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.21 2007/09/14 17:57:04 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -18,9 +18,7 @@ $gBitSystem->verifyPackage( 'treasury' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
-if( !$gContent->hasEditPermission() ) {
-	$gBitSystem->fatalError( tra( "You can not edit this file." ));
-}
+$gContent->verifyEditPermission();
 
 if( !empty( $_REQUEST['refresh'] ) ) {
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
@@ -65,7 +63,7 @@ if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
 }
 
 // set up everything for re-processing
-if( !empty( $_REQUEST['reprocess_upload'] ) ) {
+if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $gContent->mInfo['source_file'] )) {
 	// first we need to move the file out of the way
 	$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
 	rename( $gContent->mInfo['source_file'], $tmpfile );
