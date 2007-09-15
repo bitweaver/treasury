@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.53 2007/09/15 06:18:05 spiderr Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.54 2007/09/15 08:34:25 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.53 $
+ * @version     $Revision: 1.54 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -84,7 +84,7 @@ function treasury_default_verify( &$pStoreRow ) {
 			$fileInfo = $gBitSystem->mDb->getRow( "
 				SELECT la.`attachment_id`, lf.`file_id`, lf.`storage_path`
 				FROM `".BIT_DB_PREFIX."liberty_content` lc
-					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`attachment_id` = lc.`primary_attachment_id` )
+					INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( la.`content_id` = lc.`content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 				WHERE lc.`content_id` = ?", array( $pStoreRow['content_id'] ));
 			$pStoreRow = array_merge( $pStoreRow, $fileInfo );
