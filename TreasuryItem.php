@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.53 2007/07/16 15:27:21 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.54 2007/09/15 06:18:05 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.53 $
+ * @version      $Revision: 1.54 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -70,10 +70,6 @@ class TreasuryItem extends TreasuryBase {
 			if( @BitBase::verifyId( $this->mContentId )) {
 				$whereSql = " WHERE tri.`content_id` = ? ";
 				$bindVars[] = $this->mContentId;
-			} elseif( @BitBase::verifyId( $this->mPrimaryAttachmentId )) {
-				$whereSql = " WHERE lc.`primary_attachment_id` = ? AND lc.`content_type_guid` = ?";
-				$bindVars[] = $this->mPrimaryAttachmentId;
-				$bindVars[] = TREASURYITEM_CONTENT_TYPE_GUID;
 			}
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
@@ -83,7 +79,7 @@ class TreasuryItem extends TreasuryBase {
 					tri.`plugin_guid`,
 					lct.`content_description`,
 					uu.`login`, uu.`real_name`,
-					lc.`primary_attachment_id` AS `attachment_id`, lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
 					$selectSql
 				FROM `".BIT_DB_PREFIX."treasury_item` tri
@@ -97,7 +93,6 @@ class TreasuryItem extends TreasuryBase {
 				// this is passed by reference as it's updated by the load function
 				$this->mInfo                   = &$aux;
 				$this->mContentId              = $aux['content_id'];
-				$this->mPrimaryAttachmentId    = $aux['attachment_id'];
 				$this->mInfo['title']          = $this->getTitle( $aux );
 				$this->mInfo['display_url']    = $this->getDisplayUrl();
 				$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['plugin_guid']."_comments" );
@@ -170,7 +165,7 @@ class TreasuryItem extends TreasuryBase {
 			SELECT tri.`plugin_guid`,
 				lct.`content_description`,
 				uu.`login`, uu.`real_name`,
-				lc.`primary_attachment_id` AS `attachment_id`, lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
+				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 				lch.`hits` $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_item` tri
 				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
