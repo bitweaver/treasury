@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.54 2007/09/15 06:18:05 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.55 2007/10/06 20:47:37 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.54 $
+ * @version      $Revision: 1.55 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -440,7 +440,7 @@ class TreasuryItem extends TreasuryBase {
 				foreach( $galleryContentIds as $gcid ) {
 					// reduce load: we don't need to fully load the gallery to load the permissions
 					$gallery->mContentId = $gcid;
-					if( $gallery->hasUserPermission( $pPermName ) ) {
+					if( $gallery->hasUserPermission( $pPermName, TRUE, TRUE ) ) {
 						// we only need one gallery that allows us to download the file
 						return TRUE;
 					}
