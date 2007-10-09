@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.6 2007/07/30 07:20:57 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.7 2007/10/09 18:56:36 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.6 $
+ * @version		$Revision: 1.7 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -92,13 +92,10 @@ if( extension_loaded( 'ffmpeg' )) {
 // can take quite some time before it is done
 ini_set( "max_execution_time", "1800" );
 
-global $gBitSystem, $gBitUser, $_SERVER;
+global $gBitSystem, $gBitUser, $gShellScript;
 
-$_SERVER['SCRIPT_URL']  = '';
-$_SERVER['HTTP_HOST']   = '';
-$_SERVER['HTTP_HOST']   = '';
-$_SERVER['HTTP_HOST']   = '';
-$_SERVER['SERVER_NAME'] = '';
+// this will avoid $_SERVER related errors
+$gShellScript = TRUE;
 
 if( !empty( $argc )) {
 	// reduce feedback for command line to keep log noise way down
