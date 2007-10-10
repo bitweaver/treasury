@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.55 2007/10/06 20:47:37 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.56 2007/10/10 12:56:55 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.55 $
+ * @version      $Revision: 1.56 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -31,7 +31,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return none
 	 * @access public
 	 **/
-	function TreasuryItem( $pDummy = NULL, $pContentId = NULL, $pPrimaryAttachmentId = NULL ) {
+	function TreasuryItem( $pDummy = NULL, $pContentId = NULL ) {
 		TreasuryBase::TreasuryBase();
 		$this->registerContentType(
 			TREASURYITEM_CONTENT_TYPE_GUID, array(
@@ -44,7 +44,6 @@ class TreasuryItem extends TreasuryBase {
 			)
 		);
 		$this->mContentId = !empty( $pDummy ) ? $pDummy : $pContentId;
-		$this->mPrimaryAttachmentId = $pPrimaryAttachmentId;
 		$this->mContentTypeGuid = TREASURYITEM_CONTENT_TYPE_GUID;
 
 		// Permission setup
@@ -61,7 +60,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 **/
 	function load( $pPluginParameters = NULL ) {
-		if( @BitBase::verifyId( $this->mContentId ) || @BitBase::verifyId( $this->mPrimaryAttachmentId )) {
+		if( @BitBase::verifyId( $this->mContentId )) {
 			global $gTreasurySystem, $gBitSystem;
 
 			$ret = array();
@@ -541,6 +540,19 @@ class TreasuryItem extends TreasuryBase {
 	}
 
 	/**
+	 * getContentIdFromAttachmentId 
+	 * 
+	 * @param array $pAttachmentId Attachment id of which you want the content Id
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function getContentIdFromAttachmentId( $pAttachmentId ) {
+		if( @BitBase::verifyId( $pAttachmentId )) {
+			return $this->mDb->getOne( "SELECT `content_id` FROM `".BIT_DB_PREFIX."liberty_attachments` WHERE `attachment_id` = ?", array( $pAttachmentId ));
+		}
+	}
+
+	/**
 	 * Expunge data associated with an uploaded file
 	 * 
 	 * @access public
@@ -582,25 +594,6 @@ class TreasuryItem extends TreasuryBase {
 			vd($this->mErrors);
 		}
 		return( count( $this->mErrors ) == 0 );
-	}
-
-	/**
-	 * Notification sent by LibertyAttachable that an attachment is being expunged.
-	 * 
-	 * @param  numeric $pAttachmentId ID of the attachmnet being deleted.
-	 * @param  array $pContentIdArray IDs of the content that are attached to the attachment
-	 * @access private
-	 * @return void
-	 */
-	function expungingAttachment( $pAttachmentId, $pContentIdArray = FALSE ) {
-		foreach( $pContentIdArray as $id ) {
-			$this->mContentId = $id;
-			// Unfortunately we have to load in order to get some info in place. :(
-			if( $this->load() ) {
-				// It is important that we not delete the attachment since it is already being deleted.
-				$this->expunge( FALSE );
-			}
-		}
 	}
 
 	/**
