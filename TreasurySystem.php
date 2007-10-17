@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.12 2007/09/09 17:02:19 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.13 2007/10/17 07:43:07 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.12 $
+ * @version      $Revision: 1.13 $
  * created      Monday Jul 03, 2006   11:06:47 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -24,9 +24,6 @@ define( 'TREASURY_MIME', 'mime_handler' );
  * @uses LibertySystem
  */
 class TreasurySystem extends LibertySystem {
-	// Contains plugin information
-	var $mPlugins;
-
 	/**
 	 * Initiate class
 	 * 
@@ -57,8 +54,13 @@ class TreasurySystem extends LibertySystem {
 			$this->scanAllPlugins( NULL, "mime\." );
 		}
 
-		$pFileHash['type'] = $gBitSystem->lookupMimeType( $pFileHash['name'] );
+		// we will do our best to work out what this file is.
+		// both these methods use different method for fetching filetype
+		// this can be particularly important when fetching the mime-type of video files.
 		$pFileHash['type'] = $gBitSystem->verifyMimeType( $pFileHash['tmp_name'] );
+		if( $pFileHash['type'] == 'application/binary' ) {
+			$pFileHash['type'] = $gBitSystem->lookupMimeType( $pFileHash['name'] );
+		}
 
 		foreach( $this->mPlugins as $handler => $plugin ) {
 			if( $plugin['is_active'] && !empty( $plugin['mimetypes'] ) && is_array( $plugin['mimetypes'] ) ) {
