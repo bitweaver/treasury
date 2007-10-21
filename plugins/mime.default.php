@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.54 2007/09/15 08:34:25 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.55 2007/10/21 07:52:19 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.54 $
+ * @version     $Revision: 1.55 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -162,17 +162,26 @@ function treasury_default_store( &$pStoreRow, &$pCommonObject ) {
 	// take care of the uploaded file and insert it into the liberty_files and liberty_attachments tables
 	if( $storagePath = liberty_process_upload( $pStoreRow )) {
 		// add row to liberty_files
-		// this is where we store any additional data - we don't need more info for regular uploads
-		$pStoreRow['file_id'] =  defined( 'LINKED_ATTACHMENTS' ) ? $pStoreRow['content_id'] : $gBitSystem->mDb->GenID( 'liberty_files_id_seq' );
-		$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_files` ( `storage_path`, `file_id`, `mime_type`, `file_size`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-		$gBitSystem->mDb->query( $sql, array( $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'], $pStoreRow['file_id'],  $pStoreRow['upload']['type'], $pStoreRow['upload']['size'], $pStoreRow['user_id'] ));
+		$storeHash = array(
+			"storage_path" => $pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'],
+			"file_id"      => defined( 'LINKED_ATTACHMENTS' ) ? $pStoreRow['content_id'] : $gBitSystem->mDb->GenID( 'liberty_files_id_seq' ),
+			"mime_type"    => $pStoreRow['upload']['type'],
+			"file_size"    => $pStoreRow['upload']['size'],
+			"user_id"      => $pStoreRow['user_id'],
+		);
+		$gBitSystem->mDb->associateInsert( BIT_DB_PREFIX."liberty_files", $storeHash );
 
-		// this will insert the entry in the liberty_attachments table, making the upload availabe during wiki page editing
-//		if( $gLibertySystem->isPluginActive( 'bitfile' )) {
-			// first we add the data into liberty_attachments to make this file available as attachment
-			$sql = "INSERT INTO `".BIT_DB_PREFIX."liberty_attachments` ( `attachment_id`, `content_id`, `attachment_plugin_guid`, `foreign_id`, `user_id` ) VALUES ( ?, ?, ?, ?, ? )";
-			$gBitSystem->mDb->query( $sql, array( $pStoreRow['attachment_id'], $pStoreRow['content_id'], PLUGIN_GUID_BIT_FILES, $pStoreRow['file_id'], $pStoreRow['user_id'] ));
-//		}
+		// add the data into liberty_attachments to make this file available as attachment
+		$storeHash = array(
+			"attachment_id"          => $pStoreRow['attachment_id'],
+			"content_id"             => $pStoreRow['content_id'],
+			"attachment_plugin_guid" => PLUGIN_GUID_BIT_FILES,
+			"foreign_id"             => $storeHash['file_id'],
+			"user_id"                => $pStoreRow['user_id'],
+			"is_primary"             => 'y',
+		);
+		$gBitSystem->mDb->associateInsert( BIT_DB_PREFIX."liberty_attachments", $storeHash );
+
 		$ret = TRUE;
 	} else {
 		$pStoreRow['errors']['liberty_process'] = "There was a problem processing the file.";
