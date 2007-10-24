@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.13 2007/10/17 07:43:07 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/TreasurySystem.php,v 1.14 2007/10/24 20:01:49 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.13 $
+ * @version      $Revision: 1.14 $
  * created      Monday Jul 03, 2006   11:06:47 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -58,7 +58,7 @@ class TreasurySystem extends LibertySystem {
 		// both these methods use different method for fetching filetype
 		// this can be particularly important when fetching the mime-type of video files.
 		$pFileHash['type'] = $gBitSystem->verifyMimeType( $pFileHash['tmp_name'] );
-		if( $pFileHash['type'] == 'application/binary' ) {
+		if( $pFileHash['type'] == 'application/binary' || $pFileHash['type'] == 'application/octet-stream' ) {
 			$pFileHash['type'] = $gBitSystem->lookupMimeType( $pFileHash['name'] );
 		}
 
