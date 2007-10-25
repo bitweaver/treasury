@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.21 2007/09/14 17:57:04 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.22 2007/10/25 07:50:34 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -63,23 +63,27 @@ if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
 }
 
 // set up everything for re-processing
-if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $gContent->mInfo['source_file'] )) {
-	// first we need to move the file out of the way
-	$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
-	rename( $gContent->mInfo['source_file'], $tmpfile );
+if( !empty( $_REQUEST['reprocess_upload'] )) {
+	if( !empty( $gContent->mInfo['source_file'] ) && is_file( $gContent->mInfo['source_file'] )) {
+		// first we need to move the file out of the way
+		$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
+		rename( $gContent->mInfo['source_file'], $tmpfile );
 
-	// now that the file has been moved, we need to remove all the files in the storage dir
-	unlink_r( dirname( $gContent->mInfo['source_file'] ) );
+		// now that the file has been moved, we need to remove all the files in the storage dir
+		unlink_r( dirname( $gContent->mInfo['source_file'] ) );
 
-	// fill the upload hash with the file details
-	$fileHash['tmp_name'] = $tmpfile;
-	$fileHash['name']     = $gContent->mInfo['filename'];
-	$fileHash['size']     = $gContent->mInfo['file_size'];
-	$fileHash['type']     = $gContent->mInfo['mime_type'];
-	$fileHash['error']    = 0;
+		// fill the upload hash with the file details
+		$fileHash['tmp_name'] = $tmpfile;
+		$fileHash['name']     = $gContent->mInfo['filename'];
+		$fileHash['size']     = $gContent->mInfo['file_size'];
+		$fileHash['type']     = $gContent->mInfo['mime_type'];
+		$fileHash['error']    = 0;
 
-	$_REQUEST['upload']      = $fileHash;
-	$_REQUEST['update_file'] = TRUE;
+		$_REQUEST['upload']      = $fileHash;
+		$_REQUEST['update_file'] = TRUE;
+	} else {
+		$feedback['error'] = tra( 'The file could not be reprocessed. There was a problem locating the original file.' );
+	}
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
@@ -120,8 +124,9 @@ $galleryContentIds = $gContent->getGalleriesFromItemContentId();
 $gBitSmarty->assign( 'galleryContentIds', $galleryContentIds );
 
 $gallery = new TreasuryGallery();
-$listHash['get_sub_tree']   = TRUE;
-$listHash['max_records']    = -1;
+$listHash['get_sub_tree']       = TRUE;
+$listHash['max_records']        = -1;
+$listHash['content_permission'] = 'p_treasury_upload_item';
 $galleryList = $gallery->getList( $listHash );
 $gBitSmarty->assign( 'galleryList', $galleryList );
 
