@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.36 2007/10/25 17:14:15 nickpalmer Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.37 2007/10/25 20:43:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.36 $
+ * @version      $Revision: 1.37 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -122,7 +122,7 @@ class TreasuryGallery extends TreasuryBase {
 			if( $this->mItems = $treasuryItem->getList( $pListHash, $this->mStructureId )) {
 				$ret = TRUE;
 			} elseif( !empty( $treasuryItem->mErrors )) {
-				error_log( "Error loading treasury items: " . vc($treasuryItem->mErrors) );
+				error_log( "Error loading treasury items: ".vc( $treasuryItem->mErrors ));
 			}
 		}
 		return $ret;
