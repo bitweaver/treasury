@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.56 2007/10/10 12:56:55 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.57 2007/10/25 17:14:15 nickpalmer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.56 $
+ * @version      $Revision: 1.57 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -591,7 +591,7 @@ class TreasuryItem extends TreasuryBase {
 			}
 		}
 		if( count( $this->mErrors ) != 0 ) {
-			vd($this->mErrors);
+			error_log("Error deleting treasury item: " . vc($this->mErrors));
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
