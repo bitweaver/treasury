@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.13 2007/07/07 21:46:37 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.14 2007/10/29 21:59:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -18,8 +18,8 @@ $gBitSystem->verifyPackage( 'treasury' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
+$gContent->verifyDownloadPermission();
 $gContent->verifyGalleryPermissions( 'p_treasury_download_item' );
-$gContent->verifyPermission( 'p_treasury_download_item' );
 
 // TODO: make sure this works reliably - not sure what is better:
 //       - add hit after download is complete

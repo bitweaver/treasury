@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.6 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.7 2007/10/29 21:59:02 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.6 $
+ * @version      $Revision: 1.7 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -160,10 +160,35 @@ class TreasuryBase extends LibertyAttachable {
 				if( !is_null( $pPrefValue ) ) {
 					$query = "INSERT INTO `".BIT_DB_PREFIX."liberty_content_prefs` (`content_id`,`pref_name`,`pref_value`) VALUES(?, ?, ?)";
 					$bindvars[]=$pPrefValue;
-					$result = $this->mDb->query($query, $bindvars);
+					$result = $this->mDb->query( $query, $bindvars );
 					$this->mPrefs[$pPrefName] = $pPrefValue;
 				}
 			}
+		}
+	}
+
+	/**
+	 * hasDownloadPermission will mimic hasViewPermission for downloads
+	 * 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function hasDownloadPermission() {
+		return( $this->hasEditPermission() || $this->hasUserPermission( 'p_treasury_download_item', TRUE, TRUE ));
+	}
+
+	/**
+	 * verifyDownloadPermission will mimic verifyViewPermission for downloads
+	 * 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function verifyDownloadPermission() {
+		if( $this->hasDownloadPermission() ) {
+			return TRUE;
+		} else {
+			global $gBitSystem;
+			$gBitSystem->fatalPermission( 'p_treasury_download_item' );
 		}
 	}
 }
