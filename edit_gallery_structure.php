@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery_structure.php,v 1.3 2007/07/15 11:46:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery_structure.php,v 1.4 2007/11/08 21:59:35 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -23,7 +23,12 @@ $gContent->verifyPermission( 'p_treasury_edit_gallery' );
 $verifyStructurePermission = 'p_treasury_edit_gallery';
 require_once( LIBERTY_PKG_PATH.'edit_structure_inc.php' );
 
-$gBitSmarty->assign( 'loadDynamicTree', TRUE );
+// we need to load some javascript and css for this page
+$gBitThemes->loadCss( UTIL_PKG_PATH.'javascript/libs/mygosu/DynamicTree.css' );
+if( $gSniffer->_browser_info['browser'] == 'ie' && $gSniffer->_browser_info['maj_ver'] == 5 ) {
+	$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/libs/mygosu/ie5.js' );
+}
+$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/libs/mygosu/DynamicTreeBuilder.js' );
 
 // Display the template
 $gBitSystem->display( 'bitpackage:treasury/edit_gallery_structure.tpl', $gStructure->mInfo["title"] );
