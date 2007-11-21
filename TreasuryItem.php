@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.58 2007/10/25 20:43:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.59 2007/11/21 09:22:31 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.58 $
+ * @version      $Revision: 1.59 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -428,6 +428,13 @@ class TreasuryItem extends TreasuryBase {
 		return( count( $this->mErrors ) == 0 );
 	}
 
+	/**
+	 * verifyGalleryPermissions will check for permissive permissions of all galleries owning a given item
+	 * 
+	 * @param array $pPermName 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
 	function verifyGalleryPermissions( $pPermName ) {
 		global $gBitSystem, $gBitUser;
 		$ret = FALSE;
