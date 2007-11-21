@@ -6,9 +6,4 @@
 		<link rel="alternate" type="application/rss+xml" title="{$gBitSystem->getConfig('treasury_rss_title',"{tr}File Galleries{/tr} RSS")}" href="{$smarty.const.TREASURY_PKG_URL}treasury_rss.php?version={$gBitSystem->getConfig('rssfeed_default_version',0)}&amp;gallery_content_id={$gContent->mContentId}" />
 	{/if}
 {/if}
-
-{* we load the js if the flashvideo plugin is active since it could be included in any page and there is no way to inform this file of the use of the plugin *}
-{if $treasuryFlv || $gLibertySystem->isPluginActive( 'dataflashvideo' )}
-	<script type="text/javascript" src="{$smarty.const.TREASURY_PKG_URL}libs/flv_player/swfobject.js"></script>
-{/if}
 {/strip}

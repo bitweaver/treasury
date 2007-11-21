@@ -1,11 +1,11 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.15 $
+ * @version  $Revision: 1.16 $
  * @package  Treasury
  * @subpackage functions
  */
-global $gBitSystem, $gBitUser, $gBitSmarty;
+global $gBitSystem, $gBitUser, $gBitSmarty, $gBitThemes;
 
 $registerHash = array(
 	'package_name' => 'treasury',
@@ -38,6 +38,11 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 			'admin_comments_url' => TREASURY_PKG_URL.'admin/admin_plugins.php',
 		);
 		$gBitSystem->registerAppMenu( $menuHash );
+	}
+
+	// if the flashvideo plugin is active, we need to load the js file since we don't know where the plugins is being used
+	if( $gLibertySystem->isPluginActive( 'dataflashvideo' )) {
+		$gBitThemes->loadJavascript( TREASURY_PKG_PATH."libs/flv_player/swfobject.js", FALSE, 25 );
 	}
 }
 ?>

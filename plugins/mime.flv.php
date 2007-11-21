@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.31 2007/07/30 09:05:17 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flv.php,v 1.32 2007/11/21 09:23:12 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.31 $
+ * @version		$Revision: 1.32 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -121,7 +121,7 @@ function treasury_flv_update( &$pStoreRow, &$pCommonObject ) {
  * @return TRUE on success, FALSE on failure - ['errors'] will contain reason for failure
  */
 function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = NULL ) {
-	global $gBitSmarty, $gBitSystem, $gLibertySystem;
+	global $gBitSmarty, $gBitSystem, $gLibertySystem, $gBitThemes;
 	if( $ret = treasury_default_load( $pFileHash, $pCommonObject )) {
 		// check for status of conversion
 		if( is_file( dirname( $pFileHash['source_file'] ).'/error' )) {
@@ -131,7 +131,7 @@ function treasury_flv_load( &$pFileHash, &$pCommonObject, $pPluginParameters = N
 		} elseif( is_file( dirname( $pFileHash['source_file'] ).'/flick.flv' )) {
 			$pFileHash['flv_url'] = dirname( $pFileHash['source_url'] ).'/flick.flv';
 			// we need some javascript for the flv player:
-			$gBitSmarty->assign( 'treasuryFlv', TRUE );
+			$gBitThemes->loadJavascript( TREASURY_PKG_PATH."libs/flv_player/swfobject.js", FALSE, 25 );
 		}
 
 		// if we are passed an object, we'll modify width and height according to our needs
