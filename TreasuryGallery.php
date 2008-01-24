@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.37 2007/10/25 20:43:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.38 2008/01/24 20:32:56 nickpalmer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.37 $
+ * @version      $Revision: 1.38 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -275,9 +275,9 @@ class TreasuryGallery extends TreasuryBase {
 	 * @access public
 	 **/
 	function store( &$pParamHash ) {
+		$this->mDb->StartTrans();
 		if( $this->verify( $pParamHash ) && LibertyContent::store( $pParamHash ) ) {
 			$table = BIT_DB_PREFIX."treasury_gallery";
-			$this->mDb->StartTrans();
 
 			// this really confusing, strange order way of saving items is due to strange behaviour of GenID
 			// probably has to do with not null default nextval('public.liberty_structures_id_seq'::text)
