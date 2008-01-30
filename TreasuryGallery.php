@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.38 2008/01/24 20:32:56 nickpalmer Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.39 2008/01/30 06:54:00 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.38 $
+ * @version      $Revision: 1.39 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -219,7 +219,7 @@ class TreasuryGallery extends TreasuryBase {
 			// check to see if we have premissions to do someing specific with this gallery
 			if( !empty( $pListHash['content_permission'] ) ) {
 				$gal = new TreasuryGallery( NULL, $aux['content_id'] );
-				if( !$gal->hasUserPermission( $pListHash['content_permission'] ) ) {
+			if( !$gal->hasUserPermission( $pListHash['content_permission'], TRUE, TRUE ) ) {
 					$hasUserPerm = FALSE;
 				}
 			}

@@ -1,5 +1,5 @@
 {strip}
-{if $gContent->hasUserPermission( 'p_treasury_edit_gallery' ) && $editicons}
+{if $gContent->hasUserPermission( 'p_treasury_edit_gallery', TRUE, TRUE ) && $editicons}
 	<div class="floaticon">
 		{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$subtree[ix].content_id}
 		{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}
