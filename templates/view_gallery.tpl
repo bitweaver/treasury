@@ -6,13 +6,13 @@
 
 	<div class="floaticon">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
-		{if $gContent->hasUserPermission('p_treasury_upload_item', TRUE, TRUE)}
+		{if $gContent->hasUserPermission( 'p_treasury_upload_item' )}
 			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
 		{/if}
-		{if $gContent->hasEditPermission() || $gContent->hasUserPermission('p_treasury_edit_gallery', TRUE, TRUE)}
+		{if $gContent->hasEditPermission() || $gContent->hasUserPermission( 'p_treasury_edit_gallery' )}
 			{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
 		{/if}
-		{if $gContent->hasUserPermission('p_treasury_create_gallery', TRUE, TRUE)}
+		{if $gContent->hasUserPermission( 'p_treasury_create_gallery' )}
 			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
 		{/if}
 		{if $gContent->hasAdminPermission()}
@@ -172,7 +172,7 @@
 		{else}
 			<p class="norecords">
 				{tr}No Files Found{/tr}
-				{if $gContent->hasUserPermission( 'p_treasury_upload_item', TRUE, TRUE )}
+				{if $gContent->hasUserPermission( 'p_treasury_upload_item' )}
 					<br />
 					<a href="{$smarty.const.TREASURY_PKG_URL}upload.php?content_id={$gContent->mContentId}">{tr}Upload Files{/tr}</a>
 				{/if}

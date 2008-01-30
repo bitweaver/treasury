@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.7 2007/10/29 21:59:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.8 2008/01/30 14:43:07 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.7 $
+ * @version      $Revision: 1.8 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -168,13 +168,23 @@ class TreasuryBase extends LibertyAttachable {
 	}
 
 	/**
+	 * Treasury always needs to have pCheckGlobalPerm set to TRUE by default
+	 * 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function hasUserPermission( $pPermName, $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
+		return parent::hasUserPermission( $pPermName, $pVerifyAccessControl, $pCheckGlobalPerm );
+	}
+
+	/**
 	 * hasDownloadPermission will mimic hasViewPermission for downloads
 	 * 
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function hasDownloadPermission() {
-		return( $this->hasEditPermission() || $this->hasUserPermission( 'p_treasury_download_item', TRUE, TRUE ));
+		return( $this->hasEditPermission() || $this->hasUserPermission( 'p_treasury_download_item' ));
 	}
 
 	/**

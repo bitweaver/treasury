@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.60 2008/01/30 06:54:00 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.61 2008/01/30 14:43:07 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.60 $
+ * @version      $Revision: 1.61 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -384,7 +384,7 @@ class TreasuryItem extends TreasuryBase {
 		// make sure we have the correct permissions to upload to this gallery
 		foreach( $pStoreHash['galleryContentIds'] as $gcid ) {
 			$gallery = new TreasuryGallery( NULL, $gcid );
-			if( $gallery->hasUserPermission( 'p_treasury_upload_item', TRUE, TRUE ) ) {
+			if( $gallery->hasUserPermission( 'p_treasury_upload_item' )) {
 				$pStoreHash['map_store']['galleryContentIds'][] = $gcid;
 			}
 		}
@@ -446,7 +446,7 @@ class TreasuryItem extends TreasuryBase {
 				foreach( $galleryContentIds as $gcid ) {
 					// reduce load: we don't need to fully load the gallery to load the permissions
 					$gallery->mContentId = $gcid;
-					if( $gallery->hasUserPermission( $pPermName, TRUE, TRUE ) ) {
+					if( $gallery->hasUserPermission( $pPermName )) {
 						// we only need one gallery that allows us to download the file
 						return TRUE;
 					}
