@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.55 2007/10/21 07:52:19 squareing Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.56 2008/03/17 19:27:01 lsces Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.55 $
+ * @version     $Revision: 1.56 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -214,7 +214,7 @@ function treasury_default_load( &$pFileHash, &$pCommonObject ) {
 			$pFileHash['thumbnail_url']    = liberty_fetch_thumbnails( $row['storage_path'] );
 			$pFileHash['filename']         = basename( $row['storage_path'] );
 			$pFileHash['source_file']      = BIT_ROOT_PATH.$row['storage_path'];
-			$pFileHash['source_url']       = BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] )));
+			$pFileHash['source_url']       = str_replace('//', '/', BIT_ROOT_URL.str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $row['storage_path'] ))) );
 			$pFileHash['mime_type']        = $row['mime_type'];
 			$pFileHash['file_size']        = $row['file_size'];
 			$pFileHash['attachment_id']    = $row['attachment_id'];
