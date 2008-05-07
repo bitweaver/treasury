@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.10 2007/06/08 19:59:56 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.flash.php,v 1.11 2008/05/07 19:36:19 wjames5 Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.10 $
+ * @version		$Revision: 1.11 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -85,12 +85,13 @@ function treasury_flash_update( &$pStoreRow, &$pCommonObject ) {
 function treasury_flash_store( &$pStoreRow, &$pCommonObject ) {
 	global $gBitSystem;
 	if( $ret = treasury_default_store( $pStoreRow, $pCommonObject ) ) {
-		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_width'] )) {
-			$pCommonObject->storePreference( 'swf_width', $pStoreRow['plugin']['swf_width'] );
+		list( $width, $height, $type, $attr ) =  getimagesize( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].$pStoreRow['upload']['name'] );
+		if( @BitBase::verifyId( $width )) {
+			$pCommonObject->storePreference( 'swf_width', $width );
 		}
 
-		if( @BitBase::verifyId( $pStoreRow['plugin']['swf_height'] )) {
-			$pCommonObject->storePreference( 'swf_height', $pStoreRow['plugin']['swf_height'] );
+		if( @BitBase::verifyId( $height )) {
+			$pCommonObject->storePreference( 'swf_height', $height );
 		}
 	}
 	return $ret;
