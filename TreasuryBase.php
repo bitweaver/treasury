@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.8 2008/01/30 14:43:07 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.9 2008/05/08 18:33:59 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.8 $
+ * @version      $Revision: 1.9 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -26,12 +26,10 @@ class TreasuryBase extends LibertyAttachable {
 	/**
 	 * Initiates class
 	 *
-	 * @param mixed $pStructureId structure id of the treasury - use either one of the ids.
-	 * @param mixed $pContentId content id of the treasury - use either one of the ids.
 	 * @access public
 	 * @return void
 	 */
-	function TreasuryBase( $pStructureId=NULL, $pContentId=NULL ) {
+	function TreasuryBase() {
 		if( get_class( $this ) == 'treasurygallery' ) {
 			LibertyContent::LibertyContent();
 		} else {
