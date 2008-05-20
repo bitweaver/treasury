@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.23 2008/05/07 06:31:26 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.24 2008/05/20 18:54:32 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -66,7 +66,7 @@ if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
 			}
 			$i++;
 		} else {
-			$feedback['error'] = tr( "There was an error uploading the file: " ) . $upload['name'];
+			$feedback['error'] = tra( "There was an error uploading the file: " ) . $upload['name'];
 		}
 	}
 
