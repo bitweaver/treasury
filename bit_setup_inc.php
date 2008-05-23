@@ -1,7 +1,7 @@
 <?php
 /**
  * @author   xing <xing@synapse.plus.com>
- * @version  $Revision: 1.16 $
+ * @version  $Revision: 1.17 $
  * @package  Treasury
  * @subpackage functions
  */
@@ -17,6 +17,7 @@ $gBitSystem->registerPackage( $registerHash );
 define( 'TREASURY_CONTENT_TYPE_GUID', 'treasury' );
 
 if( $gBitSystem->isPackageActive( 'treasury' ) ) {
+	/*
 	// set up treasury system
 	require_once( TREASURY_PKG_PATH.'TreasurySystem.php' );
 	global $gTreasurySystem;
@@ -29,6 +30,7 @@ if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 	}
 
 	$gBitSmarty->assign_by_ref( 'gTreasurySystem', $gTreasurySystem );
+	 */
 
 	if( $gBitUser->hasPermission( 'p_treasury_view_gallery' ) ) {
 		$menuHash = array(

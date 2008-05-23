@@ -58,7 +58,7 @@
 					</div>
 
 					{capture assign=options}
-						{foreach from=$gTreasurySystem->mPlugins item=plugin}
+						{foreach from=$gLibertySystem->mPlugins item=plugin}
 							{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
 						{/foreach}
 					{/capture}
@@ -67,7 +67,7 @@
 						<div class="row">
 							{formlabel label="File Processing Options" for=""}
 							{forminput}
-								{foreach from=$gTreasurySystem->mPlugins item=plugin}
+								{foreach from=$gLibertySystem->mPlugins item=plugin}
 									{if $plugin.processing_options}{$plugin.processing_options}<br />{/if}
 								{/foreach}
 							{/forminput}
