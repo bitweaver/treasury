@@ -18,8 +18,7 @@
 
 	<div class="body">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-		{assign var=guid value=$gContent->mInfo.plugin_guid}
-		{include file=$gTreasurySystem->mPlugins.$guid.view_tpl}
+		{include file=$gContent->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 	</div><!-- end .body -->
 
 	{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}

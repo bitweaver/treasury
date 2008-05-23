@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.41 2008/05/20 19:52:46 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.42 2008/05/23 10:15:24 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.41 $
+ * @version      $Revision: 1.42 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -228,8 +228,8 @@ class TreasuryGallery extends TreasuryBase {
 				$content_ids[]             = $aux['content_id'];
 				$aux['user']               = $aux['creator_user'];
 				$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
-				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
+				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
 				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
@@ -287,7 +287,7 @@ class TreasuryGallery extends TreasuryBase {
 				}
 				$pParamHash['structure_location_id'] = $this->mStructureId;
 			} else {
-				// update the gallery_store and structure_store content_id with the one from LibertyAttachable::store()
+				// update the gallery_store and structure_store content_id with the one from LibertyMime::store()
 				$pParamHash['structure_store']['content_id'] = $pParamHash['content_id'];
 				$pParamHash['gallery_store']['content_id'] = $pParamHash['content_id'];
 

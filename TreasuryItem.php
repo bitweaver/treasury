@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.61 2008/01/30 14:43:07 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.62 2008/05/23 10:15:24 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.61 $
+ * @version      $Revision: 1.62 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -61,13 +61,13 @@ class TreasuryItem extends TreasuryBase {
 	 **/
 	function load( $pPluginParameters = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId )) {
-			global $gTreasurySystem, $gBitSystem;
+			global $gBitSystem;
 
 			$ret = array();
 
 			$selectSql = $joinSql = $orderSql = '';
 			if( @BitBase::verifyId( $this->mContentId )) {
-				$whereSql = " WHERE tri.`content_id` = ? ";
+				$whereSql = " WHERE trm.`item_content_id` = ? ";
 				$bindVars[] = $this->mContentId;
 			}
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
@@ -75,39 +75,36 @@ class TreasuryItem extends TreasuryBase {
 			$ret = array();
 			$query = "
 				SELECT
-					tri.`plugin_guid`,
 					lct.`content_description`,
 					uu.`login`, uu.`real_name`,
 					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
 					$selectSql
-				FROM `".BIT_DB_PREFIX."treasury_item` tri
-					INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
+				FROM `".BIT_DB_PREFIX."treasury_map` trm
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trm.`item_content_id` )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 					INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 				$joinSql $whereSql $orderSql";
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
-				// this is passed by reference as it's updated by the load function
-				$this->mInfo                   = &$aux;
-				$this->mContentId              = $aux['content_id'];
-				$this->mInfo['title']          = $this->getTitle( $aux );
-				$this->mInfo['display_url']    = $this->getDisplayUrl();
-				$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['plugin_guid']."_comments" );
+				$this->mContentId            = $aux['content_id'];
+				$this->mInfo                 = $aux;
+				$this->mInfo['title']        = $this->getTitle( $aux );
+				$this->mInfo['display_url']  = $this->getDisplayUrl();
+				//$this->mInfo['download_url'] = $this->getDownloadUrl();
 
-				// we might have content preferences set by some plugin
-				LibertyContent::load();
+				// LibertyMime will load the attachment details
+				LibertyMime::load();
 
-				// load details using plugin
-				$load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' );
-				if( empty( $load_function ) || !$load_function( $aux, $this, $pPluginParameters ) ) {
-					$this->mErrors['load'] = tra( 'There was a problem loading the file data.' );
+				// copy mStorage to mInfo for easy access
+				if( !empty( $this->mStorage ) && count( $this->mStorage ) > 0 ) {
+					reset( $this->mStorage );
+					$this->mInfo = array_merge( current( $this->mStorage ), $this->mInfo );
 				}
 
-				if( !isset( $this->mInfo['download_url'] )) {
-					$this->mInfo['download_url'] = $this->getDownloadUrl( $this->mInfo );
-				}
+				// TODO: take comments on a gallery basis
+				// work out if this gallery takes comments
+				//$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['attachment_plugin_guid']."_comments" );
 			}
 		}
 
@@ -122,7 +119,6 @@ class TreasuryItem extends TreasuryBase {
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function getList( &$pListHash, $pStructureId = NULL ) {
-		global $gTreasurySystem;
 		LibertyContent::prepGetList( $pListHash );
 
 		$ret = $bindVars = array();
@@ -141,7 +137,7 @@ class TreasuryItem extends TreasuryBase {
 
 		if( !empty( $pListHash['title'] ) && is_string( $pListHash['title'] ) ) {
 			$whereSql  .= empty( $whereSql ) ? ' WHERE ' : ' AND ';
-			$whereSql  .= " tri.`content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
+			$whereSql  .= " trm.`item_content_id` = lc.`content_id` AND UPPER( lc.`title` ) = ?";
 			$bindVars[] = strtoupper( $pListHash['title'] );
 		}
 
@@ -161,42 +157,27 @@ class TreasuryItem extends TreasuryBase {
 
 		$ret = array();
 		$query = "
-			SELECT tri.`plugin_guid`,
+			SELECT
 				lct.`content_description`,
 				uu.`login`, uu.`real_name`,
 				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 				lch.`hits` $selectSql
-			FROM `".BIT_DB_PREFIX."treasury_item` tri
-				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
+			FROM `".BIT_DB_PREFIX."treasury_map` trm
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trm.`item_content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 				LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_hits` lch ON ( lch.`content_id` = lc.`content_id` )
 			$joinSql $whereSql $orderSql";
 		$result = $this->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 		while( $aux = $result->fetchRow() ) {
-			$aux['title'] = $this->getTitle( $aux );
-			if( $load_function = $gTreasurySystem->getPluginFunction( $aux['plugin_guid'], 'load_function' )) {
-				// this is needed for php < 5
-				$dummy = array();
-				if( !$load_function( $aux, $dummy )) {
-					$this->mErrors['plugin_load'] = tra( 'There was a problem loading the file data.' );
-				}
-			} else {
-				$this->mErrors['load_function'] = tra( 'No suitable load function found.' );
-			}
-			$aux['display_url']  = $this->getDisplayUrl( $aux['content_id'], $aux, $pStructureId );
-			$aux['display_link'] = $this->getDisplayLink( $aux['title'], $aux, $pStructureId );
-			if( is_file( $aux['source_file'] )) {
-				$aux['download_url'] = $this->getDownloadUrl( $aux );
-			}
-			$ret[] = $aux;
+			$item = new TreasuryItem( $aux['content_id'] );
+			$item->load();
+			$ret[] = $item;
 		}
 
 		$query = "SELECT COUNT( trm.`item_content_id` )
-			FROM `".BIT_DB_PREFIX."treasury_item` tri
-				INNER JOIN `".BIT_DB_PREFIX."treasury_map` trm ON ( trm.`item_content_id` = tri.`content_id` )
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = tri.`content_id` )
+			FROM `".BIT_DB_PREFIX."treasury_map` trm
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = trm.`item_content_id` )
 				INNER JOIN `".BIT_DB_PREFIX."liberty_content_types` lct ON ( lc.`content_type_guid` = lct.`content_type_guid` )
 				INNER JOIN `".BIT_DB_PREFIX."users_users` uu ON ( uu.`user_id` = lc.`user_id` )
 			$joinSql $whereSql";
@@ -235,103 +216,35 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 **/
 	function store( &$pStoreHash ) {
-		global $gTreasurySystem, $gBitUser;
+		global $gBitUser;
 		// make sure all the data is in order
 		if( $this->verify( $pStoreHash ) ) {
 			// short hand
 			$this->mDb->StartTrans();
-			// if this is an update, we bypass the plugin stuff - no changes there
-			if( !empty( $pStoreHash['item_store']['content_id'] ) ) {
-				// ########## Update
-				if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
-					// remove all related entries in the treasury map
-					$this->expungeItemMap();
 
-					// ---------- Map store
-					foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
-						$storeRow = array(
-							'gallery_content_id' => $gcid,
-							'item_content_id' => $pStoreHash['item_store']['content_id'],
-						);
-						$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
-					}
+			// if this is an update, we remove entries in the map table first
+			if( $this->isValid() ) {
+				$this->expungeItemMap();
+			}
 
-					// Call the appropriate plugin to deal with the upload
-					// if this is a newly uploaded file, we fetch the new plugin handler
-					$guid = NULL;
-					if( !empty( $pStoreHash['upload_store']['upload']['tmp_name'] ) ) {
-						$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
-					} else {
-						$guid = $this->mInfo['plugin_guid'];
-					}
-
-					// now we can pass the info on to the update function
-					if( $verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' )) {
-						if( $verify_function( $pStoreHash['upload_store'] ) ) {
-							if( $update_function = $gTreasurySystem->getPluginFunction( $guid, 'update_function' )) {
-								if( !$update_function( $pStoreHash['upload_store'], $this ) ) {
-									$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
-								}
-							} else {
-								$this->mErrors['update_function'] = tra( 'No suitable update function found.' );
-							}
-						}
-					} else {
-						$this->mErrors['verify_function'] = tra( 'No suitable verify function found.' );
-					}
-				}
-			} else {
-				// ########## Insert
-				// call the appropriate plugin to deal with the upload
-				$guid = $gTreasurySystem->lookupMimeHandler( $pStoreHash['upload_store']['upload'] );
-				if( $verify_function = $gTreasurySystem->getPluginFunction( $guid, 'verify_function' )) {
-					// verify the uploaded file using the plugin
-					if( $verify_function( $pStoreHash['upload_store'] ) ) {
-						if( LibertyContent::store( $pStoreHash['content_store'] ) ) {
-							// ---------- Item store
-							// we can now insert the data into the item table
-							$pStoreHash['item_store']['plugin_guid'] = $guid;
-							$pStoreHash['item_store']['content_id'] = $pStoreHash['upload_store']['content_id'] = $pStoreHash['content_store']['content_id'];
-							$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_item', $pStoreHash['item_store'] );
-
-							// ---------- Map store
-							foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
-								$storeRow = array(
-									'gallery_content_id' => $gcid,
-									'item_content_id' => $pStoreHash['item_store']['content_id'],
-								);
-								$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
-							}
-
-							// ---------- Plugin Store
-							// The plugin is responsible for:
-							//       - thumbnail creation - icon.jpg (48x48), avatar.jpg (100x100), small.jpg (400x300)
-							//       - storing file data in liberty_attachments and liberty_files (if you want to use liberty)
-							if( $store_function = $gTreasurySystem->getPluginFunction( $guid, 'store_function' )) {
-								if( !$store_function( $pStoreHash['upload_store'], $this )) {
-									$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
-								}
-							} else {
-								$this->mErrors['verify_function'] = tra( 'No suitable store function found.' );
-							}
-						}
-					} else {
-						$this->mErrors = array_merge( $this->mErrors, $pStoreHash['upload_store']['errors'] );
-					}
-				} else {
-					$this->mErrors['verify_function'] = tra( 'No suitable verify function found.' );
+			if( LibertyMime::store( $pStoreHash ) ) {
+				// ---------- Map store
+				// update entries in the map
+				foreach( $pStoreHash['map_store']['galleryContentIds'] as $gcid ) {
+					$storeRow = array(
+						'gallery_content_id' => $gcid,
+						'item_content_id' => $pStoreHash['content_id'],
+					);
+					$this->mDb->associateInsert( BIT_DB_PREFIX.'treasury_map', $storeRow );
 				}
 			}
 
-			$this->mDb->CompleteTrans();
+			if( count( $this->mErrors ) == 0 ) {
+				$this->mDb->CompleteTrans();
+			} else {
+				$this->mDb->RollbackTrans();
+			}
 		}
-
-		// reset everything in case we're in a loop
-		unset( $pStoreHash['content_store'] );
-		unset( $pStoreHash['upload_store'] );
-		unset( $pStoreHash['map_store'] );
-		unset( $pStoreHash['item_store'] );
-		unset( $pStoreHash['content_id'] );
 
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -346,34 +259,27 @@ class TreasuryItem extends TreasuryBase {
 	function verify( &$pStoreHash ) {
 		global $gBitSystem, $gBitUser;
 
-		// ---------- Upload store - dealt with by plugin
+		// ---------- Upload store - dealt with by LibertyMime
 		// Deal with the uploaded file
+		// we place it in [_files_override][0] that LibertyMime knows that it has to deal with it
 		if( @is_array( $pStoreHash['upload'] ) ) {
 			if( !empty( $pStoreHash['upload']['tmp_name'] ) && empty( $pStoreHash['upload']['error'] ) ) {
-				$pStoreHash['upload_store']['upload'] = $pStoreHash['upload'];
+				$pStoreHash['_files_override'][0] = $pStoreHash['upload'];
 			} else {
 				$this->mErrors['upload'] = tra( "There was a problem processing the uploaded file. Please try again." );
 			}
 		}
 
-		// make sure the plugin has it's custom information to deal with as needed
-		if( !empty( $pStoreHash['plugin'] ) ) {
-			$pStoreHash['upload_store']['plugin'] = $pStoreHash['plugin'];
-		}
-
 		// Make sure we know what to update
 		if( $this->isValid() ) {
-			$pStoreHash['upload_store']['content_id']      =
-				$pStoreHash['content_store']['content_id'] =
-				$pStoreHash['item_store']['content_id']    = $this->mContentId;
-		} elseif( empty( $pStoreHash['upload_store']['upload']['tmp_name'] ) || !is_file( $pStoreHash['upload_store']['upload']['tmp_name'] ) ) {
+			// these 2 entries will inform LibertyContent and LibertyMime that this is an update
+			$pStoreHash['content_id'] = $this->mContentId;
+			$pStoreHash['_files_override'][0]['attachment_id'] = $this->mInfo['attachment_id'];
+		} elseif( empty( $pStoreHash['_files_override'][0]['tmp_name'] ) || !is_file( $pStoreHash['_files_override'][0]['tmp_name'] ) ) {
 			// Make sure the upload went well. If not, we break off this mellarky here.
 			$this->mErrors['upload'] = tra( 'Uploading this file has destroyed this website - possibly even the entire internet.' );
 		}
 
-
-		// ---------- Item store
-		// the item data is collected during the TreasuryItem::store() process
 
 		// ---------- Map store
 		// make sure we have at least one gallery where we can add the file
@@ -407,12 +313,12 @@ class TreasuryItem extends TreasuryBase {
 				$defaultName = $pStoreHash['upload']['name'];
 			}
 			if( strpos( $defaultName, '.' ) ) {
-				$pStoreHash['content_store']['title'] = str_replace( '_', ' ', substr( $defaultName, 0, strrpos( $defaultName, '.' ) ) );
+				$pStoreHash['title'] = str_replace( '_', ' ', substr( $defaultName, 0, strrpos( $defaultName, '.' ) ) );
 			} else {
-				$pStoreHash['content_store']['title'] = str_replace( '_', ' ', $defaultName );
+				$pStoreHash['title'] = str_replace( '_', ' ', $defaultName );
 			}
 		} elseif( !empty( $pStoreHash['title'] ) ) {
-			$pStoreHash['content_store']['title'] = substr( $pStoreHash['title'], 0, 160 );
+			$pStoreHash['title'] = substr( $pStoreHash['title'], 0, 160 );
 		}
 
 		// sort out the description
@@ -421,11 +327,52 @@ class TreasuryItem extends TreasuryBase {
 		} elseif( empty( $pStoreHash['edit'] ) ) {
 			unset( $pStoreHash['edit'] );
 		} else {
-			$pStoreHash['content_store']['edit'] = $pStoreHash['edit'];
-			//$pStoreHash['edit'] = substr( $pStoreHash['edit'], 0, 500 );
+			$pStoreHash['edit'] = $pStoreHash['edit'];
 		}
 
 		return( count( $this->mErrors ) == 0 );
+	}
+
+	/**
+	 * batchStore 
+	 * 
+	 * @param array $pStoreHash 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 * @note: files are taken from $_FILES directly
+	 */
+	function batchStore( &$pStoreHash ) {
+		// we will use the information in $_FILES
+		$i = 0;
+		foreach( $_FILES as $upload ) {
+			if( !empty( $upload['tmp_name'] ) ) {
+				// we start with a fresh copy every cycle to ensure that our store hash is pristine
+				$item = new TreasuryItem();
+				$storeHash = $pStoreHash;
+
+				if( !empty( $storeHash['file'][$i] )) {
+					$storeHash = array_merge( $storeHash, $storeHash['file'][$i] );
+				}
+
+				// transfer plugin settings --- currently not in use
+				//$storeHash['plugin'] = !empty( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
+
+				$storeHash['upload'] = $upload;
+				$item->store( $storeHash );
+
+				$i++;
+			} else {
+				$item->mErrors['upload'] = tr( "There was an error uploading the file: " ) . $upload['name'];
+			}
+		}
+
+		if( $i > 1 ) {
+			$pStoreHash['redirect'] = TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] );
+		} else {
+			$pStoreHash['redirect'] = TreasuryItem::getDisplayUrl( $storeHash['content_id'] );
+		}
+
+		return( count( $item->mErrors ) == 0 );
 	}
 
 	/**
@@ -568,38 +515,25 @@ class TreasuryItem extends TreasuryBase {
 	 * TODO: make it possible to remove only items when they are not part of other galleries
 	 */
 	function expunge( $pExpungeAttachment = TRUE ) {
-		global $gTreasurySystem;
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
 
 			// Remove map entries
 			$this->expungeItemMap();
 
-			// Remove item entry
-			$query = "DELETE FROM `".BIT_DB_PREFIX."treasury_item` WHERE `content_id` = ?";
-			$rs = $this->mDb->query( $query, array( $this->mContentId ));
-
-			// deal with the attachments if needed
-			if( $pExpungeAttachment ) {
-				// let the plugin do its thing
-				$expunge_function = $gTreasurySystem->getPluginFunction( $this->mInfo['plugin_guid'], 'expunge_function' );
-				if( empty( $expunge_function ) || !$expunge_function( $this->mInfo )) {
-					// plugin passes errors into [errors] by reference
-					$this->mErrors['expunge_plugin'] = $this->mInfo['errors'];
-				}
-			}
-
 			// now we can deal with the entry in liberty_content
-			if( count( $this->mErrors ) == 0 && LibertyContent::expunge() ) {
+			if( LibertyMime::expunge() ) {
 				$this->mDb->CompleteTrans();
 			} else {
-				$this->mErrors['expunge'] = tra( 'The item could not be removed completely' );
+				$this->mErrors['expunge'] = tra( 'The item could not be completely removed.' );
 				$this->mDb->RollbackTrans();
 			}
 		}
+
 		if( count( $this->mErrors ) != 0 ) {
 			error_log( "Error deleting treasury item: ".vc( $this->mErrors ));
 		}
+
 		return( count( $this->mErrors ) == 0 );
 	}
 

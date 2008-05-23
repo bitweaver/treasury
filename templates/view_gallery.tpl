@@ -78,29 +78,29 @@
 								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
 								<td style="text-align:center;">
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-										<a href="{$item.display_url}">
+										<a href="{$item->mInfo.display_url}">
 									{/if}
-									<img src="{$item.thumbnail_url.$thumbsize}" alt="{$item.title|escape}" title="{$item.title|escape}" />
+									<img src="{$item->mInfo.thumbnail_url.$thumbsize}" alt="{$item->mInfo.title|escape}" title="{$item->mInfo.title|escape}" />
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 										</a>
 									{/if}
 								</td>
 							{/if}
 							<td>
-								<h3><a href="{$item.display_url}">{$item.title|escape}</a></h3>
-								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' ) && $item.data}
-									<p>{$item.data|escape|nl2br}</p>
+								<h3><a href="{$item->mInfo.display_url}">{$item->mInfo.title|escape}</a></h3>
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' ) && $item->mInfo.data}
+									<p>{$item->mInfo.data|escape|nl2br}</p>
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
-									<small>{$item.wiki_plugin_link}</small>
+									<small>{$item->mInfo.wiki_plugin_link}</small>
 									{assign var=br value=1}
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_name' )}
 									{if $br}<br />{/if}
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-										<a href="{$item.display_url}">
+										<a href="{$item->mInfo.display_url}">
 									{/if}
-									{$item.filename} <small>({$item.mime_type})</small>
+									{$item->mInfo.filename} <small>({$item->mInfo.mime_type})</small>
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 										</a>
 									{/if}
@@ -109,39 +109,39 @@
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
 								<td>
 									{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' )}
-										{$item.created|bit_short_date}<br />
+										{$item->mInfo.created|bit_short_date}<br />
 									{/if}
 									{if $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
-										{tr}by{/tr}: {displayname hash=$item}
+										{tr}by{/tr}: {displayname hash=$item->mInfo}
 									{/if}
 								</td>
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
 								<td style="text-align:right;">
-									{if $item.download_url}
-										{$item.file_size|display_bytes}
+									{if $item->mInfo.download_url}
+										{$item->mInfo.file_size|display_bytes}
 									{/if}
-									{if $item.prefs.duration}
-										{if $item.download_url} / {/if}{$item.prefs.duration|display_duration}
+									{if $item->mInfo.prefs.duration}
+										{if $item->mInfo.download_url} / {/if}{$item->mInfo.prefs.duration|display_duration}
 									{/if}
 								</td>
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
 								<td style="text-align:right;">
-									{$item.hits|default:"{tr}none{/tr}"}
+									{$item->mInfo.hits|default:"{tr}none{/tr}"}
 								</td>
 							{/if}
 							<td class="actionicon">
-								{if $gBitUser->hasPermission( 'p_treasury_download_item' ) && $item.download_url}
-									<a href="{$item.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
+								{if $gBitUser->hasPermission( 'p_treasury_download_item' ) && $item->mInfo.download_url}
+									<a href="{$item->mInfo.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
 								{/if}
 								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-									<a href="{$item.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
+									<a href="{$item->mInfo.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
 								{/if}
-								{if $gContent->isOwner( $item ) || $gBitUser->isAdmin()}
-									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
-									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
-									<input type="checkbox" name="del_content_ids[]" value="{$item.content_id}" />
+								{if $gContent->isOwner( $item->mInfo ) || $gBitUser->isAdmin()}
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
+									<input type="checkbox" name="del_content_ids[]" value="{$item->mInfo.content_id}" />
 									{assign var=checks value=true}
 								{/if}
 							</td>

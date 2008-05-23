@@ -89,10 +89,10 @@
 		<a href="{$gContent->mInfo.display_url}">Return to file</a>
 
 		<h2>{tr}Preview{/tr}</h2>
+		<p class="formhelp">{tr}Please note items remaining in the browser cache might still display the previous item even if the upload worked. If this occurs, empty out the browser cache and return to the file page.{/tr}</p>
 
 		<div class="preview">
-			{assign var=guid value=$gContent->mInfo.plugin_guid}
-			{include file=$gTreasurySystem->mPlugins.$guid.view_tpl}
+			{include file=$gContent->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 		</div>
 	</div><!-- end .body -->
 </div><!-- end .treasury -->

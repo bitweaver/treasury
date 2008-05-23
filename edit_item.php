@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.22 2007/10/25 07:50:34 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.23 2008/05/23 10:15:24 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -55,9 +55,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 
 // delete icon if needed
 if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
-	$fileHash['dest_path']   = dirname( $gContent->mInfo['source_url'] ).'/';
-	$fileHash['source_file'] = $gContent->mInfo['source_file'];
-	$fileHash['type']        = $gContent->mInfo['mime_type'];
+	$fileHash['dest_path'] = dirname( $gContent->mInfo['storage_path'] ).'/';
 	liberty_clear_thumbnails( $fileHash );
 	$gContent->load();
 }
@@ -65,56 +63,69 @@ if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
 // set up everything for re-processing
 if( !empty( $_REQUEST['reprocess_upload'] )) {
 	if( !empty( $gContent->mInfo['source_file'] ) && is_file( $gContent->mInfo['source_file'] )) {
-		// first we need to move the file out of the way
-		$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
-		rename( $gContent->mInfo['source_file'], $tmpfile );
+		// check to see if the file is ok to be deleted
+		if(( $nuke = LibertyAttachable::validateStoragePath( $gContent->mInfo['source_file'] )) && is_file( $nuke )) {
+			// first we need to move the file out of the way
+			$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
+			rename( $gContent->mInfo['source_file'], $tmpfile );
 
-		// now that the file has been moved, we need to remove all the files in the storage dir
-		unlink_r( dirname( $gContent->mInfo['source_file'] ) );
+			// fill the upload hash with the file details
+			$_FILES['file']['tmp_name'] = $tmpfile;
+			$_FILES['file']['name']     = $gContent->mInfo['filename'];
+			$_FILES['file']['size']     = $gContent->mInfo['file_size'];
+			$_FILES['file']['type']     = $gContent->mInfo['mime_type'];
+			$_FILES['file']['error']    = 0;
 
-		// fill the upload hash with the file details
-		$fileHash['tmp_name'] = $tmpfile;
-		$fileHash['name']     = $gContent->mInfo['filename'];
-		$fileHash['size']     = $gContent->mInfo['file_size'];
-		$fileHash['type']     = $gContent->mInfo['mime_type'];
-		$fileHash['error']    = 0;
+			$_REQUEST['update_file'] = TRUE;
 
-		$_REQUEST['upload']      = $fileHash;
-		$_REQUEST['update_file'] = TRUE;
+			// remove the dir to make sure we don't cause problems with existing files
+			unlink_r( dirname( $nuke ));
+		}
 	} else {
 		$feedback['error'] = tra( 'The file could not be reprocessed. There was a problem locating the original file.' );
 	}
 }
 
 if( !empty( $_REQUEST['update_file'] ) ) {
+	// this will override any thumbnails created by the plugin
+	if( !empty( $_FILES['icon']['tmp_name'] ) ) {
+		if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ))) {
+			if( !empty( $_FILES['icon']['tmp_name'] )) {
+				$fileHash = $_FILES['icon'];
+				$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
+				$fileHash['source_file'] = $_FILES['icon']['tmp_name'];
+				liberty_clear_thumbnails( $fileHash );
+				liberty_generate_thumbnails( $fileHash );
+			}
+			// we've done everything with the icon. this will ensure that LibertyMime doesn't get any crazy ideas
+			unset( $_FILES['icon'] );
+		} else {
+			$feedback['error'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$_FILES['icon']['type'];
+		}
+	}
+
 	if( !empty( $_FILES['file']['tmp_name'] ) ) {
 		$_REQUEST['upload'] = $_FILES['file'];
 	}
 
-	if( $gContent->store( $_REQUEST ) ) {
-		// this will override any thumbnails created by the plugin
-		if( !empty( $_FILES['icon']['tmp_name'] ) ) {
-			if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ) ) ) {
-				$fileHash = $_FILES['icon'];
-				$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
-				$fileHash['source_file'] = $fileHash['tmp_name'];
-				liberty_clear_thumbnails( $fileHash );
-				liberty_generate_thumbnails( $fileHash );
-			} else {
-				$feedback['error'] = tra( "The file you uploaded doesn't appear to be a valid image. The reported mime type is" ).": ".$_FILES['icon']['type'];
-			}
-		}
-		$feedback['success'] = tra( 'The settings were successfully applied.' );
+	if( $gContent->store( $_REQUEST )) {
+		$feedback = $gContent->mErrors;
 	}
 
 	// get everything up to date
 	$gContent->load();
 
+	// give some feedback if all went well
+	if( empty( $feedback['error'] )) {
+		$feedback['success'] = tra( 'The settings were successfully applied.' );
+	}
+
 	// new icons need to be displayed
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
 }
 
-if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $tmpfile ) && is_file( $tmpfile ) ) {
+// move file back to where it was
+if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $tmpfile ) && is_file( $tmpfile )) {
 	// move file back to where it should be
 	rename( $tmpfile, $gContent->mInfo['source_file'] );
 }

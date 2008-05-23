@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.24 2008/05/20 18:54:32 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.25 2008/05/23 10:15:24 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -40,42 +40,9 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
-	// first of all set the execution time for this process to unlimited
-	set_time_limit( 0 );
-
-	$i = 0;
-	foreach( $_FILES as $upload ) {
-		if( !empty( $upload['tmp_name'] ) ) {
-			// store each file individually
-			$treasuryItem = new TreasuryItem();
-
-			// transfer the form data to a store hash
-			$storeHash = !empty( $_REQUEST['file'][$i] ) ? $_REQUEST['file'][$i] : array();
-
-			// transfer galleryContentIds as well
-			$storeHash['galleryContentIds'] = !empty( $_REQUEST['galleryContentIds'] ) ? $_REQUEST['galleryContentIds'] : array();
-
-			// transfer plugin settings
-			$storeHash['plugin'] = !empty( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
-
-			// add the file details to the store hash
-			$storeHash['upload'] = $upload;
-
-			if( !$treasuryItem->store( $storeHash ) ) {
-				$feedback['error'] = $treasuryItem->mErrors;
-			}
-			$i++;
-		} else {
-			$feedback['error'] = tra( "There was an error uploading the file: " ) . $upload['name'];
-		}
-	}
-
-	if( empty( $feedback['error'] )) {
-		if( $i > 1 ) {
-			bit_redirect( TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] ));
-		} else {
-			bit_redirect( TreasuryItem::getDisplayUrl( $treasuryItem->mContentId ));
-		}
+	$treasuryItem = new TreasuryItem();
+	if( $treasuryItem->batchStore( $_REQUEST )) {
+		bit_redirect( $_REQUEST['redirect'] );
 	}
 }
 

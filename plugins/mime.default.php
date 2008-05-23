@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.56 2008/03/17 19:27:01 lsces Exp $
+ * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/Attic/mime.default.php,v 1.57 2008/05/23 10:15:24 squareing Exp $
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.56 $
+ * @version     $Revision: 1.57 $
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler
@@ -88,7 +88,7 @@ function treasury_default_verify( &$pStoreRow ) {
 					INNER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON ( lf.`file_id` = la.`foreign_id` )
 				WHERE lc.`content_id` = ?", array( $pStoreRow['content_id'] ));
 			$pStoreRow = array_merge( $pStoreRow, $fileInfo );
-			$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
+			$pStoreRow['upload']['dest_path'] = LibertyMime::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 		}
 
 		$ret = TRUE;
@@ -104,7 +104,7 @@ function treasury_default_verify( &$pStoreRow ) {
 		// Store all uploaded files in the users storage area
 		// TODO: allow users to create personal galleries
 		$pStoreRow['attachment_id'] = $gBitSystem->mDb->GenID( 'liberty_attachments_id_seq' );
-		$pStoreRow['upload']['dest_path'] = LibertyAttachable::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
+		$pStoreRow['upload']['dest_path'] = LibertyMime::getStorageBranch( $pStoreRow['attachment_id'], $gBitUser->mUserId );
 
 		$ret = TRUE;
 	} else {
@@ -305,7 +305,7 @@ function treasury_default_expunge( &$pParamHash ) {
 
 		$dummy = array();
 		if( treasury_default_load( $pParamHash, $dummy )) {
-			$la = new LibertyAttachable();
+			$la = new LibertyMime();
 			$gBitSystem->mDb->StartTrans();
 			$la->expungeAttachment( $pParamHash['attachment_id'] );
 			$gBitSystem->mDb->CompleteTrans();

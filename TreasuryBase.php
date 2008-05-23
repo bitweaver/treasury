@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.9 2008/05/08 18:33:59 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.10 2008/05/23 10:15:24 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.9 $
+ * @version      $Revision: 1.10 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -13,16 +13,16 @@
 /**
  * Setup
  */ 
-require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 require_once( LIBERTY_PKG_PATH.'LibertyStructure.php' );
 
 /**
  *   TreasuryBase 
  * 
  * @package treasury
- * @uses LibertyAttachable
+ * @uses LibertyMime
  */
-class TreasuryBase extends LibertyAttachable {
+class TreasuryBase extends LibertyMime {
 	/**
 	 * Initiates class
 	 *
@@ -33,7 +33,7 @@ class TreasuryBase extends LibertyAttachable {
 		if( get_class( $this ) == 'treasurygallery' ) {
 			LibertyContent::LibertyContent();
 		} else {
-			LibertyAttachable::LibertyAttachable();
+			LibertyMime::LibertyMime();
 		}
 	}
 
