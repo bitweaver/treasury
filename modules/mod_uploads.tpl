@@ -1,29 +1,29 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.2 2007/01/05 08:31:23 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.3 2008/05/28 19:05:47 wjames5 Exp $ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'fisheye' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
 		<ul class="data">
 			{foreach from=$modItems item=modItem}
 				<li class="{cycle values='odd,even'} item">
-					<a href="{$modItem.display_url}" title="{$modItem.title|escape} - {$modItem.last_modified|bit_short_datetime}, by {displayname user=$modItem.modifier_user real_name=$modItem.modifier_real_name nolink=1}{if (strlen($modItem.title) > $maxlen) AND ($maxlen > 0)}, {$modItem.title|escape}{/if}">
+					<a href="{$modItem->mInfo.display_url}" title="{$modItem->mInfo.title|escape} - {$modItem->mInfo.last_modified|bit_short_datetime}, by {displayname user=$modItem->mInfo.modifier_user real_name=$modItem->mInfo.modifier_real_name nolink=1}{if (strlen($modItem->mInfo.title) > $maxlen) AND ($maxlen > 0)}, {$modItem->mInfo.title|escape}{/if}">
 						{if $module_params.image}
-							<img src="{$modItem.thumbnail_url.icon}" title="{$modItem.title|escape}" alt="{$modItem.title|escape}" />
+							<img src="{$modItem->mInfo.thumbnail_url.icon}" title="{$modItem->mInfo.title|escape}" alt="{$modItem->mInfo.title|escape}" />
 							<br />
 						{/if}
 
 						{if $maxlen gt 0}
-							{$modItem.title|escape|truncate:$maxlen:"...":true}
+							{$modItem->mInfo.title|escape|truncate:$maxlen:"...":true}
 						{else}
-							{$modItem.title|escape}
+							{$modItem->mInfo.title|escape}
 						{/if}
 					</a>
 
 					{if $module_params.description}
 						<br />
 						{if $maxlendesc gt 0}
-							{$modItem.data|escape|truncate:$maxlendesc:"...":true}
+							{$modItem->mInfo.data|escape|truncate:$maxlendesc:"...":true}
 						{else}
-							{$modItem.data|escape}
+							{$modItem->mInfo.data|escape}
 						{/if}
 					{/if}
 				</li>
