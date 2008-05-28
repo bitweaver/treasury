@@ -10,8 +10,13 @@ echo "
    =================================================
 ";
 
+$reset = "";
+if( !empty( $_GET )) {
+	$reset = "<a href=\"".TREASURY_PKG_URL."admin/database_to_libertymime.php\">Reset page</a>";
+}
+
 echo '
-1. Database update:
+1. Database update: '.$reset.'
    ----------------
    Our file handling system has undergone a majour overhaul and treasury needs 
    to be updated to work with the new setup. This update is only necessary if you 
@@ -19,7 +24,7 @@ echo '
    Even if you run this update more than once, there should be no damage to the 
    system.
    This is only necessary when you have just upgraded bitweaver from before 2.1.0.
-   <a href="?fix_db=1">Update existing Treasury entries to work with the new and improved LibertyMime</a>.
+   <a href="'.TREASURY_PKG_URL.'admin/database_to_libertymime.php?fix_db=1">Update existing Treasury entries to work with the new and improved LibertyMime</a>.
    After running the above, please visit the <a href="'.LIBERTY_PKG_URL.'admin/plugins.php">liberty plugin page</a> and enable the
    appropriate mime plugins.
 ';
@@ -31,7 +36,7 @@ $sql = "
 	INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( tri.`content_id` = la.`content_id` )
 	ORDER BY la.`attachment_id` ASC";
 
-if( !empty( $_REQUEST['fix_db'] )) {
+if( !empty( $_GET['fix_db'] )) {
 	// also make sure that all treasury plugins are off
 	$gBitSystem->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."kernel_config` WHERE `config_name` LIKE ?", array( 'treasury_plugin_%' ));
 	echo "\n\n   Unused treasury plugins have been disabled.\n";
@@ -40,7 +45,7 @@ if( !empty( $_REQUEST['fix_db'] )) {
 	$gLibertySystem->scanAllPlugins( NULL, "mime\." );
 	$gLibertySystem->setActivePlugin( 'mimedefault' );
 	echo "   Required liberty file plugin has been enabled.\n";
-die;
+
 	$result = $gBitSystem->mDb->query( $sql );
 	echo "<ul>";
 	while( $aux = $result->fetchRow() ) {
@@ -57,20 +62,20 @@ die;
 
 echo "<br /><br /><br />";
 echo '
-2. Content update:
+2. Content update: '.$reset.'
    ---------------
    If you have been inserting content into wiki pages using {file} as suggested 
    by treasury, you can continue using this or you can move to using the global 
    {attachment} plugin. You can revisit this page at any time if you want to make 
    all your content use {attachment} instead of {file} or {flashvideo} once you 
    are sure that {attachment} does what you want it to do.
-   <a href="?update_content=1">Update {file} or {flashvideo} with {attachment} where appropriate.</a>
+   <a href="'.TREASURY_PKG_URL.'admin/database_to_libertymime.php?update_content=1">Update {file} or {flashvideo} with {attachment} where appropriate.</a>
    You might have to run this more than once. Keep on running this script until 
    no more updates appear. Depending on your system and the number of uploads 
    and content you have, this can take some time.
 ';
 
-if( !empty( $_REQUEST['update_content'] )) {
+if( !empty( $_GET['update_content'] )) {
 	$atts = $gBitSystem->mDb->getAll( $sql );
 	$query = "SELECT lc.`data`, lc.`title`, lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`data` LIKE ? OR lc.`data` LIKE ?";
 	$content = $gBitSystem->mDb->getAll( $query, array( "%{flashvideo%", "%{file%" ));
