@@ -20,12 +20,7 @@
 						{/forminput}
 					</div>
 
-					<div class="row">
-						{formlabel label="Description" for="edit"}
-						{forminput}
-							<textarea cols="50" rows="3" id="edit" name="edit" />{$gContent->mInfo.data|escape}</textarea>
-						{/forminput}
-					</div>
+					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
 
 					<div class="row">
 						{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}

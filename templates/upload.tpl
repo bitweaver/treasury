@@ -31,6 +31,7 @@
 							{elseif $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' )}
 								<br />
 								<h2>{tr}Upload Files{/tr}</h2>
+								{include file="bitpackage:liberty/edit_format.tpl"}
 								{include file="bitpackage:kernel/upload_slot_inc.tpl"}
 							{else}
 								<div class="row">

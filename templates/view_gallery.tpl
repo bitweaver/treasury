@@ -32,15 +32,15 @@
 			<hr />
 		{/if}
 
-		<p class="description">
+		<div class="description">
 			{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
 				<a href="{$gContent->mInfo.display_url}">
 					<img class="thumb" src="{$gContent->mInfo.thumbnail_url}{$refresh}" alt="{$gContent->mInfo.title|escape}" title="{$gContent->mInfo.title|escape}" />
 				</a>
 			{/if}
 			<br />
-			{$gContent->mInfo.data|escape|nl2br}
-		</p>
+			{$gContent->mInfo.parsed_data}
+		</div>
 
 		{formfeedback hash=$feedback}
 
@@ -89,7 +89,7 @@
 							<td>
 								<h3><a href="{$item->mInfo.display_url}">{$item->mInfo.title|escape}</a></h3>
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' ) && $item->mInfo.data}
-									<p>{$item->mInfo.data|escape|nl2br}</p>
+									{$item->mInfo.parsed_data}
 								{/if}
 								{if $gBitSystem->isFeatureActive( 'treasury_item_list_attid' )}
 									<small>{$item->mInfo.wiki_plugin_link}</small>

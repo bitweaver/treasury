@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.62 2008/05/23 10:15:24 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.63 2008/05/28 21:09:32 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.62 $
+ * @version      $Revision: 1.63 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -95,6 +95,9 @@ class TreasuryItem extends TreasuryBase {
 
 				// LibertyMime will load the attachment details
 				LibertyMime::load();
+
+				// parse the data after parent load so we have our html prefs
+				$this->mInfo['parsed_data'] = $this->parseData();
 
 				// copy mStorage to mInfo for easy access
 				if( !empty( $this->mStorage ) && count( $this->mStorage ) > 0 ) {

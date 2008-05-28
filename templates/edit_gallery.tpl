@@ -38,13 +38,7 @@
 							{/forminput}
 						</div>
 
-						<div class="row">
-							{formlabel label="Description" for="treasury-desc"}
-							{forminput}
-								<textarea id="treasury-desc" name="edit" rows="3" cols="50">{$galInfo.data|escape}</textarea>
-								{formhelp note="A description of the category. This will be visible when users view this particular category."}
-							{/forminput}
-						</div>
+						{textarea label="Description"}{$galInfo.data}{/textarea}
 
 						{* not yet implemented - xing
 						<div class="row">

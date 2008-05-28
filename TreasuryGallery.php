@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.42 2008/05/23 10:15:24 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.43 2008/05/28 21:09:32 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.42 $
+ * @version      $Revision: 1.43 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -98,6 +98,9 @@ class TreasuryGallery extends TreasuryBase {
 					$this->mInfo['gallery_display_path'] = $this->getDisplayPath( $this->mInfo['gallery_path'] );
 				}
 				LibertyContent::load();
+
+				// parse the data after parent load so we have our html prefs
+				$this->mInfo['parsed_data'] = $this->parseData();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -195,7 +198,7 @@ class TreasuryGallery extends TreasuryBase {
 
 		$query = "
 			SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
-			lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`created`, lch.`hits`,
+			lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`created`, lc.`format_guid`, lch.`hits`,
 			uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $subselect $selectSql
 			FROM `".BIT_DB_PREFIX."treasury_gallery` trg
@@ -236,6 +239,12 @@ class TreasuryGallery extends TreasuryBase {
 				if( !empty( $pListHash['get_item_count'] ) ) {
 					$aux['item_count']     = $struct->getSubTree( $aux['structure_id'] );
 				}
+				// deal with the parsing
+				$parseHash['format_guid']     = $aux['format_guid'];
+				$parseHash['content_id']      = $aux['content_id'];
+				$parseHash['user_id']		  = $aux['user_id'];
+				$parseHash['data']			  = $aux['data'];
+				$aux['parsed_data'] = $this->parseData( $parseHash );
 
 				// sucky additional query to fetch item number without subselect
 				if( $gBitDbType == 'mysql' || $gBitDbType == 'mysqli' ) {
