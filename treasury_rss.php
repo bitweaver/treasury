@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.5 2007/07/08 07:56:40 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.6 2008/05/28 05:16:53 squareing Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -53,19 +53,21 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	// get all the data ready for the feed creator
 	foreach( $feeds as $feed ) {
 		$item               = new FeedItem();
-		$item->title        = $feed['title'];
-		$item->link         = $feed['display_url'];
-		$item->description  = '<a href="'.$feed['display_url'].'"><img src="'.$feed['thumbnail_url']['medium'].'" /></a>';
-		$item->description .= "<ul>";
-		if( !empty( $feed['data'] ) ) {
-			$item->description .= "<li>".tra( 'Description' ).": {$feed['data']}</li>";
+		$item->title        = $feed->getTitle();
+		$item->link         = $feed->getField( 'display_url' );
+		if( !empty( $feed->mInfo['thumbnail_url']['medium'] )) {
+			$item->description  = '<a href="'.$feed->getField( 'display_url' ).'"><img src="'.$feed->mInfo['thumbnail_url']['medium'].'" /></a>';
 		}
-		$item->description .= "<li>".tra( 'Filename' ).": {$feed['filename']} [".smarty_modifier_display_bytes( $feed['file_size'] )."]</li>";
+		$item->description .= "<ul>";
+		if( $feed->getField( 'data' )) {
+			$item->description .= "<li>".tra( 'Description' ).": {$feed->getField( 'data' )}</li>";
+		}
+		$item->description .= "<li>".tra( 'Filename' ).": {$feed->getField( 'filename' )} [".smarty_modifier_display_bytes( $feed->getField( 'file_size' ) )."]</li>";
 		$item->description .= "</ul>";
 
-		$item->date         = ( int )$feed['last_modified'];
+		$item->date         = ( int )$feed->getField( 'last_modified' );
 		$item->source       = 'http://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
-		$item->author       = $gBitUser->getDisplayName( FALSE, $feed );
+		$item->author       = $gBitUser->getDisplayName( FALSE, $feed->mInfo );
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 5000 );
 		$item->descriptionHtmlSyndicated = FALSE;
