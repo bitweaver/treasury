@@ -22,6 +22,10 @@
 
 					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
 
+					{if $gBitUser->isAdmin() || $gContent->isOwner()}
+						{include file=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
+					{/if}
+
 					<div class="row">
 						{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}
 						{formlabel label="Replace File" for="fileupload"}
