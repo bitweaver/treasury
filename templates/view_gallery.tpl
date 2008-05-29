@@ -6,6 +6,9 @@
 
 	<div class="floaticon">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
+		{if $gBitSystem->isPackageActive( 'rss' ) and $gBitSystem->isFeatureActive( 'treasury_rss' )}
+			<a href="{$smarty.const.TREASURY_PKG_URL}treasury_rss.php?version={$gBitSystem->getConfig('rssfeed_default_version',0)}&amp;gallery_content_id={$gContent->mContentId}">{biticon ipackage="rss" iname="rss-16x16" iexplain="RSS feed"}</a>
+		{/if}
 		{if $gContent->hasUserPermission( 'p_treasury_upload_item' )}
 			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
 		{/if}
