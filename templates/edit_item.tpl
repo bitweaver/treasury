@@ -23,8 +23,7 @@
 					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
 
 					{if $gBitUser->isAdmin() || $gContent->isOwner()}
-						{assign var=mime_edit_tpl value=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
-						{if $mime_edit_tpl}{include file=$mime_edit_tpl}{/if}
+						{include file=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 					{/if}
 
 					<div class="row">
