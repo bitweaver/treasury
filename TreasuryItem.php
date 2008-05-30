@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.64 2008/05/30 13:58:25 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.65 2008/05/30 19:08:29 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.64 $
+ * @version      $Revision: 1.65 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -350,7 +350,7 @@ class TreasuryItem extends TreasuryBase {
 
 				$i++;
 			} else {
-				$item->mErrors['upload'] = tr( "There was an error uploading the file: " ) . $upload['name'];
+				$item->mErrors['upload'] = tra( "There was an error uploading the file: " ) . $upload['name'];
 			}
 		}
 
