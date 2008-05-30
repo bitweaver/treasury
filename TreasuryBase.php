@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.10 2008/05/23 10:15:24 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.11 2008/05/30 13:17:25 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.10 $
+ * @version      $Revision: 1.11 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -69,7 +69,7 @@ class TreasuryBase extends LibertyMime {
 	 * @return HTML links
 	 */
 	function getDisplayPath( $pPath ) {
-		$ret = '<a title="'.tra( 'Galleries' ).'" href="'.TREASURY_PKG_URL.'">'.tra( 'Galleries' ).'</a>';
+		$ret = "";
 		if( !empty( $pPath ) && is_array( $pPath ) ) {
 			$ret .= " &raquo; ";
 			foreach( $pPath as $node ) {
