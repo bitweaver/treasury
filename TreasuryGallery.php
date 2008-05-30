@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.43 2008/05/28 21:09:32 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.44 2008/05/30 19:04:42 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.43 $
+ * @version      $Revision: 1.44 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -235,7 +235,7 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], 'small' );
+				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'] );
 				if( !empty( $pListHash['get_item_count'] ) ) {
 					$aux['item_count']     = $struct->getSubTree( $aux['structure_id'] );
 				}
