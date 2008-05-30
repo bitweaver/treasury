@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.63 2008/05/28 21:09:32 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.64 2008/05/30 13:58:25 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.63 $
+ * @version      $Revision: 1.64 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -305,24 +305,9 @@ class TreasuryItem extends TreasuryBase {
 		// ---------- Content store
 		// let's add a default title
 		if( empty( $pStoreHash['title'] ) && !empty( $pStoreHash['upload']['name'] ) ) {
-			if( preg_match( '/^[A-Z]:\\\/', $pStoreHash['upload']['name'] ) ) {
-				// MSIE shit file names if passthrough via gigaupload, etc.
-				// basename will not work - see http://us3.php.net/manual/en/function.basename.php
-				$tmp = preg_split( "[\\\]", $pStoreHash['upload']['name'] );
-				$defaultName = $tmp[count($tmp) - 1];
-			} elseif( strpos( '.', $pStoreHash['upload']['name'] ) ) {
-				list( $defaultName, $ext ) = explode( '.', $pStoreHash['upload']['name'] );
-			} else {
-				$defaultName = $pStoreHash['upload']['name'];
-			}
-			if( strpos( $defaultName, '.' ) ) {
-				$pStoreHash['title'] = str_replace( '_', ' ', substr( $defaultName, 0, strrpos( $defaultName, '.' ) ) );
-			} else {
-				$pStoreHash['title'] = str_replace( '_', ' ', $defaultName );
-			}
-		} elseif( !empty( $pStoreHash['title'] ) ) {
-			$pStoreHash['title'] = substr( $pStoreHash['title'], 0, 160 );
+			$pStoreHash['title'] = file_name_to_title( $pStoreHash['upload']['name'] );
 		}
+		$pStoreHash['title'] = substr( $pStoreHash['title'], 0, 160 );
 
 		// sort out the description
 		if( $this->isValid() && !empty( $this->mInfo['data'] ) && empty( $pStoreHash['edit'] ) ) {
