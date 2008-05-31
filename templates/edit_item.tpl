@@ -22,9 +22,7 @@
 
 					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
 
-					{if $gBitUser->isAdmin() || $gContent->isOwner()}
-						{include file=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
-					{/if}
+					{include file=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 
 					<div class="row">
 						{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}
@@ -32,8 +30,10 @@
 						{forminput}
 							<input type="file" name="file" id="fileupload" />
 							{formhelp note="Upload a new file to replace the current one."}
-							<input type="submit" name="reprocess_upload" value="{tr}Re-process uploaded File{/tr}" />
-							{formhelp note="This will process the already uploaded file as if you're uploading it for the first time. This will allow you to apply spcific file processing options if available."}
+							{if $gContent->mInfo.source_file}
+								<input type="submit" name="reprocess_upload" value="{tr}Re-process uploaded File{/tr}" />
+								{formhelp note="This will process the already uploaded file as if you're uploading it for the first time."}
+							{/if}
 						{/forminput}
 					</div>
 
@@ -42,8 +42,10 @@
 						{forminput}
 							<input type="file" id="icon" name="icon" />
 							{formhelp note="Upload an image that represents this file. The image will be scaled automatically."}
-							<input type="submit" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
-							{formhelp note="This will remove the current thumbnail and it will use the appropriate mimetype icon instead."}
+							{if !$gContent->mInfo.thumbnail_is_mime}
+								<input type="submit" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
+								{formhelp note="This will remove the current thumbnail."}
+							{/if}
 						{/forminput}
 					</div>
 
