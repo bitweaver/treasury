@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.20 2007/10/29 21:59:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.21 2008/05/31 10:36:59 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -32,8 +32,8 @@ if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
 	$gGallery->load();
 } else {
 	// if we don't have a structure id to go by, we just get a gallery we can work with
-	$galleryContentIds = $gContent->getGalleriesFromItemContentId( $gContent->mContentId );
-	if( @BitBase::verifyId( $galleryContentIds[0] ) ) {
+	$galleryContentIds = $gContent->getParentGalleries();
+	if( @BitBase::verifyId( $galleryContentIds[0] )) {
 		$gGallery = new TreasuryGallery( NULL, $galleryContentIds[0] );
 		$gGallery->load();
 	}

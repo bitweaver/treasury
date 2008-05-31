@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.23 2008/05/23 10:15:24 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.24 2008/05/31 10:36:59 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -131,7 +131,7 @@ if( !empty( $_REQUEST['reprocess_upload'] ) && !empty( $tmpfile ) && is_file( $t
 }
 
 // get a list of galleries this file is already part of
-$galleryContentIds = $gContent->getGalleriesFromItemContentId();
+$galleryContentIds = $gContent->getParentGalleries();
 $gBitSmarty->assign( 'galleryContentIds', $galleryContentIds );
 
 $gallery = new TreasuryGallery();

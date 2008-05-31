@@ -40,11 +40,19 @@
 
 						{textarea label="Description"}{$galInfo.data}{/textarea}
 
+						<div class="row">
+							{formlabel label="File Comments" for="treasury-comments"}
+							{forminput}
+								<input type="checkbox" id="treasury-comments" name="preferences[allow_comments]" value="y" {if $gContent->getPreference('allow_comments')}checked="checked" {/if}/>
+								{formhelp note="Allow users to leave comments to files in this gallery."}
+							{/forminput}
+						</div>
+
 						{* not yet implemented - xing
 						<div class="row">
 							{formlabel label="Private Gallery" for="treasury-is_private"}
 							{forminput}
-							<input type="checkbox" id="treasury-is_private" name="is_private" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
+								<input type="checkbox" id="treasury-is_private" name="is_private" value="y" {if $galInfo.is_private}checked="checked" {/if}/>
 								{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
 							{/forminput}
 						</div>

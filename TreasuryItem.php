@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.65 2008/05/30 19:08:29 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.66 2008/05/31 10:36:59 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.65 $
+ * @version      $Revision: 1.66 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -196,7 +196,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @access public
 	 * @return array of gallery content ids
 	 */
-	function getGalleriesFromItemContentId() {
+	function getParentGalleries() {
 		if( $this->isValid() ) {
 			$query = "SELECT ls.`content_id`
 				FROM `".BIT_DB_PREFIX."treasury_map` trm
@@ -375,7 +375,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = FALSE;
 		if( $this->isValid() && !empty( $pPermName ) ) {
 			// get all gallery content ids
-			$galleryContentIds = $this->getGalleriesFromItemContentId();
+			$galleryContentIds = $this->getParentGalleries();
 			if( !empty( $galleryContentIds ) && is_array( $galleryContentIds ) ) {
 				$gallery = new TreasuryGallery();
 				foreach( $galleryContentIds as $gcid ) {
@@ -536,6 +536,29 @@ class TreasuryItem extends TreasuryBase {
 		if( $this->isValid() ) {
 			$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."treasury_map` WHERE `item_content_id`=?", array( $this->mContentId ) );
 		}
+	}
+
+	/**
+	 * isCommentable 
+	 * 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure
+	 */
+	function isCommentable() {
+		global $gGallery;
+
+		// if we have a loaded gallery, we just use that to work out if we can add comments to this image
+		if( is_object( $gGallery ) ) {
+			return $gGallery->isCommentable();
+		}
+
+		$ret = FALSE;
+		if( $parents = $this->getParentGalleries() ) {
+			$gal = current( $parents );
+			$query = "SELECT `pref_value` FROM `".BIT_DB_PREFIX."liberty_content_prefs` WHERE `content_id` = ? AND `pref_name` = ?";
+			$ret = ( $this->mDb->getOne( $query, array( $gal['content_id'], 'allow_comments' )) == 'y' );
+		}
+		return $ret;
 	}
 }
 ?>

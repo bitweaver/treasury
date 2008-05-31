@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.44 2008/05/30 19:04:42 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.45 2008/05/31 10:36:58 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.44 $
+ * @version      $Revision: 1.45 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -387,6 +387,9 @@ class TreasuryGallery extends TreasuryBase {
 		}
 
 		// Individual gallery preference store - dealt with by LibertyContent::store();
+		if( empty( $pParamHash['preferences']['allow_comments'] )) {
+			$pParamHash['preferences']['allow_comments'] = NULL;
+		}
 		$pParamHash['preferences_store'] = !empty( $pParamHash['preferences'] ) ? $pParamHash['preferences'] : NULL;
 
 		// structure store
