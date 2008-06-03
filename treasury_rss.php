@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.7 2008/06/03 16:20:25 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.8 2008/06/03 16:31:15 wjames5 Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -67,7 +67,12 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 
 		$item->date         = ( int )$feed->getField( 'last_modified' );
 		$item->source       = 'http://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
-		$item->author       = $gBitUser->getDisplayName( FALSE, $feed->mInfo );
+
+		$userHash = array( 'user_id' =>$feed->getField('user_id') );
+		$user = $gBitUser->getUserInfo( $userHash );
+		if ( isset( $user['email'] ) ){
+			$item->author		= $user['email'];
+		}
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 5000 );
 		$item->descriptionHtmlSyndicated = FALSE;
