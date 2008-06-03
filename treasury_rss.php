@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.6 2008/05/28 05:16:53 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.7 2008/06/03 16:20:25 wjames5 Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -54,7 +54,7 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	foreach( $feeds as $feed ) {
 		$item               = new FeedItem();
 		$item->title        = $feed->getTitle();
-		$item->link         = $feed->getField( 'display_url' );
+		$item->link         = BIT_BASE_URI.$feed->getField( 'display_url' );
 		if( !empty( $feed->mInfo['thumbnail_url']['medium'] )) {
 			$item->description  = '<a href="'.$feed->getField( 'display_url' ).'"><img src="'.$feed->mInfo['thumbnail_url']['medium'].'" /></a>';
 		}
