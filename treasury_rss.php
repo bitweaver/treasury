@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.9 2008/06/03 16:45:58 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.10 2008/06/03 16:50:33 wjames5 Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -71,7 +71,7 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 		$userHash = array( 'user_id' =>$feed->getField('user_id') );
 		$user = $gBitUser->getUserInfo( $userHash );
 		if ( isset( $user['email'] ) ){
-			$item->author		= $user['email'];
+			$item->author		= $user['email']." (".$gBitUser->getDisplayName( FALSE, $feed->mInfo ).")";
 		}
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 5000 );
