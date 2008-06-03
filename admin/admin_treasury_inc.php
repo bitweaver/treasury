@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.15 2007/07/12 14:47:41 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.16 2008/06/03 09:42:12 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -157,6 +157,7 @@ if( !empty( $_REQUEST['treasury_settings'] ) ) {
 		}
 	}
 	$gBitSystem->storeConfig( 'treasury_gallery_list_thumb', ( !empty( $_REQUEST['treasury_gallery_list_thumb'] ) ? $_REQUEST['treasury_gallery_list_thumb'] : NULL ), TREASURY_PKG_NAME );
+	$gBitSystem->storeConfig( 'treasury_gallery_view_thumb', ( !empty( $_REQUEST['treasury_gallery_view_thumb'] ) ? $_REQUEST['treasury_gallery_view_thumb'] : NULL ), TREASURY_PKG_NAME );
 	$gBitSystem->storeConfig( 'treasury_item_list_thumb', ( !empty( $_REQUEST['treasury_item_list_thumb'] ) ? $_REQUEST['treasury_item_list_thumb'] : NULL ), TREASURY_PKG_NAME );
 	$gBitSystem->storeConfig( 'treasury_item_view_thumb', ( !empty( $_REQUEST['treasury_item_view_thumb'] ) ? $_REQUEST['treasury_item_view_thumb'] : NULL ), TREASURY_PKG_NAME );
 

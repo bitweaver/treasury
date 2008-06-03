@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.6 2007/07/18 16:14:31 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.7 2008/06/03 09:42:12 squareing Exp $ *}
 {strip}
 {form}
 	<input type="hidden" name="page" value="{$page}" />
@@ -27,8 +27,16 @@
 				<div class="row">
 					{formlabel label="Gallery Thumbnail Size"}
 					{forminput}
+						{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_view_thumb" selected=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
+						{formhelp note="This is the size of the gallery image when viewing the gallery."}
+					{/forminput}
+				</div>
+
+				<div class="row">
+					{formlabel label="Gallery List Thumbnail Size"}
+					{forminput}
 						{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_list_thumb" selected=$gBitSystem->getConfig('treasury_gallery_list_thumb')}
-						{formhelp note="This is the size of the gallery image if one is uploaded."}
+						{formhelp note="This is the size of the gallery image when viewing the gallery list."}
 					{/forminput}
 				</div>
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.45 2008/05/31 10:36:58 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.46 2008/06/03 09:42:11 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.45 $
+ * @version      $Revision: 1.46 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -235,16 +235,13 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'] );
-				if( !empty( $pListHash['get_item_count'] ) ) {
-					$aux['item_count']     = $struct->getSubTree( $aux['structure_id'] );
-				}
+				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], $gBitSystem->getConfig( 'treasury_gallery_list_thumb', 'small' ));
 				// deal with the parsing
-				$parseHash['format_guid']     = $aux['format_guid'];
-				$parseHash['content_id']      = $aux['content_id'];
-				$parseHash['user_id']		  = $aux['user_id'];
-				$parseHash['data']			  = $aux['data'];
-				$aux['parsed_data'] = $this->parseData( $parseHash );
+				$parseHash['format_guid']  = $aux['format_guid'];
+				$parseHash['content_id']   = $aux['content_id'];
+				$parseHash['user_id']      = $aux['user_id'];
+				$parseHash['data']         = $aux['data'];
+				$aux['parsed_data']        = $this->parseData( $parseHash );
 
 				// sucky additional query to fetch item number without subselect
 				if( $gBitDbType == 'mysql' || $gBitDbType == 'mysqli' ) {
@@ -588,9 +585,9 @@ class TreasuryGallery extends TreasuryBase {
 			$pContentId = $this->mContentId;
 		}
 
-		if( @BitBase::verifyId( $pContentId ) && $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )) {
+		if( @BitBase::verifyId( $pContentId ) && $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' )) {
 			if( empty( $pSize )) {
-				$pSize = $gBitSystem->getConfig( 'treasury_gallery_list_thumb' );
+				$pSize = $gBitSystem->getConfig( 'treasury_gallery_view_thumb', 'small' );
 			}
 			$ret = liberty_fetch_thumbnail_url( $this->getGalleryThumbBaseUrl( $pContentId ), $pSize );
 		}
