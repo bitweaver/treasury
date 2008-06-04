@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.2 2006/12/18 16:20:37 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.3 2008/06/04 12:41:31 wjames5 Exp $
  * @package fisheye
  * @subpackage modules
  */
@@ -11,6 +11,8 @@ global $gQueryUserId, $module_rows, $module_params, $module_title, $gContent;
  * required setup
  */
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
+// this has the stuff we need from the form
+extract( $moduleParams );
 
 $item = new TreasuryItem();
 $display = TRUE;
@@ -37,7 +39,8 @@ $listHash['sort_mode'] = $sort_mode;
 
 $items = $item->getList( $listHash );
 
-if( empty( $module_title ) && $items ) {
+// vd( $moduleParams );
+if( empty( $moduleParams['title'] ) && $items ) {
 	$moduleTitle = '';
 	if( !empty( $module_params['sort_mode'] ) ) {
 		if( $module_params['sort_mode'] == 'random' ) {
