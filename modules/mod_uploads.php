@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.3 2008/06/04 12:41:31 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.4 2008/06/04 12:48:42 squareing Exp $
  * @package fisheye
  * @subpackage modules
  */
 
-global $gQueryUserId, $module_rows, $module_params, $module_title, $gContent;
+global $gQueryUserId, $gContent;
 
 /**
  * required setup
