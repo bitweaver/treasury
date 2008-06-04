@@ -1,6 +1,6 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.3 2008/05/28 19:05:47 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.4 2008/06/04 12:14:24 wjames5 Exp $ *}
 {strip}
-{if $gBitSystem->isPackageActive( 'fisheye' ) && $modItems}
+{if $gBitSystem->isPackageActive( 'treasury' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
 		<ul class="data">
 			{foreach from=$modItems item=modItem}
