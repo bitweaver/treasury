@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.24 2008/05/31 10:36:59 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.25 2008/06/05 21:30:24 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -64,7 +64,7 @@ if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
 if( !empty( $_REQUEST['reprocess_upload'] )) {
 	if( !empty( $gContent->mInfo['source_file'] ) && is_file( $gContent->mInfo['source_file'] )) {
 		// check to see if the file is ok to be deleted
-		if(( $nuke = LibertyAttachable::validateStoragePath( $gContent->mInfo['source_file'] )) && is_file( $nuke )) {
+		if(( $nuke = LibertyMime::validateStoragePath( $gContent->mInfo['source_file'] )) && is_file( $nuke )) {
 			// first we need to move the file out of the way
 			$tmpfile = str_replace( "//", "/", tempnam( TEMP_PKG_PATH, TREASURY_PKG_NAME ) );
 			rename( $gContent->mInfo['source_file'], $tmpfile );

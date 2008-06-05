@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.47 2008/06/04 14:35:17 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.48 2008/06/05 21:30:24 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.47 $
+ * @version      $Revision: 1.48 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -566,7 +566,7 @@ class TreasuryGallery extends TreasuryBase {
 
 		if( @BitBase::verifyId( $pContentId ) ) {
 			// getStorageBranch is a private function, so this is a no-no but necessary until LA offers something better
-			$ret = LibertyAttachable::getStorageBranch( 'gallery_thumbnails/'.$pContentId, NULL, TREASURY_PKG_NAME );
+			$ret = LibertyMime::getStorageBranch( 'gallery_thumbnails/'.$pContentId, NULL, TREASURY_PKG_NAME );
 		}
 		return $ret;
 	}
