@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.25 2008/06/05 21:30:24 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.26 2008/06/06 05:49:42 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -77,9 +77,6 @@ if( !empty( $_REQUEST['reprocess_upload'] )) {
 			$_FILES['file']['error']    = 0;
 
 			$_REQUEST['update_file'] = TRUE;
-
-			// remove the dir to make sure we don't cause problems with existing files
-			unlink_r( dirname( $nuke ));
 		}
 	} else {
 		$feedback['error'] = tra( 'The file could not be reprocessed. There was a problem locating the original file.' );
