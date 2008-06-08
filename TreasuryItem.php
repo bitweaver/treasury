@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.66 2008/05/31 10:36:59 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.67 2008/06/08 16:44:46 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.66 $
+ * @version      $Revision: 1.67 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -55,11 +55,11 @@ class TreasuryItem extends TreasuryBase {
 	/**
 	 * load the treasury item
 	 *
-	 * @param $pPluginParameters parameters passed on to the plugin during laod
+	 * @param $pPluginParams parameters passed on to the plugin during laod
 	 * @return bool TRUE on success, FALSE if it's not valid
 	 * @access public
 	 **/
-	function load( $pPluginParameters = NULL ) {
+	function load( $pPluginParams = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId )) {
 			global $gBitSystem;
 
@@ -94,7 +94,7 @@ class TreasuryItem extends TreasuryBase {
 				//$this->mInfo['download_url'] = $this->getDownloadUrl();
 
 				// LibertyMime will load the attachment details
-				LibertyMime::load();
+				LibertyMime::load( NULL, $pPluginParams );
 
 				// parse the data after parent load so we have our html prefs
 				$this->mInfo['parsed_data'] = $this->parseData();
