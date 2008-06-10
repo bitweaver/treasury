@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.14 2007/10/29 21:59:02 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/Attic/download.php,v 1.15 2008/06/10 17:59:08 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -25,7 +25,7 @@ $gContent->verifyGalleryPermissions( 'p_treasury_download_item' );
 //       - add hit after download is complete
 //       - add hit as soon as user executes this script
 //$gContent->addHit();
-if( $download_function = $gTreasurySystem->getPluginFunction( $gContent->mInfo['plugin_guid'], 'download_function' )) {
+if( $download_function = $gLibertySystem->getPluginFunction( $gContent->mInfo['plugin_guid'], 'download_function' )) {
 	if( $download_function( $gContent->mInfo )) {
 		// add hit if download was successful
 		$gContent->addHit();
