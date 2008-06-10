@@ -82,6 +82,8 @@ then
 	find . -name "*" -type f -exec perl -i -wpe "s/galleries/$gslcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Galleries/$gsccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'gallery' with $glcase
+	find . -name "*" -type f -exec perl -i -wpe "s/file gallery/$glcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/File Gallery/$gccase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/gallery/$glcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Gallery/$gccase/g" {} \;
 
@@ -91,9 +93,14 @@ then
 	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryItem/$icccase/g" {} \;
 	# we must do plural first
 	echo Case sensitive Search and Replace all occureneces of 'items' with your $islcase
+	find . -name "*" -type f -exec perl -i -wpe "s/upload files/upload $islcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/Upload Files/Upload $isccase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'item' with your $ilcase
+	find . -name "*" -type f -exec perl -i -wpe "s/upload file/upload $ilcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/Upload file/Upload $iccase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/Uploaded file/$iccase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/item/$ilcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
 
