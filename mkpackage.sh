@@ -91,9 +91,13 @@ then
 	echo Case sensitive Search and Replace all occureneces of 'items' with your $islcase
 	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/files/$islcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/Files/$isccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'item' with your $ilcase
 	find . -name "*" -type f -exec perl -i -wpe "s/item/$ilcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/file/$ilcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/File/$iccase/g" {} \;
 
 	echo Case sensitive Search and Replace all occureneces of 'treasury' with $lcase
 	find . -name "*" -type f -exec perl -i -wpe "s/treasury/$lcase/g" {} \;
