@@ -87,7 +87,7 @@
 		{/form}
 
 		<br />
-		<a href="{$gContent->mInfo.display_url}">Return to file</a>
+		<a href="{$gContent->mInfo.display_url}">{tr}Return to file{/tr}</a>
 
 		<h2>{tr}Preview{/tr}</h2>
 		<p class="formhelp">{tr}Please note items remaining in the browser cache might still display the previous item even if the upload worked. If this occurs, empty out the browser cache and return to the file page.{/tr}</p>
