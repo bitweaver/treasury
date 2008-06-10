@@ -100,7 +100,7 @@ then
 	echo Case sensitive Search and Replace all occureneces of 'item' with your $ilcase
 	find . -name "*" -type f -exec perl -i -wpe "s/upload file/upload $ilcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Upload file/Upload $iccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Uploaded file/$iccase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/Uploaded File/$iccase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/item/$ilcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
 
