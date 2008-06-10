@@ -86,7 +86,7 @@ then
 	echo Case sensitive Search and Replace all occureneces of 'treasuryitem' with $islcase
 	find . -name "*" -type f -exec perl -i -wpe "s/treasuryitem/$iclcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYITEM/$icucase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TreasryItem/$icccase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryItem/$icccase/g" {} \;
 	# we must do plural first
 	echo Case sensitive Search and Replace all occureneces of 'items' with your $islcase
 	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
