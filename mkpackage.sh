@@ -28,7 +28,8 @@ ccase=`echo "$lcase" | perl -n -e "print ucfirst"`
 
 gclcase=`echo "bit$gallery" | perl -ne "print lc"`
 gcucase=`echo "BIT$gallery" | perl -ne "print uc"`
-gcccase=`echo "Bit$glcase" | perl -n -e "print ucfirst"`
+galleryuc=`echo "$gallery" | perl -n -e "print ucfirst"`
+gcccase="Bit$galleryuc"
 
 glcase=`echo "$gallery" | perl -ne "print lc"`
 gucase=`echo "$gallery" | perl -ne "print uc"`
@@ -40,7 +41,8 @@ gsccase=`echo "$gslcase" | perl -n -e "print ucfirst"`
 
 iclcase=`echo "bit$item" | perl -ne "print lc"`
 icucase=`echo "BIT$item" | perl -ne "print uc"`
-icccase=`echo "Bit$ilcase" | perl -n -e "print ucfirst"`
+itemuc=`echo "$item" | perl -n -e "print ucfirst"`
+icccase="Bit$itemuc"
 
 ilcase=`echo "$item" | perl -ne "print lc"`
 iucase=`echo "$item" | perl -ne "print uc"`
@@ -70,55 +72,55 @@ then
 	# From http://www.bitweaver.org/wiki/TreasuryPackage
 	echo Rename Treasury
 	mv treasury $lcase; cd $lcase
-	echo Case sensitive Search and Replace all occureneces of 'treasurygallery' with your treasurygallery class name
+	echo Case sensitive Search and Replace all occureneces of 'treasurygallery' with $gclcase
 	find . -name "*" -type f -exec perl -i -wpe "s/treasurygallery/$gclcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYGALLERY/$gcucase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryGallery/$gcccase/g" {} \;
-	echo Case sensitive Search and Replace all occureneces of 'galleries' with your galleries name
+	echo Case sensitive Search and Replace all occureneces of 'galleries' with $gslcase
 	find . -name "*" -type f -exec perl -i -wpe "s/galleries/$gslcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Galleries/$gsccase/g" {} \;
-	echo Case sensitive Search and Replace all occureneces of 'gallery' with your gallery name
+	echo Case sensitive Search and Replace all occureneces of 'gallery' with $glcase
 	find . -name "*" -type f -exec perl -i -wpe "s/gallery/$glcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Gallery/$gccase/g" {} \;
 
-	echo Case sensitive Search and Replace all occureneces of 'treasuryitem' with your item class name
+	echo Case sensitive Search and Replace all occureneces of 'treasuryitem' with $islcase
 	find . -name "*" -type f -exec perl -i -wpe "s/treasuryitem/$iclcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYITEM/$icucase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TreasryItem/$icccase/g" {} \;
 	# we must do plural first
-	echo Case sensitive Search and Replace all occureneces of 'items' with your items name
+	echo Case sensitive Search and Replace all occureneces of 'items' with your $islcase
 	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
-	echo Case sensitive Search and Replace all occureneces of 'item' with your item name
+	echo Case sensitive Search and Replace all occureneces of 'item' with your $ilcase
 	find . -name "*" -type f -exec perl -i -wpe "s/item/$ilcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
 
-	echo Case sensitive Search and Replace all occureneces of 'treasurys' with your package name
-	find . -name "*" -type f -exec perl -i -wpe "s/treasurys/$lcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYS/$ucase/g" {} \;
+	echo Case sensitive Search and Replace all occureneces of 'treasury' with $lcase
+	find . -name "*" -type f -exec perl -i -wpe "s/treasury/$lcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/TREASURY/$ucase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Treasury/$ccase/g" {} \;
 
-	echo Rename all the files containing 'treasurygallery' with your class name
-	find . -name "*treasurygallery*" -exec rename sample $gclcase {} \;
-	find . -name "*TreasuryGallery*" -exec rename Sample $gcccase {} \;
-	echo Rename all the files containing 'treasuryitem' with your class name
-	find . -name "*treasuryitem*" -exec rename sample $iclcase {} \;
-	find . -name "*TreasuryItem*" -exec rename Sample $icccase {} \;
-	echo Rename all the files containing 'galleries' with your class name
-	find . -name "*galleries*" -exec rename sample $gslcase {} \;
-	find . -name "*Galleries*" -exec rename Sample $gsccase {} \;
-	echo Rename all the files containing 'items' with your class name
-	find . -name "*items*" -exec rename sample $islcase {} \;
-	find . -name "*Items*" -exec rename Sample $isccase {} \;
-	echo Rename all the files containing 'gallery' with your class name
-	find . -name "*gallery*" -exec rename sample $glcase {} \;
-	find . -name "*Gallery*" -exec rename Sample $gccase {} \;
-	echo Rename all the files containing 'item' with your class name
-	find . -name "*item*" -exec rename sample $ilcase {} \;
-	find . -name "*Item*" -exec rename Sample $iccase {} \;
-	echo Rename all the files containing 'treasury' with your package name
-	find . -name "*treasury*" -exec rename sample $lcase {} \;
-	find . -name "*Treasury*" -exec rename Sample $ccase {} \;
+	echo Rename all the files containing 'treasurygallery' with $gclcase
+	find . -name "*treasurygallery*" -exec rename treasurygallery $gclcase {} \;
+	find . -name "*TreasuryGallery*" -exec rename TreasuryGallery $gcccase {} \;
+	echo Rename all the files containing 'treasuryitem' with $iclcase
+	find . -name "*treasuryitem*" -exec rename treasuryitem $iclcase {} \;
+	find . -name "*TreasuryItem*" -exec rename TreasuryItem $icccase {} \;
+	echo Rename all the files containing 'galleries' with $gslcase 
+	find . -name "*galleries*" -exec rename galleries $gslcase {} \;
+	find . -name "*Galleries*" -exec rename Galleries $gsccase {} \;
+	echo Rename all the files containing 'items' with $islcase 
+	find . -name "*items*" -exec rename items $islcase {} \;
+	find . -name "*Items*" -exec rename Items $isccase {} \;
+	echo Rename all the files containing 'gallery' with $glcase 
+	find . -name "*gallery*" -exec rename gallery $glcase {} \;
+	find . -name "*Gallery*" -exec rename Gallery $gccase {} \;
+	echo Rename all the files containing 'item' with $ilcase 
+	find . -name "*item*" -exec rename item $ilcase {} \;
+	find . -name "*Item*" -exec rename Item $iccase {} \;
+	echo Rename all the files containing 'treasury' with $lcase 
+	find . -name "*treasury*" -exec rename treasury $lcase {} \;
+	find . -name "*Treasury*" -exec rename Treasury $ccase {} \;
 	cd ..
 
 	echo
