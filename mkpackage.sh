@@ -10,7 +10,7 @@ fi
 
 package=$1
 gallery=$2
-galleriess=$3
+galleries=$3
 item=$4
 items=$5
 
@@ -26,16 +26,16 @@ lcase=`echo "$package" | perl -ne "print lc"`
 ucase=`echo "$package" | perl -ne "print uc"`
 ccase=`echo "$lcase" | perl -n -e "print ucfirst"`
 
-gclcase=`echo "bit$treasury" | perl -ne "print lc"`
-gcucase=`echo "BIT$treasury" | perl -ne "print uc"`
+gclcase=`echo "bit$gallery" | perl -ne "print lc"`
+gcucase=`echo "BIT$gallery" | perl -ne "print uc"`
 gcccase=`echo "Bit$glcase" | perl -n -e "print ucfirst"`
 
-glcase=`echo "$treasury" | perl -ne "print lc"`
-gucase=`echo "$treasury" | perl -ne "print uc"`
+glcase=`echo "$gallery" | perl -ne "print lc"`
+gucase=`echo "$gallery" | perl -ne "print uc"`
 gccase=`echo "$glcase" | perl -n -e "print ucfirst"`
 
-gslcase=`echo "$treasurys" | perl -ne "print lc"`
-gsucase=`echo "$treasurys" | perl -ne "print uc"`
+gslcase=`echo "$galleries" | perl -ne "print lc"`
+gsucase=`echo "$galleries" | perl -ne "print uc"`
 gsccase=`echo "$gslcase" | perl -n -e "print ucfirst"`
 
 iclcase=`echo "bit$item" | perl -ne "print lc"`
@@ -46,8 +46,8 @@ ilcase=`echo "$item" | perl -ne "print lc"`
 iucase=`echo "$item" | perl -ne "print uc"`
 iccase=`echo "$ilcase" | perl -n -e "print ucfirst"`
 
-islcase=`echo "$item" | perl -ne "print lc"`
-isucase=`echo "$item" | perl -ne "print uc"`
+islcase=`echo "$items" | perl -ne "print lc"`
+isucase=`echo "$items" | perl -ne "print uc"`
 isccase=`echo "$islcase" | perl -n -e "print ucfirst"`
 
 # Check that the package doesn't already exist
@@ -86,7 +86,7 @@ then
 	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYITEM/$icucase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TreasryItem/$icccase/g" {} \;
 	# we must do plural first
-	echo Case sensitive Search and Replace all occureneces of 'items' with your item name
+	echo Case sensitive Search and Replace all occureneces of 'items' with your items name
 	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'item' with your item name
