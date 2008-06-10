@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.67 2008/06/08 16:44:46 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.68 2008/06/10 18:01:07 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.67 $
+ * @version      $Revision: 1.68 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -91,7 +91,6 @@ class TreasuryItem extends TreasuryBase {
 				$this->mInfo                 = $aux;
 				$this->mInfo['title']        = $this->getTitle( $aux );
 				$this->mInfo['display_url']  = $this->getDisplayUrl();
-				//$this->mInfo['download_url'] = $this->getDownloadUrl();
 
 				// LibertyMime will load the attachment details
 				LibertyMime::load( NULL, $pPluginParams );
@@ -414,40 +413,6 @@ class TreasuryItem extends TreasuryBase {
 		if( !empty( $pTitle ) && !empty( $pMixed ) ) {
 			if( $gBitSystem->isPackageActive( 'treasury' ) ) {
 				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryItem::getDisplayUrl( $pMixed['content_id'], $pMixed, $pStructureId ).'">'.htmlspecialchars( $pTitle ).'</a>';
-			}
-		}
-		return $ret;
-	}
-
-	/**
-	 * Generate URL to view this item in detail
-	 * 
-	 * @param numeric $pFileHash['content_id'] Content id of the item we want to create the url for
-	 * @param numeric $pFileHash['source_file'] Relative path to file in question
-	 * @param array $pMixed Mixed hash of information
-	 * @access public
-	 * @return URL
-	 */
-	function getDownloadUrl( $pFileHash = NULL ) {
-		global $gBitSystem;
-		$ret = NULL;
-		// try to get the correct content_id from anywhere possible
-		if( @BitBase::verifyId( $pFileHash['content_id'] )) {
-			$contentId = $pFileHash['content_id'];
-		} elseif( $this->isValid() ) {
-			$contentId = $this->mContentId;
-		}
-
-		// if we have a source_file to check and it doesn't exist, we don't return download url
-		if( !empty( $pFileHash['source_file'] ) && !is_file( $pFileHash['source_file'] )) {
-			$contentId = NULL;
-		}
-
-		if( @BitBase::verifyId( $contentId ) ) {
-			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-				$ret = TREASURY_PKG_URL.'download/'.$contentId;
-			} else {
-				$ret = TREASURY_PKG_URL.'download.php?content_id='.$contentId;
 			}
 		}
 		return $ret;
