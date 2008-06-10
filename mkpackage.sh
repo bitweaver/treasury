@@ -77,6 +77,8 @@ then
 	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYGALLERY/$gcucase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryGallery/$gcccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'galleries' with $gslcase
+	find . -name "*" -type f -exec perl -i -wpe "s/file galleries/$gslcase/g" {} \;
+	find . -name "*" -type f -exec perl -i -wpe "s/File Galleries/$gsccase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/galleries/$gslcase/g" {} \;
 	find . -name "*" -type f -exec perl -i -wpe "s/Galleries/$gsccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'gallery' with $glcase
