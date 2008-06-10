@@ -4,7 +4,14 @@ echo
 # Validate Input
 if [ $# == 0 ]
 then
-	echo "Usage: mkpackage packagename, gallery, galleries, item, items"
+	echo "Usage: mkpackage.sh packagename, gallery, galleries, item, items
+How to use this script
+	You should copy this script from the treasury package folder to your root directory and run it from there.
+	@param packagename - as it says, what you would like to rename this package. It is common this is the same as the gallery replacement value
+	@param gallery - your new name for gallery objects	(example: podcast)
+	@param galleries - the plural form of gallery		(example: podcasts)
+	@param item - your new name for item objects		(example: episode)
+	@param items - the plural form of item			(example: episodes)"
 	exit
 fi
 
@@ -72,42 +79,42 @@ then
 	# From http://www.bitweaver.org/wiki/TreasuryPackage
 	echo Rename Treasury
 	mv treasury $lcase; cd $lcase
+	# regex strings - ORDER IS IMPORTANT!
 	echo Case sensitive Search and Replace all occureneces of 'treasurygallery' with $gclcase
-	find . -name "*" -type f -exec perl -i -wpe "s/treasurygallery/$gclcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYGALLERY/$gcucase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryGallery/$gcccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/treasurygallery/$gclcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/TREASURYGALLERY/$gcucase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/TreasuryGallery/$gcccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'galleries' with $gslcase
-	find . -name "*" -type f -exec perl -i -wpe "s/file galleries/$gslcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/File Galleries/$gsccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/galleries/$gslcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Galleries/$gsccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/file galleries/$gslcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/File Galleries/$gsccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/galleries/$gslcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Galleries/$gsccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'gallery' with $glcase
-	find . -name "*" -type f -exec perl -i -wpe "s/file gallery/$glcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/File Gallery/$gccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/gallery/$glcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Gallery/$gccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/file gallery/$glcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/File Gallery/$gccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/gallery/$glcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Gallery/$gccase/g" {} \;
 
 	echo Case sensitive Search and Replace all occureneces of 'treasuryitem' with $islcase
-	find . -name "*" -type f -exec perl -i -wpe "s/treasuryitem/$iclcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TREASURYITEM/$icucase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TreasuryItem/$icccase/g" {} \;
-	# we must do plural first
+	find . -type f -exec perl -i -wpe "s/treasuryitem/$iclcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/TREASURYITEM/$icucase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/TreasuryItem/$icccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'items' with your $islcase
-	find . -name "*" -type f -exec perl -i -wpe "s/upload files/upload $islcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Upload Files/Upload $isccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/upload files/upload $islcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Upload Files/Upload $isccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/items/$islcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Items/$isccase/g" {} \;
 	echo Case sensitive Search and Replace all occureneces of 'item' with your $ilcase
-	find . -name "*" -type f -exec perl -i -wpe "s/upload file/upload $ilcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Upload file/Upload $iccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Uploaded File/$iccase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/item/$ilcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/upload file/upload $ilcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Upload file/Upload $iccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Uploaded File/$iccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/(?\!<\s)item(?!=)/$ilcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
 
 	echo Case sensitive Search and Replace all occureneces of 'treasury' with $lcase
-	find . -name "*" -type f -exec perl -i -wpe "s/treasury/$lcase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/TREASURY/$ucase/g" {} \;
-	find . -name "*" -type f -exec perl -i -wpe "s/Treasury/$ccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/treasury/$lcase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/TREASURY/$ucase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/Treasury/$ccase/g" {} \;
 
 	echo Rename all the files containing 'treasurygallery' with $gclcase
 	find . -name "*treasurygallery*" -exec rename treasurygallery $gclcase {} \;
