@@ -109,7 +109,8 @@ then
 	find . -type f -exec perl -i -wpe "s/Upload file/Upload $iccase/g" {} \;
 	find . -type f -exec perl -i -wpe "s/Uploaded File/$iccase/g" {} \;
 	find . -type f -exec perl -i -wpe "s/(?\!<\s)item(?!=)/$ilcase/g" {} \;
-	find . -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
+	# find . -type f -exec perl -i -wpe "s/Item/$iccase/g" {} \;
+	find . -type f -exec perl -i -wpe "s/(?<\!(eed|\badd))Item/$isccase/g" {} \;
 
 	echo Case sensitive Search and Replace all occureneces of 'treasury' with $lcase
 	find . -type f -exec perl -i -wpe "s/treasury/$lcase/g" {} \;
