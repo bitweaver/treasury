@@ -103,4 +103,17 @@ if( !empty( $_GET['update_content'] )) {
 	echo "   All content has been updated";
 }
 echo "</pre>";
+
+// some stuff that has to happen regardless of what the user wants
+if( empty( $_GET )) {
+	if( !$gBitSystem->isFeatureActive( "treasury_item_list_thumb_custom" )) {
+		if( $galleryContentIds = $gBitSystem->mDb->getCol( "SELECT `content_id` FROM `".BIT_DB_PREFIX."treasury_gallery`" ) ) {
+			foreach( $galleryContentIds as $gid ) {
+				$query    = "DELETE FROM `".BIT_DB_PREFIX."liberty_content_prefs` WHERE `content_id` = ? AND `pref_name` = ? ";
+				$bindvars = array( $gid, 'item_list_thumb_size' );
+				$result   = $gBitSystem->mDb->query( $query, $bindvars );
+			}
+		}
+	}
+}
 ?>

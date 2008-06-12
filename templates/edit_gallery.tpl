@@ -66,16 +66,15 @@
 									{formhelp note="Pick the size of preview icon in the file list."}
 								{/forminput}
 							</div>
-						{else}
-							<input type="hidden" name="preferences[item_list_thumb_size]" value="{$gBitSystem->getConfig('treasury_item_list_thumb')}" />
 						{/if}
 
-						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' )}
+						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) || $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' )}
+							{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
 							{if $galInfo.thumbnail_url}
 								<div class="row">
 									{formlabel label="Gallery Thumbnail" for=""}
 									{forminput}
-									<img alt="Gallery Thumbnail" src="{$galInfo.thumbnail_url}{$refresh}" />
+										<img alt="Gallery Thumbnail" src="{$galInfo.thumbnail_url.$galThumb}{$refresh}" />
 										{formhelp note=""}
 									{/forminput}
 								</div>

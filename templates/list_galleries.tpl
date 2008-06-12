@@ -22,8 +22,9 @@
 							<h2><a href="{$gallery.display_url}">{$gallery.title|escape}</a></h2>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gallery.thumbnail_url}
+							{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_list_thumb')}
 							<a href="{$gallery.display_url}">
-								<img class="thumb" src="{$gallery.thumbnail_url}" alt="{$gallery.title|escape}" title="{$gallery.title|escape}" />
+								<img class="thumb" src="{$gallery.thumbnail_url.$galThumb}" alt="{$gallery.title|escape}" title="{$gallery.title|escape}" />
 							</a>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_desc' )}

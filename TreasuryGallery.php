@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.48 2008/06/05 21:30:24 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.49 2008/06/12 07:14:40 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.48 $
+ * @version      $Revision: 1.49 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -90,7 +90,7 @@ class TreasuryGallery extends TreasuryBase {
 				$this->mInfo['display_name']  = BitUser::getTitle( $this->mInfo );
 				$this->mInfo['editor']        = ( isset( $row['modifier_real_name'] ) ? $row['modifier_real_name'] : $row['modifier_user'] );
 				$this->mInfo['display_url']   = $this->getDisplayUrl();
-				$this->mInfo['thumbnail_url'] = $this->getGalleryThumbUrl();
+				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( $this->getGalleryThumbBaseUrl(), NULL, NULL, FALSE );
 
 				// get extra information if required
 				if( $pExtras ) {
@@ -235,7 +235,7 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-				$aux['thumbnail_url']      = $this->getGalleryThumbUrl( $aux['content_id'], $gBitSystem->getConfig( 'treasury_gallery_list_thumb', 'small' ));
+				$aux['thumbnail_url']      = liberty_fetch_thumbnails( $this->getGalleryThumbBaseUrl( $aux['content_id'] ), NULL, NULL, FALSE );
 				// deal with the parsing
 				$parseHash['format_guid']  = $aux['format_guid'];
 				$parseHash['content_id']   = $aux['content_id'];

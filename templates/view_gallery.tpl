@@ -36,9 +36,10 @@
 		{/if}
 
 		<div class="description">
-			{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) and $gContent->mInfo.thumbnail_url}
+			{if $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' ) and $gContent->mInfo.thumbnail_url}
+				{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
 				<a href="{$gContent->mInfo.display_url}">
-					<img class="thumb" src="{$gContent->mInfo.thumbnail_url}{$refresh}" alt="{$gContent->mInfo.title|escape}" title="{$gContent->mInfo.title|escape}" />
+					<img class="thumb" src="{$gContent->mInfo.thumbnail_url.$galThumb}{$refresh}" alt="{$gContent->mInfo.title|escape}" title="{$gContent->mInfo.title|escape}" />
 				</a>
 			{/if}
 			<br />
@@ -50,13 +51,14 @@
 		{if $gContent->mItems}
 			{form id=formid}
 				<input type="hidden" name="structure_id" value="{$gContent->mStructureId}" />
+				{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size',$gBitSystem->getConfig('treasury_item_list_thumb'))}
 				<table class="data">
 					<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
 					<tr>
-						{if $gContent->getPreference('item_list_thumb_size')}
-							<th style="width:10%"></th>
+						{if $thumbsize}
+							<th style="width:1%"></th>
 						{/if}
-						<th style="width:50%">
+						<th style="width:60%">
 							{smartlink ititle=Name isort=title icontrol=$listInfo structure_id=$gContent->mStructureId}
 						</th>
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_creator' )}
@@ -77,8 +79,7 @@
 
 					{foreach from=$gContent->mItems item=item}
 						<tr class="{cycle values="odd,even"}">
-							{if $gContent->getPreference('item_list_thumb_size')}
-								{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size')}
+							{if $thumbsize}
 								<td style="text-align:center;">
 									{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
 										<a href="{$item->mInfo.display_url}">

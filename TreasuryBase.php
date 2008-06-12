@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.11 2008/05/30 13:17:25 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.12 2008/06/12 07:14:40 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.11 $
+ * @version      $Revision: 1.12 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -136,32 +136,6 @@ class TreasuryBase extends LibertyMime {
 			$sql = "UPDATE `".BIT_DB_PREFIX."fisheye_gallery_image_map` SET `item_position` = ?
 					WHERE `item_content_id` = ? AND `gallery_content_id` = ? AND (`item_position` IS NULL OR `item_position`!=?)";
 			$rs = $this->mDb->query( $sql, array( $newPosition, $this->mContentId, $pGalleryContentId, $newPosition ) );
-		}
-	}
-
-	/**
-	 * update the preference of all galleries at once
-	 * 
-	 * @param array $pPrefName 
-	 * @param array $pPrefValue 
-	 * @access public
-	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
-	 */
-	function batchStorePreference( $pPrefName, $pPrefValue = NULL ) {
-		global $gBitSystem;
-		// get all gallery contentIds
-		if( $galleryContentIds = $gBitSystem->mDb->getCol( "SELECT `content_id` FROM `".BIT_DB_PREFIX."treasury_gallery`" ) ) {
-			foreach( $galleryContentIds as $gid ) {
-				$query    = "DELETE FROM `".BIT_DB_PREFIX."liberty_content_prefs` WHERE `content_id`=? AND `pref_name`=?";
-				$bindvars = array( $gid, $pPrefName );
-				$result   = $this->mDb->query( $query, $bindvars );
-				if( !is_null( $pPrefValue ) ) {
-					$query = "INSERT INTO `".BIT_DB_PREFIX."liberty_content_prefs` (`content_id`,`pref_name`,`pref_value`) VALUES(?, ?, ?)";
-					$bindvars[]=$pPrefValue;
-					$result = $this->mDb->query( $query, $bindvars );
-					$this->mPrefs[$pPrefName] = $pPrefValue;
-				}
-			}
 		}
 	}
 

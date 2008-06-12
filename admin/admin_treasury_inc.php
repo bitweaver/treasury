@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.16 2008/06/03 09:42:12 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.17 2008/06/12 07:14:40 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -160,11 +160,5 @@ if( !empty( $_REQUEST['treasury_settings'] ) ) {
 	$gBitSystem->storeConfig( 'treasury_gallery_view_thumb', ( !empty( $_REQUEST['treasury_gallery_view_thumb'] ) ? $_REQUEST['treasury_gallery_view_thumb'] : NULL ), TREASURY_PKG_NAME );
 	$gBitSystem->storeConfig( 'treasury_item_list_thumb', ( !empty( $_REQUEST['treasury_item_list_thumb'] ) ? $_REQUEST['treasury_item_list_thumb'] : NULL ), TREASURY_PKG_NAME );
 	$gBitSystem->storeConfig( 'treasury_item_view_thumb', ( !empty( $_REQUEST['treasury_item_view_thumb'] ) ? $_REQUEST['treasury_item_view_thumb'] : NULL ), TREASURY_PKG_NAME );
-
-	if( !empty( $_REQUEST['treasury_item_list_thumb'] ) && empty( $_REQUEST['treasury_item_list_thumb_custom'] ) ) {
-		include_once( TREASURY_PKG_PATH.'TreasuryBase.php' );
-		$treasuryBase = new TreasuryBase();
-		$treasuryBase->batchStorePreference( 'item_list_thumb_size', !empty( $_REQUEST['treasury_item_list_thumb'] ) ? $_REQUEST['treasury_item_list_thumb'] : NULL );
-	}
 }
 ?>
