@@ -28,7 +28,7 @@
 	</div>
 
 	<div class="body">
-		{if $galleryStyle == 'list' }
+		{if $listInfo.galleryStyle == 'list' }
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 			{if count($subtree) gt 1}
 				{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}	
@@ -52,7 +52,7 @@
 		{if $gContent->mItems}
 			{form id=formid}
 				<input type="hidden" name="structure_id" value="{$gContent->mStructureId}" />
-				{if $galleryStyle == 'auto_flow'}
+				{if $listInfo.galleryStyle == 'auto_flow'}
 					{if $gBrowserInfo.browser eq 'ie'}
 						<!-- we need this friggin table for MSIE that images don't float outside of the designated area - once again a hack for our favourite browser - grrr -->
 						<table style="border:0;border-collapse:collapse;border-spacing:0; width:auto;"><tr><td>
@@ -77,14 +77,14 @@
 						</td></tr></table>
 					{/if}
 					<div class="clear"></div>
-				{elseif $galleryStyle == 'grid'}
-					{assign var=thumbsize value='small'}
+				{elseif $listInfo.galleryStyle == 'grid'}
+					{assign var=thumbsize value=$listInfo.thumbsize}
 					<table class="thumbnailblock">
 						{counter assign="imageCount" start="0" print=false}
 						{assign var="max" value=100}
-						{assign var="tdWidth" value="`$max/$cols_per_page`"}
+						{assign var="tdWidth" value="`$max/$listInfo.cols_per_page`"}
 						{foreach from=$gContent->mItems item=item key=itemContentId}
-							{if $imageCount % $cols_per_page == 0}
+							{if $imageCount % $listInfo.cols_per_page == 0}
 								<tr > <!-- Begin Image Row -->
 							{/if}
 	
@@ -94,20 +94,24 @@
 									<h3><a href="{$item->mInfo.display_url}">{$item->mInfo.title|escape}</a></h3>
 									<a href="{$item->getDisplayUrl()|escape}">
 										<img src="{$item->mInfo.thumbnail_url.$thumbsize}" alt="{$item->mInfo.title|escape}" title="{$item->mInfo.title|escape}" />
-									</a>
+									</a><br />
 									{if $gBitSystem->isFeatureActive( 'treasury_item_list_desc' ) && $item->mInfo.data}
-										{$item->mInfo.parsed_data}
+										{$item->mInfo.parsed_data}<br />
 									{/if}
+									{if $gContent->isOwner( $item->mInfo ) || $gBitUser->isAdmin()}
+										<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
+										<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
+									{/if}									
 								{/box}
 							</td> <!-- End Image Cell -->
 							{counter}
 
-							{if $imageCount % $cols_per_page == 0}
+							{if $imageCount % $listInfo.cols_per_page == 0}
 								</tr> <!-- End Image Row -->
 							{/if}
 						{/foreach}
 
-						{if $imageCount % $cols_per_page != 0}</tr>{/if}
+						{if $imageCount % $listInfo.cols_per_page != 0}</tr>{/if}
 					</table>
 				{else}
 				{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size',$gBitSystem->getConfig('treasury_item_list_thumb'))}

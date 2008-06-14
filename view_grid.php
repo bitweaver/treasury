@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.1 2008/06/14 07:19:02 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.2 2008/06/14 13:11:08 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -89,14 +89,17 @@ $listHash['root_structure_id'] = $gContent->mInfo['root_structure_id'];
 $listHash['structure_id']      = $gContent->mInfo['structure_id'];
 $listHash['sort_mode']         = !empty( $_REQUEST['sort_mode'] ) ? $_REQUEST['sort_mode'] : 'created_desc';
 
+$listHash['listInfo']['cols_per_page'] = 4;
+$listHash['listInfo']['rows_per_page'] = 3;
+$listHash['listInfo']['galleryStyle'] = 'grid';
+$listHash['listInfo']['thumbsize'] = 'small';
+$listHash['max_records'] = $listHash['listInfo']['cols_per_page'] * $listHash['listInfo']['rows_per_page'];
 $gContent->loadItems( $listHash );
 
 // pagination related settings
 $listHash['listInfo']['parameters']['structure_id'] = $gContent->mStructureId;
 $gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 $gBitSmarty->assign( 'feedback', $feedback );
-$gBitSmarty->assign( 'galleryStyle', 'grid' );
-$gBitSmarty->assign( 'cols_per_page', 3 );
 
 $gContent->addHit();
 
