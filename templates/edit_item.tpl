@@ -22,7 +22,7 @@
 
 					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
 
-					{include file=$gContent->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
+					{include file=$gLibertySystem->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 
 					<div class="row">
 						{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}
@@ -93,7 +93,7 @@
 		<p class="formhelp">{tr}Please note items remaining in the browser cache might still display the previous item even if the upload worked. If this occurs, empty out the browser cache and return to the file page.{/tr}</p>
 
 		<div class="preview">
-			{include file=$gContent->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
+			{include file=$gLibertySystem->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 		</div>
 	</div><!-- end .body -->
 </div><!-- end .treasury -->
