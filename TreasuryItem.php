@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.68 2008/06/10 18:01:07 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.69 2008/06/18 09:20:58 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.68 $
+ * @version      $Revision: 1.69 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -326,7 +326,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @param array $pStoreHash 
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
-	 * @note: files are taken from $_FILES directly
+	 * note: files are taken from $_FILES directly
 	 */
 	function batchStore( &$pStoreHash ) {
 		// we will use the information in $_FILES
