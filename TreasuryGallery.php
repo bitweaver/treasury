@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.49 2008/06/12 07:14:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.50 2008/06/23 21:56:13 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.49 $
+ * @version      $Revision: 1.50 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -90,7 +90,10 @@ class TreasuryGallery extends TreasuryBase {
 				$this->mInfo['display_name']  = BitUser::getTitle( $this->mInfo );
 				$this->mInfo['editor']        = ( isset( $row['modifier_real_name'] ) ? $row['modifier_real_name'] : $row['modifier_user'] );
 				$this->mInfo['display_url']   = $this->getDisplayUrl();
-				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( $this->getGalleryThumbBaseUrl(), NULL, NULL, FALSE );
+				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( array(
+					'storage_path' => $this->getGalleryThumbBaseUrl(),
+					'mime_image'   => FALSE
+				));
 
 				// get extra information if required
 				if( $pExtras ) {
@@ -235,7 +238,10 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['display_name']       = BitUser::getTitle( $aux );
 				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
-				$aux['thumbnail_url']      = liberty_fetch_thumbnails( $this->getGalleryThumbBaseUrl( $aux['content_id'] ), NULL, NULL, FALSE );
+				$aux['thumbnail_url']      = liberty_fetch_thumbnails( array(
+					'storage_path' => $this->getGalleryThumbBaseUrl( $aux['content_id'] ),
+					'mime_image'   => FALSE
+				));
 				// deal with the parsing
 				$parseHash['format_guid']  = $aux['format_guid'];
 				$parseHash['content_id']   = $aux['content_id'];
@@ -567,29 +573,6 @@ class TreasuryGallery extends TreasuryBase {
 		if( @BitBase::verifyId( $pContentId ) ) {
 			// getStorageBranch is a private function, so this is a no-no but necessary until LA offers something better
 			$ret = LibertyMime::getStorageBranch( 'gallery_thumbnails/'.$pContentId, NULL, TREASURY_PKG_NAME );
-		}
-		return $ret;
-	}
-
-	/**
-	 * Get the full URL to the needed thumbnail
-	 *
-	 * @param numeric $pContentId Content ID of gallery in question
-	 * @access public
-	 * @return Path to thumbnail, FALSE on failure
-	 */
-	function getGalleryThumbUrl( $pContentId = NULL, $pSize = NULL ) {
-		global $gBitSystem;
-		$ret = FALSE;
-		if( !@BitBase::verifyId( $pContentId ) && $this->isValid() ) {
-			$pContentId = $this->mContentId;
-		}
-
-		if( @BitBase::verifyId( $pContentId ) && $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' )) {
-			if( empty( $pSize )) {
-				$pSize = $gBitSystem->getConfig( 'treasury_gallery_view_thumb', 'small' );
-			}
-			$ret = liberty_fetch_thumbnail_url( $this->getGalleryThumbBaseUrl( $pContentId ), $pSize );
 		}
 		return $ret;
 	}
