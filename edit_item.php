@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.26 2008/06/06 05:49:42 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.27 2008/06/25 22:21:27 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -141,5 +141,5 @@ $gBitSmarty->assign( 'galleryList', $galleryList );
 $gContent->invokeServices( 'content_edit_function' );
 
 $gBitSmarty->assign( 'feedback', ( !empty( $feedback ) ? $feedback : NULL ) );
-$gBitSystem->display( "bitpackage:treasury/edit_item.tpl", tra( "Edit File" ) );
+$gBitSystem->display( "bitpackage:treasury/edit_item.tpl", tra( "Edit File" ) , array( 'display_mode' => 'edit' ));
 ?>

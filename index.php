@@ -16,5 +16,5 @@ $galleryList = $gContent->getList( $listHash );
 $gBitSmarty->assign( 'galleryList', $galleryList );
 $gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 
-$gBitSystem->display( 'bitpackage:treasury/list_galleries.tpl', tra( 'File Galleries' ) );
+$gBitSystem->display( 'bitpackage:treasury/list_galleries.tpl', tra( 'File Galleries' ) , array( 'display_mode' => 'display' ));
 ?>

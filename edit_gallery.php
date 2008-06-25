@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.17 2007/09/14 17:57:04 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.18 2008/06/25 22:21:27 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -89,5 +89,5 @@ $gContent->invokeServices( 'content_edit_function' );
 $gBitSmarty->assign( 'imageSizes', get_image_size_options() );
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 
-$gBitSystem->display( 'bitpackage:treasury/edit_gallery.tpl', tra( 'Edit File Gallery' ) );
+$gBitSystem->display( 'bitpackage:treasury/edit_gallery.tpl', tra( 'Edit File Gallery' ) , array( 'display_mode' => 'edit' ));
 ?>
