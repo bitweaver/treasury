@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.26 2008/06/25 22:21:27 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.27 2008/06/26 07:28:19 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -58,5 +58,5 @@ $gContent->invokeServices( 'content_edit_function' );
 
 $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 
-$gBitSystem->display( 'bitpackage:treasury/upload.tpl', tra( 'Upload File' ) , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:treasury/upload.tpl', tra( 'Upload File' ) , array( 'display_mode' => 'edit' ));
 ?>

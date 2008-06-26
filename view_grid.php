@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.3 2008/06/25 22:21:27 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.4 2008/06/26 07:28:19 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -104,5 +104,5 @@ $gBitSmarty->assign( 'feedback', $feedback );
 $gContent->addHit();
 
 // Display the template
-$gBitSystem->display( 'bitpackage:treasury/view_grid.tpl', tra( 'View Gallery' ) , array( 'display_mode' => 'display' ));
+$gBitSystem->display( 'bitpackage:treasury/view_grid.tpl', tra( 'View Gallery' ) , array( 'display_mode' => 'list' ));
 ?>
