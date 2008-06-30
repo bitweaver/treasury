@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.11 2008/06/03 17:34:34 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.12 2008/06/30 19:29:17 squareing Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -8,6 +8,8 @@
 /**
  * Initialization
  */
+// ensure that we use absolute URLs everywhere
+$_REQUEST['uri_mode'] = TRUE;
 require_once( "../bit_setup_inc.php" );
 
 $gBitSystem->verifyPackage( 'treasury' );
@@ -16,6 +18,7 @@ $gBitSystem->verifyFeature( 'treasury_rss' );
 
 require_once( TREASURY_PKG_PATH."TreasuryItem.php" );
 require_once( RSS_PKG_PATH."rss_inc.php" );
+
 
 $rss->title       = $gBitSystem->getConfig( 'treasury_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'File Galleries' ) );
 $rss->description = $gBitSystem->getConfig( 'treasury_rss_description', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'RSS Feed' ) );
@@ -47,16 +50,20 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	$feeds = $treasury->getList( $listHash );
 
 	// set the rss link
-	$rss->link = 'http://'.$_SERVER['HTTP_HOST'].TREASURY_PKG_URL;
+	$rss->link = TREASURY_PKG_URI;
 
 	require_once $gBitSmarty->_get_plugin_filepath( 'modifier', 'display_bytes' );
 	// get all the data ready for the feed creator
 	foreach( $feeds as $feed ) {
-		$item               = new FeedItem();
-		$item->title        = $feed->getTitle();
-		$item->link         = BIT_BASE_URI.$feed->getField( 'display_url' );
+		$item = new FeedItem();
+
+		$item->title  = $feed->getTitle();
+		$item->link   = $feed->getField( 'display_url' );
+		$item->date   = ( int )$feed->getField( 'last_modified' );
+		$item->source = BIT_ROOT_URI;
+
 		if( !empty( $feed->mInfo['thumbnail_url']['medium'] )) {
-			$item->description  = '<a href="'.BIT_BASE_URI.$feed->getField( 'display_url' ).'"><img src="'.$feed->mInfo['thumbnail_url']['medium'].'" /></a>';
+			$item->description  = '<a href="'.$feed->getField( 'display_url' ).'"><img src="'.$feed->mInfo['thumbnail_url']['medium'].'" /></a>';
 		}
 		$item->description .= "<ul>";
 		if( $feed->getField( 'parsed_data' )) {
@@ -65,13 +72,10 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 		$item->description .= "<li>".tra( 'Filename' ).": {$feed->getField( 'filename' )} [".smarty_modifier_display_bytes( $feed->getField( 'file_size' ) )."]</li>";
 		$item->description .= "</ul>";
 
-		$item->date         = ( int )$feed->getField( 'last_modified' );
-		$item->source       = 'http://'.$_SERVER['HTTP_HOST'].BIT_ROOT_URL;
-
 		$userHash = array( 'user_id' =>$feed->getField('user_id') );
 		$user = $gBitUser->getUserInfo( $userHash );
-		if ( isset( $user['email'] ) ){
-			$item->author		= $user['email']." (".$gBitUser->getDisplayName( FALSE, $feed->mInfo ).")";
+		if( isset( $user['email'] )) {
+			$item->author = $user['email']." (".$gBitUser->getDisplayName( FALSE, $feed->mInfo ).")";
 		}
 
 		$item->descriptionTruncSize = $gBitSystem->getConfig( 'rssfeed_truncate', 5000 );
