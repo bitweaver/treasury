@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.27 2008/06/25 22:21:27 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.28 2008/07/01 09:05:38 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -83,7 +83,7 @@ if( !empty( $_REQUEST['reprocess_upload'] )) {
 	}
 }
 
-if( !empty( $_REQUEST['update_file'] ) ) {
+if( !empty( $_REQUEST['update_file'] )) {
 	// this will override any thumbnails created by the plugin
 	if( !empty( $_FILES['icon']['tmp_name'] ) ) {
 		if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ))) {
@@ -109,8 +109,13 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 		$feedback = $gContent->mErrors;
 	}
 
-	// get everything up to date
-	$gContent->load();
+	// update file settings if plugin-specific changes were made
+	$data = !empty( $_REQUEST['plugin'][$gContent->mInfo['attachment_id']][$gContent->mInfo['attachment_plugin_guid']] ) ? $_REQUEST['plugin'][$gContent->mInfo['attachment_id']][$gContent->mInfo['attachment_plugin_guid']] : array();
+	if( $gContent->updateAttachmentParams( $gContent->mInfo['attachment_id'], $gContent->mInfo['attachment_plugin_guid'], $data )) {
+		$feedback['success'] = tra( "The data was successfully updated." );
+	} else {
+		$feedback['error'] = $gContent->mErrors;
+	}
 
 	// give some feedback if all went well
 	if( empty( $feedback['error'] )) {
@@ -119,6 +124,9 @@ if( !empty( $_REQUEST['update_file'] ) ) {
 
 	// new icons need to be displayed
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
+
+	// get everything up to date
+	$gContent->load();
 }
 
 // move file back to where it was
