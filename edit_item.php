@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.28 2008/07/01 09:05:38 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.29 2008/07/11 18:22:54 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -107,14 +107,6 @@ if( !empty( $_REQUEST['update_file'] )) {
 
 	if( $gContent->store( $_REQUEST )) {
 		$feedback = $gContent->mErrors;
-	}
-
-	// update file settings if plugin-specific changes were made
-	$data = !empty( $_REQUEST['plugin'][$gContent->mInfo['attachment_id']][$gContent->mInfo['attachment_plugin_guid']] ) ? $_REQUEST['plugin'][$gContent->mInfo['attachment_id']][$gContent->mInfo['attachment_plugin_guid']] : array();
-	if( $gContent->updateAttachmentParams( $gContent->mInfo['attachment_id'], $gContent->mInfo['attachment_plugin_guid'], $data )) {
-		$feedback['success'] = tra( "The data was successfully updated." );
-	} else {
-		$feedback['error'] = $gContent->mErrors;
 	}
 
 	// give some feedback if all went well
