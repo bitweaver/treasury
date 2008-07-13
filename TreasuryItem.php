@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.70 2008/07/13 10:01:17 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.71 2008/07/13 10:49:56 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.70 $
+ * @version      $Revision: 1.71 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -347,14 +347,16 @@ class TreasuryItem extends TreasuryBase {
 				if( $import['type'] == 'application/binary' || $import['type'] == 'application/octet-stream' || $import['type'] == 'application/octetstream' ) {
 					$import['type'] = $gBitSystem->lookupMimeType( basename( $file ));
 				}
-				$_FILES['import'] = $import;
+				// pass on details to correct place
+				$pStoreHash['file'][] = $pStoreHash['import'];
+				$_FILES[] = $import;
 			} else {
 				$this->mErrors['import'] = "The file path given was not valid.";
 			}
 		}
 
 		foreach( $_FILES as $upload ) {
-			if( !empty( $upload['tmp_name'] ) ) {
+			if( !empty( $upload['tmp_name'] )) {
 				// we start with a fresh copy every cycle to ensure that our store hash is pristine
 				$item = new TreasuryItem();
 				$storeHash = $pStoreHash;
@@ -363,16 +365,12 @@ class TreasuryItem extends TreasuryBase {
 					$storeHash = array_merge( $storeHash, $storeHash['file'][$i] );
 				}
 
-				// transfer plugin settings --- currently not in use
-				//$storeHash['plugin'] = !empty( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
-
 				$storeHash['upload'] = $upload;
 				$item->store( $storeHash );
-
-				$i++;
 			} else {
-				$item->mErrors['upload'] = tra( "There was an error uploading the file: " ) . $upload['name'];
+				$item->mErrors['upload'] = tra( "There was an error uploading the file: " ).$upload['name'];
 			}
+			$i++;
 		}
 
 		if( $i > 1 ) {

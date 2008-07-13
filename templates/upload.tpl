@@ -71,6 +71,13 @@
 										{formhelp note="Type the path and name to your file in your upload directory. e.g.: public/video.mpg"}
 									{/forminput}
 								</div>
+
+								<div class="row">
+									{formlabel label="Description" for="import_edit"}
+									{forminput}
+										<textarea rows="2" cols="50" name="import[edit]" id="import_edit"></textarea>
+									{/forminput}
+								</div>
 								<hr />
 							{/if}
 
