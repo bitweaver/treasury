@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.50 2008/06/23 21:56:13 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.51 2008/07/13 16:31:00 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.50 $
+ * @version      $Revision: 1.51 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -573,6 +573,28 @@ class TreasuryGallery extends TreasuryBase {
 		if( @BitBase::verifyId( $pContentId ) ) {
 			// getStorageBranch is a private function, so this is a no-no but necessary until LA offers something better
 			$ret = LibertyMime::getStorageBranch( 'gallery_thumbnails/'.$pContentId, NULL, TREASURY_PKG_NAME );
+		}
+		return $ret;
+	}
+	
+	/**
+	* Returns the create/edit url to a gallery
+	* @param number $pContentId a valid content id
+	* @param array $pMixed a hash of params to add to the url  
+	*/
+	function getEditUrl( $pContentId = NULL, $pMixed = NULL ){
+		if( @BitBase::verifyId( $pContentId ) ) {
+			$ret = TREASURY_PKG_URL.'edit_gallery.php?content_id='.$pContentId;
+		} elseif( $this->isValid() ) {
+			$ret = TREASURY_PKG_URL.'edit_gallery.php?content_id='.$this->mContentId;
+		} else {
+			$ret = TREASURY_PKG_URL.'edit_gallery.php'.(!empty( $pMixed )?"?":"");
+		}
+		foreach( $pMixed as $key => $value ){
+			if( $key != "content_id" || ( $key == "content_id" && @BitBase::verifyId( $value ) ) ) {
+				$ret .= (isset($amp)?"&":"").$key."=".$value;
+			}
+			$amp = TRUE;
 		}
 		return $ret;
 	}
