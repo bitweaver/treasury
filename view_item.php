@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.22 2008/06/25 22:21:27 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.23 2008/07/13 16:38:32 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -38,6 +38,10 @@ if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
 		$gGallery->load();
 	}
 }
+
+// invoke services
+$displayHash = array( 'perm_name' => $gContent->mViewContentPerm );
+$gContent->invokeServices( 'content_display_function', $displayHash );
 
 $galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gGallery->mStructureId ) );
 $gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
