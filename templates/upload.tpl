@@ -29,7 +29,6 @@
 								{$gigaPopup}
 								{include file="bitpackage:gigaupload/form_inc.tpl"}
 							{elseif $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' )}
-								<br />
 								<h2>{tr}Upload Files{/tr}</h2>
 								{include file="bitpackage:liberty/edit_format.tpl"}
 								{include file="bitpackage:kernel/upload_slot_inc.tpl"}
@@ -54,6 +53,25 @@
 										/* ]]> */</script>
 									{/forminput}
 								</div>
+							{/if}
+
+							{if $gBitSystem->isFeatureActive( 'treasury_file_import_path' ) && $gBitUser->hasPermission( 'p_treasury_import_item' )}
+								<h2>{tr}Import File{/tr}</h2>
+								<div class="row">
+									{formlabel label="Import File Title" for="import_title"}
+									{forminput}
+										<input type="text" name="import[title]" id="import_title" size="50" />
+									{/forminput}
+								</div>
+
+								<div class="row">
+									{formlabel label="Import file" for="import_file"}
+									{forminput}
+										<input type="text" name="import[file]" id="import_file" />
+										{formhelp note="Type the path and name to your file in your upload directory. e.g.: public/video.mpg"}
+									{/forminput}
+								</div>
+								<hr />
 							{/if}
 
 							<div class="row">

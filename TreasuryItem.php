@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.69 2008/06/18 09:20:58 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.70 2008/07/13 10:01:17 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.69 $
+ * @version      $Revision: 1.70 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -329,8 +329,30 @@ class TreasuryItem extends TreasuryBase {
 	 * note: files are taken from $_FILES directly
 	 */
 	function batchStore( &$pStoreHash ) {
+		global $gBitUser, $gBitSystem;
 		// we will use the information in $_FILES
 		$i = 0;
+		if( !empty( $pStoreHash['import']['file'] ) && $gBitUser->hasPermission( 'p_treasury_import_item' )) {
+			// don't allow sneaky shits to import stuff outside our specified jail
+			$jail = $gBitSystem->getConfig( 'treasury_file_import_path' );
+			$file = realpath( $jail.$pStoreHash['import']['file'] );
+			if( strpos( $file, $jail ) !== FALSE && is_file( $file )) {
+				// this will copy a file instead of move it
+				$import['copy_file'] = TRUE;
+				$import['tmp_name']  = $file;
+				$import['name']      = basename( $file );
+				$import['size']      = filesize( $file );
+				$import['error']     = 0;
+				$import['type']      = $gBitSystem->verifyMimeType( $file );
+				if( $import['type'] == 'application/binary' || $import['type'] == 'application/octet-stream' || $import['type'] == 'application/octetstream' ) {
+					$import['type'] = $gBitSystem->lookupMimeType( basename( $file ));
+				}
+				$_FILES['import'] = $import;
+			} else {
+				$this->mErrors['import'] = "The file path given was not valid.";
+			}
+		}
+
 		foreach( $_FILES as $upload ) {
 			if( !empty( $upload['tmp_name'] ) ) {
 				// we start with a fresh copy every cycle to ensure that our store hash is pristine
@@ -355,7 +377,7 @@ class TreasuryItem extends TreasuryBase {
 
 		if( $i > 1 ) {
 			$pStoreHash['redirect'] = TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] );
-		} else {
+		} elseif( !empty( $storeHash['content_id'] )) {
 			$pStoreHash['redirect'] = TreasuryItem::getDisplayUrl( $storeHash['content_id'] );
 		}
 

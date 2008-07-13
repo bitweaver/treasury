@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.18 2008/07/01 09:11:58 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.19 2008/07/13 10:01:17 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -11,6 +11,11 @@ $treasurySettings = array(
 		'label' => 'Force Download',
 		'note' => "If you set this, the mime type during download will be set to application/force-download forcing the browser to download the content regardless of it's original file type.",
 		'type' => 'checkbox',
+	),
+	'treasury_file_import_path' => array(
+		'label' => 'Import Path',
+		'note' => 'Absolute path to directory you want to use as base to import files from. <strong>For security reasons this has to be the true path and can not have any symbolic links in it.</strong>. <strong>Requires trailing slash</strong>. e.g.: /home/ftp/public/',
+		'type' => 'text',
 	),
 );
 if( !$gBitSystem->isPackageActive( 'gigaupload' ) ) {
