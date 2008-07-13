@@ -95,26 +95,6 @@
 								{/forminput}
 							</div>
 
-							{* i think this should be done on a file by file basis
-							{capture assign=processingOptions}
-								{foreach from=$gLibertySystem->mPlugins item=plugin key=guid}
-									{if $gLibertySystem->isPluginActive( $guid ) && $plugin.processing_options}
-										<div class="row">
-											{formlabel label=$plugin.title for=$guid}
-											{forminput}
-												{$plugin.processing_options}
-											{/forminput}
-										</div>
-									{/if}
-								{/foreach}
-							{/capture}
-
-							{if $processingOptions}
-								<h3>{tr}Processing Options{/tr}</h3>
-								{$processingOptions}
-							{/if}
-							*}
-
 							{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 
 							{if $gBitSystem->isPackageActive( 'gigaupload' )}
