@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.28 2008/06/26 09:57:05 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.29 2008/07/13 09:46:25 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -39,17 +39,19 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 	$gBitSmarty->assign( 'galleryContentIds', $galleryContentIds );
 }
 
-if( !empty( $_REQUEST['treasury_store'] ) && !empty( $_FILES ) ) {
+if( !empty( $_REQUEST['treasury_store'] )) {
 	$treasuryItem = new TreasuryItem();
 	if( $treasuryItem->batchStore( $_REQUEST )) {
 		bit_redirect( $_REQUEST['redirect'] );
+	} else {
+		vd( $treasuryItem->mErrors );
 	}
 }
 
 if( $gBitSystem->isPackageActive( 'gigaupload' ) ) {
 	gigaupload_smarty_setup( TREASURY_PKG_URL.'upload.php' );
 } elseif( $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' ) ) {
-	$gBitThemes->loadAjax( 'mochikit' );
+	// nothing
 } else {
 	$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/libs/multifile.js', TRUE );
 }
