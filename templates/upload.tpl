@@ -68,7 +68,7 @@
 									{formlabel label="Import file" for="ajax_input"}
 									{forminput}
 										<input type="text" name="import[file]" id="ajax_input" size="40" />
-										{formhelp note="Type the path and name to your file in your upload directory. e.g.: public/video.mpg"}
+										{formhelp note="You can click on the load files link below to display available files and it will also insert the correct path to the desired file you wish to import. e.g.: public/video.mpg"}
 									{/forminput}
 								</div>
 
