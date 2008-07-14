@@ -79,7 +79,7 @@
 									{/forminput}
 								</div>
 
-								{include file="bitpackage:liberty/ajax_file_browser.tpl" ajax_path_conf=treasury_file_import_path}
+								{include file="bitpackage:kernel/ajax_file_browser_inc.tpl" ajax_path_conf=treasury_file_import_path}
 								<hr />
 							{/if}
 

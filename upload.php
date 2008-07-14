@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.30 2008/07/14 11:23:22 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.31 2008/07/14 20:54:59 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -62,9 +62,8 @@ $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 
 // get the ajax file browser working
 if( $gBitSystem->isFeatureActive( 'treasury_file_import_path' ) && $gBitUser->hasPermission( 'p_treasury_import_item' )) {
-	// let the file browser know where we're getting the files from
-	//$ajaxConfigName = 'treasury_file_import_path';
-	require_once( LIBERTY_PKG_PATH.'ajax_file_browser.php' );
+	//$_REQUEST['ajax_path_conf'] = 'treasury_file_import_path';
+	require_once( KERNEL_PKG_PATH.'ajax_file_browser_inc.php' );
 }
 
 $gBitSystem->display( 'bitpackage:treasury/upload.tpl', tra( 'Upload File' ) , array( 'display_mode' => 'upload' ));
