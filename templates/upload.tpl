@@ -60,14 +60,14 @@
 								<div class="row">
 									{formlabel label="Import File Title" for="import_title"}
 									{forminput}
-										<input type="text" name="import[title]" id="import_title" size="50" />
+										<input type="text" name="import[title]" id="import_title" size="40" />
 									{/forminput}
 								</div>
 
 								<div class="row">
-									{formlabel label="Import file" for="import_file"}
+									{formlabel label="Import file" for="ajax_input"}
 									{forminput}
-										<input type="text" name="import[file]" id="import_file" />
+										<input type="text" name="import[file]" id="ajax_input" size="40" />
 										{formhelp note="Type the path and name to your file in your upload directory. e.g.: public/video.mpg"}
 									{/forminput}
 								</div>
@@ -75,9 +75,11 @@
 								<div class="row">
 									{formlabel label="Description" for="import_edit"}
 									{forminput}
-										<textarea rows="2" cols="50" name="import[edit]" id="import_edit"></textarea>
+										<textarea rows="2" cols="40" name="import[edit]" id="import_edit"></textarea>
 									{/forminput}
 								</div>
+
+								{include file="bitpackage:liberty/ajax_file_browser.tpl" ajax_path_conf=treasury_file_import_path}
 								<hr />
 							{/if}
 
