@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.29 2008/07/11 18:22:54 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.30 2008/07/14 08:26:17 lsces Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -89,7 +89,7 @@ if( !empty( $_REQUEST['update_file'] )) {
 		if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ))) {
 			if( !empty( $_FILES['icon']['tmp_name'] )) {
 				$fileHash = $_FILES['icon'];
-				$fileHash['dest_path'] = dirname( $gContent->mInfo['source_url'] ).'/';
+				$fileHash['dest_path'] = dirname( $gContent->mInfo['storage_path'] ).'/';
 				$fileHash['source_file'] = $_FILES['icon']['tmp_name'];
 				liberty_clear_thumbnails( $fileHash );
 				liberty_generate_thumbnails( $fileHash );
