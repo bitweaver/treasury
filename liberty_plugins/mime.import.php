@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.1 2008/07/15 09:28:43 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.2 2008/07/15 09:32:23 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.1 $
+ * @version		$Revision: 1.2 $
  * created		Thursday May 08, 2008
  * @package		liberty
  * @subpackage	liberty_mime_handler
@@ -43,10 +43,25 @@ $pluginParams = array (
 );
 $gLibertySystem->registerPlugin( PLUGIN_MIME_GUID_IMPORT, $pluginParams );
 
-function mime_import_upload( &$pCommonObject ) {
+/**
+ * mime_import_upload 
+ * 
+ * @access public
+ * @return void
+ */
+function mime_import_upload() {
 	require_once( KERNEL_PKG_PATH.'ajax_file_browser_inc.php' );
 }
 
+/**
+ * Sanitise and validate data before it's stored - this will also generate all 
+ * required for the default verify function to be happy.
+ * 
+ * @param array $pStoreRow Hash of data that needs to be stored
+ * @param array $pStoreRow['upload'] Hash passed in by $_FILES upload
+ * @access public
+ * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
+ */
 function mime_import_verify( &$pStoreRow ) {
 	global $gBitSystem;
 	$ret = FALSE;
@@ -77,6 +92,15 @@ function mime_import_verify( &$pStoreRow ) {
 	return $ret;
 }
 
+/**
+ * Store the data in the database - this function will hand off the file to the 
+ * correct plugin and use that to store the data. The import plugin will not be 
+ * called again by this file.
+ * 
+ * @param array $pStoreRow File data needed to store details in the database - sanitised and generated in the verify function
+ * @access public
+ * @return TRUE on success, FALSE on failure - $pStoreRow['errors'] will contain reason
+ */
 function mime_import_store( &$pStoreRow ) {
 	global $gLibertySystem;
 	$libertyMime = new LibertyMime();
