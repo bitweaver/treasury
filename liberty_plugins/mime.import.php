@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.2 2008/07/15 09:32:23 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.3 2008/07/17 08:17:52 squareing Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.2 $
+ * @version		$Revision: 1.3 $
  * created		Thursday May 08, 2008
  * @package		liberty
  * @subpackage	liberty_mime_handler
@@ -32,8 +32,9 @@ $pluginParams = array (
 	'description'         => 'This plugin allows you to import a file that has been uploaded to a location outside bitweaver. This might be useful if you upload files using FTP or SSH.',
 	// Templates to display the files
 	'upload_tpl'          => 'bitpackage:treasury/mime_import_upload_inc.tpl',
-	// url to page with options for this plugin
-	'plugin_settings_url' => TREASURY_PKG_URL.'admin/mime_import.php',
+	// url to page with options for this plugin - don't use package constants here to avoid undefined constants error
+	// the package name will be interpreted and converted to <package>_PKG_URL/...
+	'plugin_settings_url' => 'treasury/admin/mime_import.php',
 	// This should be the same for all mime plugins
 	'plugin_type'         => MIME_PLUGIN,
 	// Set this to TRUE if you want the plugin active right after installation
