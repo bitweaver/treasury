@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.4 2008/06/04 12:14:24 wjames5 Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.5 2008/08/12 21:18:46 laetzer Exp $ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'treasury' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
@@ -27,9 +27,8 @@
 						{/if}
 					{/if}
 				</li>
-			{foreachelse}
-				<li></li>
 			{/foreach}
+			<li class="more"><a href="{$smarty.const.TREASURY_PKG_URL}index.php">{tr}Show more{/tr} &hellip;</a></li>
 		</ul>
 	{/bitmodule}
 {/if}
