@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.4 2008/06/04 12:48:42 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.5 2008/08/13 01:36:58 laetzer Exp $
  * @package fisheye
  * @subpackage modules
  */
@@ -29,7 +29,7 @@ if( $gQueryUserId ) {
 }
 
 // this is needed to avoid wrong sort_modes entered resulting in db errors
-$sort_options = array( 'hits', 'created' );
+$sort_options = array( 'hits', 'created', 'last_modified' );
 if( !empty( $module_params['sort_mode'] ) && in_array( $module_params['sort_mode'], $sort_options ) ) {
 	$sort_mode = $module_params['sort_mode'].'_desc';
 } else {
@@ -49,6 +49,8 @@ if( empty( $moduleParams['title'] ) && $items ) {
 			$moduleTitle = 'Recent';
 		} elseif( $module_params['sort_mode'] == 'hits' ) {
 			$moduleTitle = 'Popular';
+		} elseif( $module_params['sort_mode'] == 'last_modified' ) {
+			$moduleTitle = 'Updated';
 		}
 	} else {
 		$moduleTitle = 'Random';
