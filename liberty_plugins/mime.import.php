@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.3 2008/07/17 08:17:52 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.4 2008/08/14 02:56:52 laetzer Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.3 $
+ * @version		$Revision: 1.4 $
  * created		Thursday May 08, 2008
  * @package		liberty
  * @subpackage	liberty_mime_handler
@@ -28,7 +28,7 @@ $pluginParams = array (
 	'verify_function'     => 'mime_import_verify',
 	'store_function'      => 'mime_import_store',
 	// Brief description of what the plugin does
-	'title'               => 'Import a an uploaded file',
+	'title'               => 'Import an uploaded file',
 	'description'         => 'This plugin allows you to import a file that has been uploaded to a location outside bitweaver. This might be useful if you upload files using FTP or SSH.',
 	// Templates to display the files
 	'upload_tpl'          => 'bitpackage:treasury/mime_import_upload_inc.tpl',
