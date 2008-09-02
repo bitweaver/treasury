@@ -1,8 +1,8 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.5 2008/08/12 21:18:46 laetzer Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.6 2008/09/02 16:08:25 laetzer Exp $ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'treasury' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}
-		<ul class="data">
+		<ul>
 			{foreach from=$modItems item=modItem}
 				<li class="{cycle values='odd,even'} item">
 					<a href="{$modItem->mInfo.display_url}" title="{$modItem->mInfo.title|escape} - {$modItem->mInfo.last_modified|bit_short_datetime}, by {displayname user=$modItem->mInfo.modifier_user real_name=$modItem->mInfo.modifier_real_name nolink=1}{if (strlen($modItem->mInfo.title) > $maxlen) AND ($maxlen > 0)}, {$modItem->mInfo.title|escape}{/if}">
