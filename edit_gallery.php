@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.18 2008/06/25 22:21:27 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.19 2008/09/17 04:45:14 laetzer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -77,7 +77,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove_gallery' || 
 		$msgHash = array(
 			'label' => 'Remove File Gallery',
 			'confirm_item' => $gContent->mInfo['title'].'<br />'.tra( 'and any subgalleries' ),
-			'warning' => 'This will remove the gallery, any syb-galleries and all associated files.',
+			'warning' => 'This will remove the gallery, any sub-galleries and all associated files.',
 		);
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	} else {
