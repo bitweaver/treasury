@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Revision: 1.1 $
+ * @version  $Revision: 1.2 $
  * @package  liberty
  * @subpackage plugins_storage
  */
@@ -157,8 +157,16 @@ function data_file_help() {
 				.'<td>'.tra( "boolean").'<br />'.tra("(optional)").'</td>'
 				.'<td>'.tra( "When you set download, clicking on the file will directly download it as opposed to linking to the file page." ).'</td>'
 			.'</tr>'
+			.'<tr class="even">'
+				.'<td>desc</td>'
+				.'<td>'.tra( "string").'<br />'.tra("(optional)").'</td>'
+				.'<td>'.tra( "The text that will be the link." ).'</td>'
+			.'</tr>'
 		.'</table>'
-		. tra( "Example: ") . "{file id='13' size='small' text-align='center'}";
+		. tra( "Example: ") . ' ' . "{file id='13' size='small' text-align='center'}"
+		. '<br />'
+		. tra("Example: ") . ' ' . "{file id='11' desc='Text, the link will be wrapped around' output=desc}";
+
 	return $help;
 }
 ?>
