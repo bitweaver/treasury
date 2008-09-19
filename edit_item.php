@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.30 2008/07/14 08:26:17 lsces Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.31 2008/09/19 01:34:38 laetzer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -34,7 +34,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 				$feedback['error'] = $gContent->mErrors;
 			}
 		}
-		$gBitSystem->setBrowserTitle( 'Confirm removal of '.$gContent->mInfo['title'] );
+		$gBitSystem->setBrowserTitle( tra('Confirm removal of ').$gContent->mInfo['title'] );
 		$formHash['remove'] = TRUE;
 		$formHash['content_id'] = $_REQUEST['content_id'];
 		$formHash['action'] = 'remove';
@@ -43,9 +43,9 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 //			'<label><input name="force_item_delete" value="true" type="radio" /> '.tra( "Permanently delete file, even if it appears in other galleries." ).'</label>',
 //		);
 		$msgHash = array(
-			'label' => 'Remove File',
+			'label' => tra('Remove File'),
 			'confirm_item' => $gContent->mInfo['title'],
-			'warning' => 'This will permanently remove the file.',
+			'warning' => tra('This will permanently remove the file.'),
 		);
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	} else {

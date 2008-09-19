@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.4 2008/06/26 07:28:19 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.5 2008/09/19 01:34:38 laetzer Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -50,8 +50,8 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 		$formHash['action'] = 'remove';
 		$formHash['structure_id'] = $_REQUEST['structure_id'];
 		$msgHash = array(
-			'label' => 'Remove Files',
-			'warning' => 'This will permanently remove these files.',
+			'label' => tra('Remove Files'),
+			'warning' => tra('This will permanently remove these files.'),
 		);
 		$gBitSystem->confirmDialog( $formHash, $msgHash );
 	}
