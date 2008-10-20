@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.72 2008/10/03 17:20:16 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.73 2008/10/20 21:40:12 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.72 $
+ * @version      $Revision: 1.73 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -49,7 +49,7 @@ class TreasuryItem extends TreasuryBase {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_treasury_view_item';
 		$this->mCreateContentPerm  = 'p_treasury_upload_item';
-		$this->mEditContentPerm  = 'p_treasury_edit_item';
+		$this->mUpdateContentPerm  = 'p_treasury_update_item';
 		$this->mAdminContentPerm = 'p_treasury_admin';
 	}
 

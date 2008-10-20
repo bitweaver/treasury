@@ -1,6 +1,6 @@
 {strip}
 <ul>
-	{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' )}
+	{if $gBitUser->hasPermission( 'p_treasury_create_gallery' )}
 		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery.php">{biticon iname="document-new" iexplain="Create Gallery" ilocation=menu}</a></li>
 		{if $gContent->mStructureId}
 			<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery_structure.php?structure_id={$gContent->mStructureId}">{biticon iname="view-refresh" iexplain="Gallery Hierarchy" ilocation=menu}</a></li>

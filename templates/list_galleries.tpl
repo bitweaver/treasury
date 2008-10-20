@@ -10,7 +10,7 @@
 				{foreach from=$galleryList item=gallery}
 					<li class="item {cycle values='odd,even'}">
 						<div class="floaticon">
-							{if $gBitUser->hasPermission( 'p_treasury_edit_gallery' )}
+							{if $gBitUser->hasPermission( 'p_treasury_update_gallery' )}
 								{smartlink ititle="Edit" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" content_id=$gallery.content_id action=edit}
 								{smartlink ititle="Insert Sub-gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" content_id=$gallery.content_id action=insert}
 							{/if}

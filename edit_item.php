@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.32 2008/10/03 17:20:16 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.33 2008/10/20 21:40:12 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -19,7 +19,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
 require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 // we don't create new items here so we're always dealing with valid content, only check edit perm
-$gContent->verifyEditPermission();
+$gContent->verifyUpdatePermission();
 
 if( !empty( $_REQUEST['refresh'] ) ) {
 	$gBitSmarty->assign( 'refresh', '?refresh='.time() );

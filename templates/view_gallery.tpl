@@ -12,7 +12,7 @@
 		{if $gContent->hasUserPermission( 'p_treasury_upload_item' )}
 			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
 		{/if}
-		{if $gContent->hasEditPermission() || $gContent->hasUserPermission( 'p_treasury_edit_gallery' )}
+		{if $gContent->hasUpdatePermission()}
 			{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
 		{/if}
 		{if $gContent->hasUserPermission( 'p_treasury_create_gallery' )}

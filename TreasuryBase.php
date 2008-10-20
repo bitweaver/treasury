@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.12 2008/06/12 07:14:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.13 2008/10/20 21:40:12 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.12 $
+ * @version      $Revision: 1.13 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -156,7 +156,7 @@ class TreasuryBase extends LibertyMime {
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
 	function hasDownloadPermission() {
-		return( $this->hasEditPermission() || $this->hasUserPermission( 'p_treasury_download_item' ));
+		return( $this->hasUpdatePermission() || $this->hasUserPermission( 'p_treasury_download_item' ));
 	}
 
 	/**

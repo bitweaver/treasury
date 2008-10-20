@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.21 2008/10/03 17:20:16 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_gallery.php,v 1.22 2008/10/20 21:40:12 spiderr Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -19,7 +19,7 @@ require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
 
 if( $gContent->isValid() ){
-	$gContent->verifyEditPermission();
+	$gContent->verifyUpdatePermission();
 }else{
 	$gContent->verifyCreatePermission();
 }
@@ -30,7 +30,7 @@ if( !empty( $gContent->mStructureId ) ) {
 	$_REQUEST['structure_id'] = $gContent->mStructureId;
 
 	// this interferes with the deletion
-	$verifyStructurePermission = 'p_treasury_edit_gallery';
+	$verifyStructurePermission = 'p_treasury_update_gallery';
 	include_once( LIBERTY_PKG_PATH.'edit_structure_inc.php' );
 
 	// get all the nodes in this structure
