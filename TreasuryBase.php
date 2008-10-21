@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.13 2008/10/20 21:40:12 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryBase.php,v 1.14 2008/10/21 02:51:28 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.13 $
+ * @version      $Revision: 1.14 $
  * created      Monday Jul 03, 2006   11:01:55 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -137,16 +137,6 @@ class TreasuryBase extends LibertyMime {
 					WHERE `item_content_id` = ? AND `gallery_content_id` = ? AND (`item_position` IS NULL OR `item_position`!=?)";
 			$rs = $this->mDb->query( $sql, array( $newPosition, $this->mContentId, $pGalleryContentId, $newPosition ) );
 		}
-	}
-
-	/**
-	 * Treasury always needs to have pCheckGlobalPerm set to TRUE by default
-	 * 
-	 * @access public
-	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
-	 */
-	function hasUserPermission( $pPermName, $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
-		return parent::hasUserPermission( $pPermName, $pVerifyAccessControl, $pCheckGlobalPerm );
 	}
 
 	/**
