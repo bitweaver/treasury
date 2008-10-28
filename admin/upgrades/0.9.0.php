@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/admin/upgrades/Attic/2.0.0.php,v 1.2 2008/10/25 09:37:34 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/admin/upgrades/0.9.0.php,v 1.1 2008/10/28 21:15:34 squareing Exp $
  */
 global $gBitInstaller;
 
@@ -12,4 +12,8 @@ $infoHash = array(
 );
 
 $gBitInstaller->registerPackageUpgrade( $infoHash );
+
+$gBitInstaller->registerPackageDependencies( $infoHash, array(
+	'liberty' => array( 'min' => '2.1.0' ),
+));
 ?>
