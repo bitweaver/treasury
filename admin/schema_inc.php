@@ -98,4 +98,9 @@ if( defined( 'RSS_PKG_NAME' )) {
 		array( RSS_PKG_NAME, TREASURY_PKG_NAME.'_rss', 'y'),
 	));
 }
+
+// Package dependencies
+$gBitInstaller->registerDependencies( TREASURY_PKG_NAME, array(
+	'liberty' => array( 'min' => '2.1.0' ),
+));
 ?>
