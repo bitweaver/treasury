@@ -32,7 +32,7 @@ foreach( array_keys( $tables ) AS $tableName ) {
 $gBitInstaller->registerPackageInfo( TREASURY_PKG_NAME, array(
 	'description' => "A flexible file manager.",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-) );
+));
 
 // Sequences
 $sequences = array (
@@ -81,14 +81,13 @@ $gBitInstaller->registerUserPermissions( TREASURY_PKG_NAME, array(
 	// gallery permissions
 	array( 'p_treasury_view_gallery',   'Can view file galleries',                       'basic',      TREASURY_PKG_NAME ),
 	array( 'p_treasury_create_gallery', 'Can create and remove file galleries',          'editors',    TREASURY_PKG_NAME ),
-	array( 'p_treasury_update_gallery',   'Can edit existing file galleries',              'editors',    TREASURY_PKG_NAME ),
+	array( 'p_treasury_update_gallery', 'Can edit existing file galleries',              'editors',    TREASURY_PKG_NAME ),
 	// item permissions
 	array( 'p_treasury_view_item',      'Can view a downloadable file',                  'basic',      TREASURY_PKG_NAME ),
 	array( 'p_treasury_download_item',  'Can download files',                            'basic',      TREASURY_PKG_NAME ),
 	array( 'p_treasury_upload_item',    'Can upload files into existing file galleries', 'registered', TREASURY_PKG_NAME ),
 	array( 'p_treasury_import_item',    'Can import a file from an upload directory',    'editors',    TREASURY_PKG_NAME ),
-	array( 'p_treasury_update_item',      'Can edit already uploaded files',               'editors',    TREASURY_PKG_NAME ),
-	//array( 'p_treasury_delete_item',    'Can delete files other than his own',           'editors',    TREASURY_PKG_NAME ),
+	array( 'p_treasury_update_item',    'Can edit already uploaded files',               'editors',    TREASURY_PKG_NAME ),
 	// admin permission
 	array( 'p_treasury_admin',          'Can admin file galleries and the uploaded files', 'admin',    TREASURY_PKG_NAME ),
 ));
@@ -99,8 +98,13 @@ if( defined( 'RSS_PKG_NAME' )) {
 	));
 }
 
-// Package dependencies
-$gBitInstaller->registerDependencies( TREASURY_PKG_NAME, array(
+$gBitInstaller->registerContentObjects( WIKI_PKG_NAME, array( 
+	'TreasuryItem'    => TREASURY_PKG_PATH.'TreasuryItem.php',
+	'TreasuryGallery' => TREASURY_PKG_PATH.'TreasuryGallery.php',
+));
+
+// Package Requirements
+$gBitInstaller->registerRequirements( TREASURY_PKG_NAME, array(
 	'liberty' => array( 'min' => '2.1.0' ),
 ));
 ?>
