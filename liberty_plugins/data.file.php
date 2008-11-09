@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Revision: 1.2 $
+ * @version  $Revision: 1.3 $
  * @package  liberty
  * @subpackage plugins_storage
  */
@@ -19,7 +19,6 @@ $pluginParams = array (
 	'auto_activate' => FALSE,
 	'requires_pair' => FALSE,
 	'syntax'        => '{file id= }',
-	'path'          => LIBERTY_PKG_PATH.'plugins/data.file.php',
 	'plugin_type'   => DATA_PLUGIN,
 
 	// display icon in quicktags bar

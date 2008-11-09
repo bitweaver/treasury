@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Revision: 1.1 $
+ * @version  $Revision: 1.2 $
  * @package  liberty
  * @subpackage plugins_data
  */
@@ -15,7 +15,7 @@
 // +----------------------------------------------------------------------+
 // | Authors: drewslater <andrew@andrewslater.com>
 // +----------------------------------------------------------------------+
-// $Id: data.flashvideo.php,v 1.1 2008/07/08 07:04:18 squareing Exp $
+// $Id: data.flashvideo.php,v 1.2 2008/11/09 09:08:56 squareing Exp $
 
 /**
  * definitions
@@ -34,8 +34,6 @@ $pluginParams = array (
 	'description'   => tra( "Display flashvideo in content. This requires treasury to be active with the flashvideo plugin available and working. Please view the online help for details." ),
 	'help_function' => 'data_flashvideo_help',
 	'syntax'        => '{flashvideo id= size= align= }',
-	'path'          => LIBERTY_PKG_PATH.'plugins/data.flashvideo.php',
-	'security'      => 'registered',
 	'plugin_type'   => DATA_PLUGIN,
 	'biticon'       => '{biticon ilocation=quicktag iname=video-x-generic iexplain="Flashvideo"}',
 	'taginsert'     => '{flashvideo id= align= description=}',
