@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.53 2008/10/20 21:40:12 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.54 2008/11/18 23:23:41 pppspoonman Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.53 $
+ * @version      $Revision: 1.54 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -200,8 +200,11 @@ class TreasuryGallery extends TreasuryBase {
 			$subselect = "";
 		}
 
+		// don't fetch trg.`is_private` for list, because it conflicts with gks.is_private
+		// and it's not used on list anyway
 		$query = "
-			SELECT trg.*, ls.`root_structure_id`, ls.`parent_id`,
+			SELECT trg.`content_id`, trg.`structure_id`,
+			ls.`root_structure_id`, ls.`parent_id`,
 			lc.`title`, lc.`data`, lc.`user_id`, lc.`content_type_guid`, lc.`created`, lc.`format_guid`, lch.`hits`,
 			uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 			uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $subselect $selectSql
