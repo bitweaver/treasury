@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.23 2008/07/13 16:38:32 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_item.php,v 1.24 2008/12/02 16:04:44 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -56,6 +56,8 @@ if( is_object( $gGallery ) && $gContent->isCommentable() ) {
 	$gBitSmarty->assign( 'item_display_comments', TRUE );
 	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 }
+
+$gContent->addHit();
 
 $gBitSystem->display( "bitpackage:treasury/view_item.tpl", tra( "View File" ) , array( 'display_mode' => 'display' ));
 ?>

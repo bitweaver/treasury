@@ -71,7 +71,7 @@
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
 							<th style="width:10%">
-								{smartlink ititle=Downloads isort="lch.hits" icontrol=$listInfo structure_id=$gContent->mStructureId}
+								{smartlink ititle=Downloads isort="la.hits" icontrol=$listInfo structure_id=$gContent->mStructureId}
 							</th>
 						{/if}
 						<th style="width:20%">{tr}Actions{/tr}</th>
@@ -132,7 +132,7 @@
 							{/if}
 							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
 								<td style="text-align:right;">
-									{$item->mInfo.hits|default:"{tr}none{/tr}"}
+									{$item->mInfo.downloads|default:"{tr}none{/tr}"}
 								</td>
 							{/if}
 							<td class="actionicon">
