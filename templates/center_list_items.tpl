@@ -7,8 +7,8 @@
 
 		<div class="body">
 			{foreach from=$centerItemList item=item}
-				<a href="{$item.display_url}">
-					<img class="thumb" src="{$item.thumbnail_url.avatar}" alt="{$item.title|escape}" title="{$item.title|escape}" />
+				<a href="{$item->mInfo.display_url}">
+					<img class="thumb" src="{$item->mInfo.thumbnail_url.avatar}" alt="{$item->mInfo.title|escape}" title="{$item->mInfo.title|escape}" />
 				</a>
 			{foreachelse}
 				{tr}No records found{/tr}
