@@ -17,11 +17,11 @@
 	</div>
 
 	<div class="body">
-		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-		<div class="description">
-			{$gContent->mInfo.parsed_data}
-		</div>
 		{include file=$gLibertySystem->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
+		<p class="description">
+			{$gContent->mInfo.parsed_data}
+		</p>
 	</div><!-- end .body -->
 
 	{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
