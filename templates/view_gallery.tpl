@@ -35,7 +35,7 @@
 			<hr />
 		{/if}
 
-		<div class="description">
+		<p class="description">
 			{if $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' ) and $gContent->mInfo.thumbnail_url}
 				{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
 				<a href="{$gContent->mInfo.display_url}">
@@ -44,7 +44,7 @@
 			{/if}
 			<br />
 			{$gContent->mInfo.parsed_data}
-		</div>
+		</p>
 
 		{formfeedback hash=$feedback}
 
