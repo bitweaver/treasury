@@ -1,5 +1,5 @@
 {strip}
-{if $gBitUser->hasPermission('p_liberty_attach_attachments') && $gBitSystem->isFeatureActive( 'mime_import_file_import_path' )}
+{if $gBitUser->hasPermission( 'p_liberty_attach_attachments' ) && $gBitSystem->isFeatureActive( 'mime_import_file_import_path' )}
 	<div class="row">
 		{formlabel label="Import file" for="ajax_input"}
 		{forminput}
