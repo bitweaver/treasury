@@ -13,7 +13,7 @@ $tables = array(
 		content_id I4 NOTNULL,
 		plugin_guid C(16) NOTNULL
 		CONSTRAINT '
-			, CONSTRAINT `treasury_item_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+			, CONSTRAINT `treasury_item_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 	",
 
 	'treasury_map' => "
