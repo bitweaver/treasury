@@ -9,13 +9,6 @@ $tables = array(
 			, CONSTRAINT `treasury_gallery_structure_ref` FOREIGN KEY (`structure_id`) REFERENCES `".BIT_DB_PREFIX."liberty_structures`( `structure_id` )'
 	",
 
-	'treasury_item' => "
-		content_id I4 NOTNULL,
-		plugin_guid C(16) NOTNULL
-		CONSTRAINT '
-			, CONSTRAINT `treasury_item_content_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
-	",
-
 	'treasury_map' => "
 		gallery_content_id I4 NOTNULL,
 		item_content_id I4 NOTNULL,

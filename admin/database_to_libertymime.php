@@ -24,17 +24,10 @@ echo '
    Even if you run this update more than once, there should be no damage to the 
    system.
    This is only necessary when you have just upgraded bitweaver from before 2.1.0.
-   <a href="'.TREASURY_PKG_URL.'admin/database_to_libertymime.php?fix_db=1">Update existing Treasury entries to work with the new and improved LibertyMime</a>.
+   <a href="'.TREASURY_PKG_URL.'admin/database_to_libertymime.php?fix_db=1">Disable Treasury plugins</a>.
    After running the above, please visit the <a href="'.LIBERTY_PKG_URL.'admin/plugins.php">liberty plugin page</a> and enable the
    appropriate mime plugins.
 ';
-
-$sql = "
-	SELECT lc.`title`, tri.`plugin_guid`, la.`attachment_id`
-	FROM `".BIT_DB_PREFIX."treasury_item` tri
-	INNER JOIN `".BIT_DB_PREFIX."liberty_content`     lc ON ( tri.`content_id` = lc.`content_id` )
-	INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( tri.`content_id` = la.`content_id` )
-	ORDER BY la.`attachment_id` ASC";
 
 if( !empty( $_GET['fix_db'] )) {
 	// also make sure that all treasury plugins are off
@@ -45,19 +38,6 @@ if( !empty( $_GET['fix_db'] )) {
 	$gLibertySystem->scanAllPlugins( NULL, "mime\." );
 	$gLibertySystem->setActivePlugin( 'mimedefault' );
 	echo "   Required liberty file plugin has been enabled.\n";
-
-	$result = $gBitSystem->mDb->query( $sql );
-	echo "<ul>";
-	while( $aux = $result->fetchRow() ) {
-		echo "<li>Updating: [ attachment_id: {$aux['attachment_id']}] - {$aux['title']}</li>";
-		$gBitSystem->mDb->associateUpdate(
-			BIT_DB_PREFIX."liberty_attachments",
-			array( "attachment_plugin_guid" => str_replace( "_", "", $aux['plugin_guid'] )),
-			array( "attachment_id" => $aux['attachment_id'] )
-		);
-	}
-	echo "</ul>";
-	echo "   All Treasury uploads have been updated.\n";
 }
 
 echo "<br /><br /><br />";
@@ -76,7 +56,13 @@ echo '
 ';
 
 if( !empty( $_GET['update_content'] )) {
-	$atts = $gBitSystem->mDb->getAll( $sql );
+$sql = "
+	SELECT la.`attachment_id`
+	FROM `".BIT_DB_PREFIX."liberty_content` lc
+	INNER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON ( lc.`content_id` = la.`content_id` )
+	WHERE lc.content_type_guid = ? ORDER BY la.`attachment_id` ASC";
+
+	$atts = $gBitSystem->mDb->getAll( $sql, array( 'treasuryitem' ));
 	$query = "SELECT lc.`data`, lc.`title`, lc.`content_id` FROM `".BIT_DB_PREFIX."liberty_content` lc WHERE lc.`data` LIKE ? OR lc.`data` LIKE ?";
 	$content = $gBitSystem->mDb->getAll( $query, array( "%{flashvideo%", "%{file%" ));
 
@@ -88,8 +74,6 @@ if( !empty( $_GET['update_content'] )) {
 	foreach( $atts as $att ) {
 		$attId = $att['attachment_id'];
 		foreach( $content as $c ) {
-			//vd($c['data']);
-			//if( preg_match( "#\{flashvideo[^\}]*\bid *= *{$attId}\s[^\}]*\}#i", $c['data'] )) {
 			$pattern = "#\{(file|flashvideo)([^\}]+)\bid *= *{$attId}\b([^\}]*)\}#i";
 			if( preg_match( $pattern, $c['data'] )) {
 				$data = preg_replace( $pattern, "{attachment$2id={$attId}$3}", $c['data'] );
