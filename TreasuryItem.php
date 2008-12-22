@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.75 2008/12/19 11:35:24 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.76 2008/12/22 12:06:15 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.75 $
+ * @version      $Revision: 1.76 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -495,7 +495,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 * TODO: make it possible to remove only items when they are not part of other galleries
 	 */
-	function expunge( $pExpungeAttachment = TRUE ) {
+	function expunge() {
 		if( $this->isValid() ) {
 			$this->mDb->StartTrans();
 
