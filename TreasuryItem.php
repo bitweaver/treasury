@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.76 2008/12/22 12:06:15 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.77 2008/12/23 14:36:40 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.76 $
+ * @version      $Revision: 1.77 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -323,6 +323,9 @@ class TreasuryItem extends TreasuryBase {
 		} else {
 			$pStoreHash['edit'] = $pStoreHash['edit'];
 		}
+
+		// we've done all our own permission checks
+		$pStoreHash['no_perm_check'] = TRUE;
 
 		return( count( $this->mErrors ) == 0 );
 	}
