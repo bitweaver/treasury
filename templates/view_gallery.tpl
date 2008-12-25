@@ -41,7 +41,7 @@
 		</p>
 
 		{if count($subtree) gt 1}
-			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
+			{include file="bitpackage:treasury/structure_inc.tpl"}
 
 			<hr />
 		{/if}

@@ -23,10 +23,14 @@
 {/if}
 
 {if $current}<strong>{/if}
-	{if $ifile}
-		<a href="{$smarty.const.TREASURY_PKG_URL}{$ifile}?structure_id={$subtree[ix].structure_id}">{$subtree[ix].title|escape}</a>
+	{if $targetfile}
+		<a href="{$smarty.const.TREASURY_PKG_URL}{$targetfile}?structure_id={$subtree[ix].structure_id}">{$subtree[ix].title|escape}</a>
 	{else}
-		<a href="{$smarty.const.TREASURY_PKG_URL}edit_gallery.php?structure_id={$subtree[ix].structure_id}">{$subtree[ix].title|escape}</a>
+		{if $gBitSystem->isFeatureActive( 'pretty_urls' )}
+			<a href="{$smarty.const.TREASURY_PKG_URL}structure/{$subtree[ix].structure_id}">{$subtree[ix].title|escape}</a>
+		{else}
+			<a href="{$smarty.const.TREASURY_PKG_URL}view.php?structure_id={$subtree[ix].structure_id}">{$subtree[ix].title|escape}</a>
+		{/if}
 	{/if}
 {if $current}</strong>{/if}
 

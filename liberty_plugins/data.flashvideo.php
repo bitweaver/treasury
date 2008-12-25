@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Revision: 1.2 $
+ * @version  $Revision: 1.3 $
  * @package  liberty
  * @subpackage plugins_data
  */
@@ -15,7 +15,7 @@
 // +----------------------------------------------------------------------+
 // | Authors: drewslater <andrew@andrewslater.com>
 // +----------------------------------------------------------------------+
-// $Id: data.flashvideo.php,v 1.2 2008/11/09 09:08:56 squareing Exp $
+// $Id: data.flashvideo.php,v 1.3 2008/12/25 19:14:24 squareing Exp $
 
 /**
  * definitions
@@ -57,12 +57,12 @@ function data_flashvideo_help() {
 			.'<tr class="even">'
 				.'<td>size</td>'
 				.'<td>' . tra( "key-words") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "You can change the display size of the video here. This will not influence the download size of the video itself. Possible values are:") . ' <strong>small, medium, large, huge</strong></td>'
+				.'<td>' . tra( "You can change the display size of the video here. This will not influence the download size of the video itself. Possible values are:") . ' <strong>small, medium, large</strong></td>'
 			.'</tr>'
 			.'<tr class="odd">'
 				.'<td>view</td>'
 				.'<td>' . tra( "key-words") . '<br />' . tra("(optional)") . '</td>'
-				.'<td>' . tra( "If you are including a small version of the video, you can easily link to the large version of this film. Possible values are:") . ' <strong>small, medium, large, huge, original</strong></td>'
+				.'<td>' . tra( "If you are including a small version of the video, you can easily link to the large version of this film. Possible values are:") . ' <strong>small, medium, large, original</strong></td>'
 			.'</tr>'
 			.'<tr class="even">'
 				.'<td>width</td>'

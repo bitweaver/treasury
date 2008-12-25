@@ -31,7 +31,7 @@
 		{if $listInfo.galleryStyle == 'list' }
 			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 			{if count($subtree) gt 1}
-				{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}	
+				{include file="bitpackage:treasury/structure_inc.tpl"}
 				<hr />
 			{/if}
 		{/if}
