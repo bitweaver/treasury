@@ -29,12 +29,6 @@
 
 	<div class="body">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
-		{if count($subtree) gt 1}
-			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
-
-			<hr />
-		{/if}
-
 		<p class="description">
 			{if $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' ) and $gContent->mInfo.thumbnail_url}
 				{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
@@ -45,6 +39,12 @@
 			<br />
 			{$gContent->mInfo.parsed_data}
 		</p>
+
+		{if count($subtree) gt 1}
+			{include file="bitpackage:treasury/structure_inc.tpl" ifile="view.php"}
+
+			<hr />
+		{/if}
 
 		{formfeedback hash=$feedback}
 
