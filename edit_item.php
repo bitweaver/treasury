@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.33 2008/10/20 21:40:12 spiderr Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/edit_item.php,v 1.34 2008/12/28 07:50:20 squareing Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -20,10 +20,6 @@ require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
 
 // we don't create new items here so we're always dealing with valid content, only check edit perm
 $gContent->verifyUpdatePermission();
-
-if( !empty( $_REQUEST['refresh'] ) ) {
-	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
-}
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( $_REQUEST['confirm'] ) ) {
 	if( @BitBase::verifyId( $_REQUEST['content_id'] ) ) {
@@ -115,11 +111,8 @@ if( !empty( $_REQUEST['update_file'] )) {
 		$feedback['success'] = tra( 'The settings were successfully applied.' );
 	}
 
-	// new icons need to be displayed
-	$gBitSmarty->assign( 'refresh', '?refresh='.time() );
-
-	// get everything up to date
-	$gContent->load();
+	// now that the file has been updated, we return to the view page
+	bit_redirect( $gContent->mInfo['display_url'] );
 }
 
 // move file back to where it was

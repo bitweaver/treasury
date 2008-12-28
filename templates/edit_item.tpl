@@ -85,16 +85,6 @@
 				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl no_help_tab=1}
 			{/jstabs}
 		{/form}
-
-		<br />
-		<a href="{$gContent->mInfo.display_url}">{tr}Return to file{/tr}</a>
-
-		<h2>{tr}Preview{/tr}</h2>
-		<p class="formhelp">{tr}Please note items remaining in the browser cache might still display the previous item even if the upload worked. If this occurs, empty out the browser cache and return to the file page.{/tr}</p>
-
-		<div class="preview">
-			{include file=$gLibertySystem->getMimeTemplate('view',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
-		</div>
 	</div><!-- end .body -->
 </div><!-- end .treasury -->
 {/strip}
