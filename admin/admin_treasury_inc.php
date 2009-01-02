@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.19 2008/07/13 10:01:17 squareing Exp $
+// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.20 2009/01/02 10:46:34 squareing Exp $
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(
@@ -93,6 +93,11 @@ $itemListing = array(
 		'type' => 'checkbox',
 	),
 	'treasury_item_list_hits' => array(
+		'label' => 'Hits',
+		'note' => 'Display the number of times the file has been viewed.',
+		'type' => 'checkbox',
+	),
+	'treasury_item_list_downloads' => array(
 		'label' => 'Downloads',
 		'note' => 'Display the number of times the file has been downloaded.',
 		'type' => 'checkbox',

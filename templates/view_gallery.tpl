@@ -67,12 +67,22 @@
 							</th>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_size' )}
-							<th style="width:10%">{tr}Size{/tr} /<br />{tr}Duration{/tr}</th>
+							<th style="width:10%">{tr}Size{/tr}</th>
+						{/if}
+						{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
+							<th style="width:10%">
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+									{smartlink ititle=Hits isort="lch.hits" iorder=desc icontrol=$listInfo structure_id=$gContent->mStructureId}
+								{/if}
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' ) && $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
+									<br />
+								{/if}
+								{if $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
+									{smartlink ititle=Downloads isort="la.hits" iorder=desc icontrol=$listInfo structure_id=$gContent->mStructureId}
+								{/if}
+							</th>
 						{/if}
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
-							<th style="width:10%">
-								{smartlink ititle=Downloads isort="la.hits" icontrol=$listInfo structure_id=$gContent->mStructureId}
-							</th>
 						{/if}
 						<th style="width:20%">{tr}Actions{/tr}</th>
 					</tr>
@@ -125,14 +135,19 @@
 									{if $item->mInfo.download_url}
 										{$item->mInfo.file_size|display_bytes}
 									{/if}
-									{if $item->mInfo.prefs.duration}
-										{if $item->mInfo.download_url} / {/if}{$item->mInfo.prefs.duration|display_duration}
-									{/if}
 								</td>
 							{/if}
-							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+							{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' ) || $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
 								<td style="text-align:right;">
-									{$item->mInfo.downloads|default:"{tr}none{/tr}"}
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' )}
+										{$item->mInfo.hits|default:"{tr}none{/tr}"}
+									{/if}
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_hits' ) && $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
+										<br />
+									{/if}
+									{if $gBitSystem->isFeatureActive( 'treasury_item_list_downloads' )}
+										{$item->mInfo.downloads|default:"{tr}none{/tr}"}
+									{/if}
 								</td>
 							{/if}
 							<td class="actionicon">
