@@ -35,9 +35,8 @@ $gBitInstaller->registerSchemaSequences( TREASURY_PKG_NAME, $sequences );
 
 // Indeces
 $indices = array (
-	'treasury_gallery_content_idx' => array( 'table' => 'treasury_gallery', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
-	'treasury_gallery_structure_idx' => array( 'table' => 'treasury_gallery', 'cols' => 'structure_id', 'opts' => array( 'UNIQUE' ) ),
-	'treasury_item_content_idx' => array( 'table' => 'treasury_item', 'cols' => 'content_id', 'opts' => array( 'UNIQUE' ) ),
+	'treasury_gallery_content_idx'   => array( 'table' => 'treasury_gallery', 'cols' => 'content_id'  , 'opts' => array( 'UNIQUE' )),
+	'treasury_gallery_structure_idx' => array( 'table' => 'treasury_gallery', 'cols' => 'structure_id', 'opts' => array( 'UNIQUE' )),
 );
 $gBitInstaller->registerSchemaIndexes( TREASURY_PKG_NAME, $indices );
 
