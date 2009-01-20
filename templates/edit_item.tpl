@@ -75,14 +75,14 @@
 						</div>
 					{/if}
 
-					{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+					{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 					<div class="row submit">
 						<input type="submit" name="update_file" value="{tr}Update File{/tr}" />
 					</div>
 				{/jstab}
 
-				{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl no_help_tab=1}
+				{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl" no_help_tab="1"}
 			{/jstabs}
 		{/form}
 	</div><!-- end .body -->
