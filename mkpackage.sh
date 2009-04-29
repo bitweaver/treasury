@@ -6,7 +6,7 @@ if [ $# == 0 ]
 then
 	echo "Usage: mkpackage.sh packagename, gallery, galleries, item, items
 How to use this script
-	You should copy this script from the treasury package folder to your root directory and run it from there.
+	You should copy this script from the treasury package folder to your bitweaver root directory and run it from there.
 	@param packagename - as it says, what you would like to rename this package. It is common this is the same as the gallery replacement value
 	@param gallery - your new name for gallery objects	(example: podcast)
 	@param galleries - the plural form of gallery		(example: podcasts)
