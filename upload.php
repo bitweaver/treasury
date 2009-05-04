@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.31 2008/07/14 20:54:59 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.32 2009/05/04 16:04:47 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -51,7 +51,7 @@ if( !empty( $_REQUEST['treasury_store'] )) {
 if( $gBitSystem->isPackageActive( 'gigaupload' ) ) {
 	gigaupload_smarty_setup( TREASURY_PKG_URL.'upload.php' );
 } elseif( $gBitSystem->isFeatureActive( 'treasury_extended_upload_slots' ) ) {
-	// nothing
+	$gBitThemes->loadAjax( 'mochikit' );
 } else {
 	$gBitThemes->loadJavascript( UTIL_PKG_PATH.'javascript/libs/multifile.js', TRUE );
 }
