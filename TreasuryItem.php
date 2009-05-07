@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.77 2008/12/23 14:36:40 squareing Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.78 2009/05/07 13:32:49 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.77 $
+ * @version      $Revision: 1.78 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -108,6 +108,9 @@ class TreasuryItem extends TreasuryBase {
 				// TODO: take comments on a gallery basis
 				// work out if this gallery takes comments
 				//$this->mInfo['allow_comments'] = $gBitSystem->isFeatureActive( "treasury_".$this->mInfo['attachment_plugin_guid']."_comments" );
+            } else {
+				// null the content id if load was unsuccessful 
+				$this->mContentId = NULL;
 			}
 		}
 
