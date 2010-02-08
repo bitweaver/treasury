@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.5 2008/09/19 01:34:38 laetzer Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/view_grid.php,v 1.6 2010/02/08 21:27:26 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury
@@ -11,7 +11,7 @@
 /**
  * Setup
  */ 
-require_once( '../bit_setup_inc.php' );
+require_once( '../kernel/setup_inc.php' );
 
 $gBitSystem->verifyPackage( 'treasury' );
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.7 2007/10/09 18:56:36 squareing Exp $
+ * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.8 2010/02/08 21:27:26 wjames5 Exp $
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.7 $
+ * @version		$Revision: 1.8 $
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler
@@ -104,7 +104,7 @@ if( !empty( $argc )) {
 
 // running from cron can cause us not to be in the right dir.
 chdir( dirname( __FILE__ ));
-require_once( '../../bit_setup_inc.php' );
+require_once( '../../kernel/setup_inc.php' );
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
 
 // add some protection for arbitrary thumbail execution.

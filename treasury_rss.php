@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.12 2008/06/30 19:29:17 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_treasury/treasury_rss.php,v 1.13 2010/02/08 21:27:26 wjames5 Exp $
  * @package treasury
  * @subpackage functions
  */
@@ -10,7 +10,7 @@
  */
 // ensure that we use absolute URLs everywhere
 $_REQUEST['uri_mode'] = TRUE;
-require_once( "../bit_setup_inc.php" );
+require_once( "../kernel/setup_inc.php" );
 
 $gBitSystem->verifyPackage( 'treasury' );
 $gBitSystem->verifyPackage( 'rss' );
