@@ -1,7 +1,7 @@
 {if $gBitSystem->isPackageActive('gigaupload')}
 	{include file="bitpackage:gigaupload/js_inc.tpl"}
 {else}
-	{assign var=onSubmit value="javascript:disableSubmit('submitbutton');"}
+	{assign var=onSubmit value="javascript:BitBase.disableSubmit('submitbutton');"}
 	{assign var=id value=treasure}
 {/if}
 
