@@ -97,6 +97,5 @@ $gBitInstaller->registerContentObjects( WIKI_PKG_NAME, array(
 
 // Package Requirements
 $gBitInstaller->registerRequirements( TREASURY_PKG_NAME, array(
-	'liberty' => array( 'min' => '2.1.0' ),
+	'liberty' => array( 'min' => '2.1.4' ),
 ));
-?>

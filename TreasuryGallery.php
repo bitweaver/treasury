@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.54 2008/11/18 23:23:41 pppspoonman Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.55 2010/04/17 22:46:10 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.54 $
+ * @version      $Revision: 1.55 $
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver
@@ -35,7 +35,8 @@ class TreasuryGallery extends TreasuryBase {
 		TreasuryBase::TreasuryBase();
 		$this->registerContentType( TREASURYGALLERY_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => TREASURYGALLERY_CONTENT_TYPE_GUID,
-			'content_description' => 'File Gallery',
+			'content_name' => 'File Gallery',
+			'content_name_plural' => 'File Galleries',
 			'handler_class' => 'TreasuryGallery',
 			'handler_package' => 'treasury',
 			'handler_file' => 'TreasuryGallery.php',

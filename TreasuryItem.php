@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.78 2009/05/07 13:32:49 wjames5 Exp $
+ * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryItem.php,v 1.79 2010/04/17 22:46:10 wjames5 Exp $
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.78 $
+ * @version      $Revision: 1.79 $
  * created      Monday Jul 03, 2006   11:55:41 CEST
  * @package      treasury
  * @copyright   2003-2006 bitweaver
@@ -36,7 +36,7 @@ class TreasuryItem extends TreasuryBase {
 		$this->registerContentType(
 			TREASURYITEM_CONTENT_TYPE_GUID, array(
 				'content_type_guid'   => TREASURYITEM_CONTENT_TYPE_GUID,
-				'content_description' => 'Uploaded File',
+				'content_name' => 'Uploaded File',
 				'handler_class'       => 'TreasuryItem',
 				'handler_package'     => 'treasury',
 				'handler_file'        => 'TreasuryItem.php',
@@ -76,7 +76,7 @@ class TreasuryItem extends TreasuryBase {
 			$ret = array();
 			$query = "
 				SELECT
-					lct.`content_description`,
+					lct.`content_name`,
 					uu.`login`, uu.`real_name`,
 					lc.`content_id`, lc.`format_guid`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 					lch.`hits`
@@ -169,7 +169,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = array();
 		$query = "
 			SELECT
-				lct.`content_description`,
+				lct.`content_name`,
 				uu.`login`, uu.`real_name`,
 				lc.`content_id`, lc.`last_modified`, lc.`user_id`, lc.`title`, lc.`content_type_guid`, lc.`created`, lc.`data`,
 				lch.`hits` $selectSql
