@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/gallery_lookup_inc.php,v 1.3 2006/10/13 12:47:20 lsces Exp $
+ * @version      $Header$
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/item_lookup_inc.php,v 1.5 2007/02/26 18:02:27 squareing Exp $
+ * @version      $Header$
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury

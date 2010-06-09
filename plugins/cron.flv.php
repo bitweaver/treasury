@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/plugins/cron.flv.php,v 1.8 2010/02/08 21:27:26 wjames5 Exp $
+ * @version		$Header$
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.8 $
+ * @version		$Revision$
  * created		Sunday Jul 02, 2006   14:42:13 CEST
  * @package		treasury
  * @subpackage	treasury_mime_handler

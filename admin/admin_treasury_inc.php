@@ -1,5 +1,5 @@
 <?php
-// $Header: /cvsroot/bitweaver/_bit_treasury/admin/admin_treasury_inc.php,v 1.20 2009/01/02 10:46:34 squareing Exp $
+// $Header$
 
 $treasurySettings = array(
 	'treasury_menu_text' => array(

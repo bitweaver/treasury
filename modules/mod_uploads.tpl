@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.tpl,v 1.6 2008/09/02 16:08:25 laetzer Exp $ *}
+{* $Header$ *}
 {strip}
 {if $gBitSystem->isPackageActive( 'treasury' ) && $modItems}
 	{bitmodule title="$moduleTitle" name="treasury_items"}

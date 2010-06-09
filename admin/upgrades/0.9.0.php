@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/admin/upgrades/0.9.0.php,v 1.2 2008/10/30 22:02:20 squareing Exp $
+ * @version $Header$
  */
 global $gBitInstaller;
 

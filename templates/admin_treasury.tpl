@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_treasury/templates/admin_treasury.tpl,v 1.7 2008/06/03 09:42:12 squareing Exp $ *}
+{* $Header$ *}
 {strip}
 {form}
 	<input type="hidden" name="page" value="{$page}" />

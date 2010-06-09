@@ -1,9 +1,9 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/TreasuryGallery.php,v 1.55 2010/04/17 22:46:10 wjames5 Exp $
+ * @version      $Header$
  *
  * @author       xing  <xing@synapse.plus.com>
- * @version      $Revision: 1.55 $
+ * @version      $Revision$
  * created      Monday Jul 03, 2006   11:53:42 CEST
  * @package      treasury
  * @copyright    2003-2006 bitweaver

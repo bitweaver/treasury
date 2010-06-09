@@ -1,9 +1,9 @@
 <?php
 /**
- * @version		$Header: /cvsroot/bitweaver/_bit_treasury/liberty_plugins/mime.import.php,v 1.4 2008/08/14 02:56:52 laetzer Exp $
+ * @version		$Header$
  *
  * @author		xing  <xing@synapse.plus.com>
- * @version		$Revision: 1.4 $
+ * @version		$Revision$
  * created		Thursday May 08, 2008
  * @package		liberty
  * @subpackage	liberty_mime_handler

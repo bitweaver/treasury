@@ -1,6 +1,6 @@
 <?php
 /**
- * @version      $Header: /cvsroot/bitweaver/_bit_treasury/upload.php,v 1.33 2010/02/08 21:27:26 wjames5 Exp $
+ * @version      $Header$
  *
  * @author       xing  <xing@synapse.plus.com>
  * @package      treasury

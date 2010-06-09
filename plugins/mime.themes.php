@@ -1,9 +1,9 @@
 <?php
 /**
- * @version     $Header: /cvsroot/bitweaver/_bit_treasury/plugins/mime.themes.php,v 1.18 2007/06/08 19:59:56 squareing Exp $
+ * @version     $Header$
  *
  * @author      xing  <xing@synapse.plus.com>
- * @version     $Revision: 1.18 $
+ * @version     $Revision$
  * created     Sunday Jul 02, 2006   14:42:13 CEST
  * @package     treasury
  * @subpackage  treasury_mime_handler

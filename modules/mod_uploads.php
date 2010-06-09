@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_treasury/modules/mod_uploads.php,v 1.5 2008/08/13 01:36:58 laetzer Exp $
+ * @version $Header$
  * @package fisheye
  * @subpackage modules
  */
