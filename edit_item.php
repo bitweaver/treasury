@@ -52,7 +52,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'remove' || !empty( 
 
 // delete icon if needed
 if( !empty( $_REQUEST['delete_thumbnails'] ) ) {
-	$fileHash['dest_path'] = dirname( $gContent->mInfo['storage_path'] ).'/';
+	$fileHash['dest_branch'] = dirname( $gContent->mInfo['storage_path'] ).'/';
 	liberty_clear_thumbnails( $fileHash );
 	$gContent->load();
 }
@@ -86,7 +86,7 @@ if( !empty( $_REQUEST['update_file'] )) {
 		if( preg_match( '#^image/#i', strtolower( $_FILES['icon']['type'] ))) {
 			if( !empty( $_FILES['icon']['tmp_name'] )) {
 				$fileHash = $_FILES['icon'];
-				$fileHash['dest_path'] = dirname( $gContent->mInfo['storage_path'] ).'/';
+				$fileHash['dest_branch'] = dirname( $gContent->mInfo['storage_path'] ).'/';
 				$fileHash['source_file'] = $_FILES['icon']['tmp_name'];
 				liberty_clear_thumbnails( $fileHash );
 				liberty_generate_thumbnails( $fileHash );

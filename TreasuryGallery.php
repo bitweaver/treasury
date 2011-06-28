@@ -331,7 +331,7 @@ class TreasuryGallery extends TreasuryBase {
 					$checkFunc = liberty_get_function( 'can_thumbnail' );
 					if( $checkFunc( $pParamHash['thumb']['type'] )) {
 						$fileHash = $pParamHash['thumb'];
-						$fileHash['dest_path'] = $this->getGalleryThumbBaseUrl();
+						$fileHash['dest_branch'] = $this->getGalleryThumbBaseUrl();
 						$fileHash['source_file'] = $fileHash['tmp_name'];
 						liberty_clear_thumbnails( $fileHash );
 						liberty_generate_thumbnails( $fileHash );

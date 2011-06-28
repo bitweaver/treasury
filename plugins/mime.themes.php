@@ -246,7 +246,7 @@ function treasury_theme_process_extracted_files( $pStoreRow ) {
 	// if this is a theme, we need to convert the preview image into thumbnails
 	if( !empty( $pStoreRow['thumb'] ) ) {
 		$pStoreRow['thumb']['source_file']    = $pStoreRow['thumb']['tmp_name'];
-		$pStoreRow['thumb']['dest_path']      = $pStoreRow['upload']['dest_path'];
+		$pStoreRow['thumb']['dest_branch']      = $pStoreRow['upload']['dest_branch'];
 		$pStoreRow['thumb']['dest_base_name'] = $pStoreRow['thumb']['name'];
 		liberty_generate_thumbnails( $pStoreRow['thumb'] );
 	}
@@ -257,7 +257,7 @@ function treasury_theme_process_extracted_files( $pStoreRow ) {
 			$resizeFunc = liberty_get_function( 'resize' );
 			$sshot['source_file']       = $sshot['tmp_name'];
 			$sshot['dest_base_name']    = $sshot['name'];
-			$sshot['dest_path']         = $pStoreRow['upload']['dest_path'];
+			$sshot['dest_branch']         = $pStoreRow['upload']['dest_branch'];
 			$sshot['max_width']         = 400;
 			$sshot['max_height']        = 300;
 			$sshot['medium_thumb_path'] = BIT_ROOT_PATH.$resizeFunc( $sshot );
@@ -266,9 +266,9 @@ function treasury_theme_process_extracted_files( $pStoreRow ) {
 
 	// if we have icons, we should place them somewhere that we can display them
 	if( !empty( $pStoreRow['icons'] ) ) {
-		@mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'icons' );
+		@mkdir( BIT_ROOT_PATH.$pStoreRow['upload']['dest_branch'].'icons' );
 		foreach( $pStoreRow['icons'] as $icon ) {
-			$dest = BIT_ROOT_PATH.$pStoreRow['upload']['dest_path'].'icons/'.basename( $icon );
+			$dest = BIT_ROOT_PATH.$pStoreRow['upload']['dest_branch'].'icons/'.basename( $icon );
 			if( $icon != $dest ) {
 				rename( $icon, $dest );
 			}
