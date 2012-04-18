@@ -73,7 +73,7 @@ class TreasuryBase extends LibertyMime {
 		if( !empty( $pPath ) && is_array( $pPath ) ) {
 			$ret .= " &raquo; ";
 			foreach( $pPath as $node ) {
-				$ret .= ( @BitBase::verifyId( $node['parent_id'] ) ? ' &raquo; ' : '' ).'<a title="'.htmlspecialchars( $node['title'] ).'" href="'.TreasuryGallery::getDisplayUrl( $node['content_id'] ).'">'.htmlspecialchars( $node['title'] ).'</a>';
+				$ret .= ( @BitBase::verifyId( $node['parent_id'] ) ? ' &raquo; ' : '' ).'<a title="'.htmlspecialchars( $node['title'] ).'" href="'.TreasuryGallery::getDisplayUrlFromHash( $node['content_id'] ).'">'.htmlspecialchars( $node['title'] ).'</a>';
 			}
 		}
 		return $ret;

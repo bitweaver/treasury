@@ -387,9 +387,9 @@ class TreasuryItem extends TreasuryBase {
 		}
 
 		if( $i > 1 ) {
-			$pStoreHash['redirect'] = TreasuryGallery::getDisplayUrl( $storeHash['galleryContentIds'][0] );
+			$pStoreHash['redirect'] = TreasuryGallery::getDisplayUrlFromHash( $storeHash['galleryContentIds'][0] );
 		} elseif( !empty( $storeHash['content_id'] )) {
-			$pStoreHash['redirect'] = TreasuryItem::getDisplayUrl( $storeHash['content_id'] );
+			$pStoreHash['redirect'] = self::getDisplayUrlFromHash( $storeHash['content_id'] );
 		}
 
 		$this->mErrors = array_merge( $this->mErrors, $item->mErrors );
@@ -446,7 +446,7 @@ class TreasuryItem extends TreasuryBase {
 		$ret = $pTitle;
 		if( !empty( $pTitle ) && !empty( $pMixed ) ) {
 			if( $gBitSystem->isPackageActive( 'treasury' ) ) {
-				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryItem::getDisplayUrl( $pMixed['content_id'], $pMixed, $pStructureId ).'">'.htmlspecialchars( $pTitle ).'</a>';
+				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryItem::getDisplayUrlFromHash( $pMixed['content_id'], $pMixed, $pStructureId ).'">'.htmlspecialchars( $pTitle ).'</a>';
 			}
 		}
 		return $ret;

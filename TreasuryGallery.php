@@ -241,7 +241,7 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
 				$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
 				$aux['display_name']       = BitUser::getTitle( $aux );
-				$aux['display_url']        = $this->getDisplayUrl( $aux['content_id'] );
+				$aux['display_url']        = $this->getDisplayUrl( $aux );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
 				$aux['thumbnail_url']      = liberty_fetch_thumbnails( array(
 					'storage_path' => $this->getGalleryThumbBaseUrl( $aux['content_id'] ),
@@ -531,7 +531,7 @@ class TreasuryGallery extends TreasuryBase {
 		$ret = $pTitle;
 		if( !empty( $pTitle ) && !empty( $pMixed ) ) {
 			if( $gBitSystem->isPackageActive( 'treasury' ) ) {
-				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryGallery::getDisplayUrl( $pMixed['content_id'] ).'">'.htmlspecialchars( $pTitle ).'</a>';
+				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryGallery::getDisplayUrlFromHash( $pMixed['content_id'] ).'">'.htmlspecialchars( $pTitle ).'</a>';
 			}
 		}
 		return $ret;
@@ -542,21 +542,15 @@ class TreasuryGallery extends TreasuryBase {
 	 * @param $pContentId is the gallery we want to see
 	 * @return the link to display the page.
 	 **/
-	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+	function getDisplayUrlFromHash( $pParamHash ) {
 		global $gBitSystem;
 		$ret = NULL;
-		// try to get the correct content_id from anywhere possible
-		if( !@BitBase::verifyId( $pContentId ) && $this->isValid() ) {
-			$pContentId = $this->mContentId;
-		} elseif( !@BitBase::verifyId( $pContentId ) && !empty( $pMixed['content_id'] ) ) {
-			$pContentId = $pMixed['content_id'];
-		}
 
-		if( @BitBase::verifyId( $pContentId ) ) {
+		if( @BitBase::verifyId( $pParamHash['content_id'] ) ) {
 			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
-				$ret = TREASURY_PKG_URL.'gallery/'.$pContentId;
+				$ret = TREASURY_PKG_URL.'gallery/'.$pParamHash['content_id'];
 			} else {
-				$ret = TREASURY_PKG_URL.'view.php?content_id='.$pContentId;
+				$ret = TREASURY_PKG_URL.'view.php?content_id='.$pParamHash['content_id'];
 			}
 		}
 		return $ret;
