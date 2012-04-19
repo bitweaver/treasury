@@ -542,7 +542,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @param $pContentId is the gallery we want to see
 	 * @return the link to display the page.
 	 **/
-	function getDisplayUrlFromHash( $pParamHash ) {
+	public static function getDisplayUrlFromHash( $pParamHash ) {
 		global $gBitSystem;
 		$ret = NULL;
 
