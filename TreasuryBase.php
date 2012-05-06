@@ -31,7 +31,7 @@ class TreasuryBase extends LibertyMime {
 	 */
 	function TreasuryBase() {
 		if( get_class( $this ) == 'treasurygallery' ) {
-			LibertyContent::LibertyContent();
+			parent::__construct();
 		} else {
 			parent::__construct();
 		}
