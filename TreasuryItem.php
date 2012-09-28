@@ -60,7 +60,7 @@ class TreasuryItem extends TreasuryBase {
 	 * @return bool TRUE on success, FALSE if it's not valid
 	 * @access public
 	 **/
-	function load( $pPluginParams = NULL ) {
+	function load( $pContentId = NULL, $pPluginParams = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId )) {
 			global $gBitSystem;
 
