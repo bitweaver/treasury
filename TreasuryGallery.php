@@ -60,7 +60,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @return bool TRUE on success, FALSE if it's not valid
 	 * @access public
 	 **/
-	function load( $pExtras = FALSE ) {
+	function load( $pContentId = NULL, $pPluginParams = NULL ) {
 		if( @BitBase::verifyId( $this->mContentId ) || @BitBase::verifyId( $this->mStructureId ) ) {
 			global $gBitSystem;
 
@@ -89,7 +89,7 @@ class TreasuryGallery extends TreasuryBase {
 				$this->mStructureId           = $row['structure_id'];
 				$this->mInfo['user']          = $row['creator_user'];
 				$this->mInfo['real_name']     = ( isset( $row['creator_real_name'] ) ? $row['creator_real_name'] : $row['creator_user'] );
-				$this->mInfo['display_name']  = BitUser::getTitle( $this->mInfo );
+				$this->mInfo['display_name']  = BitUser::getDisplayNameFromHash( FALSE, $this->mInfo );
 				$this->mInfo['editor']        = ( isset( $row['modifier_real_name'] ) ? $row['modifier_real_name'] : $row['modifier_user'] );
 				$this->mInfo['display_url']   = $this->getDisplayUrl();
 				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( array(
@@ -98,7 +98,7 @@ class TreasuryGallery extends TreasuryBase {
 				));
 
 				// get extra information if required
-				if( $pExtras ) {
+				if( $pPluginParams['extras'] ) {
 					$this->mInfo['gallery_path']         = $this->getGalleryPath();
 					$this->mInfo['gallery_display_path'] = $this->getDisplayPath( $this->mInfo['gallery_path'] );
 				}
@@ -240,8 +240,8 @@ class TreasuryGallery extends TreasuryBase {
 				$aux['user']               = $aux['creator_user'];
 				$aux['real_name']          = ( isset( $aux['creator_real_name'] ) ? $aux['creator_real_name'] : $aux['creator_user'] );
 				$aux['editor']             = ( isset( $aux['modifier_real_name'] ) ? $aux['modifier_real_name'] : $aux['modifier_user'] );
-				$aux['display_name']       = BitUser::getTitle( $aux );
-				$aux['display_url']        = $this->getDisplayUrl( $aux );
+				$aux['display_name']       = BitUser::getDisplayNameFromHash( FALSE, $aux );
+				$aux['display_url']        = self::getDisplayUrlFromHash( $aux );
 				$aux['display_link']       = $this->getDisplayLink( $aux['title'], $aux );
 				$aux['thumbnail_url']      = liberty_fetch_thumbnails( array(
 					'storage_path' => $this->getGalleryThumbBaseUrl( $aux['content_id'] ),
@@ -518,20 +518,38 @@ class TreasuryGallery extends TreasuryBase {
 	 * @param $pContentId content id of the gallery in question
 	 * @return the link to display the page.
 	 **/
-	function getDisplayLink( $pTitle=NULL, $pMixed=NULL ) {
+	function getDisplayLink( $pLinkText=NULL, $pMixed=NULL, $pAnchor=NULL ) {
 		global $gBitSystem;
-		if( empty( $pTitle ) && !empty( $this ) ) {
-			$pTitle = $this->getTitle();
+		if( empty( $pLinkText ) && !empty( $this ) ) {
+			$pLinkText = $this->getTitle();
 		}
 
 		if( empty( $pMixed ) && !empty( $this ) ) {
 			$pMixed = $this->mInfo;
 		}
 
-		$ret = $pTitle;
-		if( !empty( $pTitle ) && !empty( $pMixed ) ) {
+		$ret = $pLinkText;
+		if( !empty( $pLinkText ) && !empty( $pMixed ) ) {
 			if( $gBitSystem->isPackageActive( 'treasury' ) ) {
-				$ret = '<a title="'.htmlspecialchars( $pTitle ).'" href="'.TreasuryGallery::getDisplayUrlFromHash( $pMixed['content_id'] ).'">'.htmlspecialchars( $pTitle ).'</a>';
+				$ret = '<a title="'.htmlspecialchars( $pLinkText ).'" href="'.TreasuryGallery::getDisplayUrlFromHash( $pMixed ).'">'.htmlspecialchars( $pLinkText ).'</a>';
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * Generates the URL to this gallery from current object
+	 * @return the link to display the page.
+	 **/
+	public function getDisplayUrl() {
+		global $gBitSystem;
+		$ret = NULL;
+
+		if( $this->isValid() ) {
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+				$ret = TREASURY_PKG_URL.'gallery/'.$this->mContentId;
+			} else {
+				$ret = TREASURY_PKG_URL.'view.php?content_id='.$this->mContentId;
 			}
 		}
 		return $ret;
@@ -542,7 +560,7 @@ class TreasuryGallery extends TreasuryBase {
 	 * @param $pContentId is the gallery we want to see
 	 * @return the link to display the page.
 	 **/
-	public static function getDisplayUrlFromHash( $pParamHash ) {
+	public static function getDisplayUrlFromHash( &$pParamHash ) {
 		global $gBitSystem;
 		$ret = NULL;
 
