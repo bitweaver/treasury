@@ -21,7 +21,8 @@ require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
 require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
 
 // turn the max_file_size value into megabytes
-$gBitSmarty->assign_by_ref( 'feedback', $feedback = array() );
+$feedback = array();
+$gBitSmarty->assign_by_ref( 'feedback', $feedback );
 
 $listHash['get_sub_tree']       = TRUE;
 $listHash['max_records']        = -1;
