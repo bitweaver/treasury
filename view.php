@@ -69,7 +69,7 @@ $gContent->invokeServices( 'content_display_function', $displayHash );
 // set up structure related stuff
 global $gStructure;
 if( empty( $gContent->mInfo['root_structure_id'] ) || !@BitBase::verifyId( $gContent->mInfo['root_structure_id'] ) ) {
-	header( "Location:".TREASURY_PKG_URL."index.php" );
+	bit_redirect( TREASURY_PKG_URL."index.php" );
 }
 
 $gStructure = new LibertyStructure( $gContent->mInfo['root_structure_id'] );
