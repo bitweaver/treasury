@@ -158,8 +158,8 @@
 									<a href="{$item->mInfo.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
 								{/if}
 								{if $gContent->isOwner( $item->mInfo ) || $gBitUser->isAdmin()}
-									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=edit">{biticon ipackage="icons" iname="accessories-text-editor" iexplain="Edit File"}</a>
-									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=remove">{biticon ipackage="icons" iname="edit-delete" iexplain="Remove File"}</a>
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=edit">{booticon iname="icon-edit" ipackage="icons" iexplain="Edit File"}</a>
+									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=remove">{booticon iname="icon-trash" ipackage="icons" iexplain="Remove File"}</a>
 									<input type="checkbox" name="del_content_ids[]" value="{$item->mInfo.content_id}" />
 									{assign var=checks value=true}
 								{/if}
