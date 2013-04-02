@@ -7,8 +7,8 @@
 	<div class="floaticon">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='icon' serviceHash=$gContent->mInfo}
 		{if $gContent->hasUpdatePermission()}
-			{smartlink ifile="edit_item.php" ibiticon="icons/accessories-text-editor" ititle="Edit File" content_id=$gContent->mContentId action=edit}
-			{smartlink ifile="edit_item.php" ibiticon="icons/edit-delete" ititle="Remove File" content_id=$gContent->mContentId action=remove}
+			{smartlink ifile="edit_item.php" booticon="icon-edit" ititle="Edit File" content_id=$gContent->mContentId action=edit}
+			{smartlink ifile="edit_item.php" booticon="icon-trash" ititle="Remove File" content_id=$gContent->mContentId action=remove}
 		{/if}
 	</div>
 

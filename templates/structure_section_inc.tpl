@@ -1,10 +1,10 @@
 {strip}
 {if $gContent->hasUpdatePermission() && $editicons}
 	<div class="floaticon">
-		{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$subtree[ix].content_id}
-		{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}
+		{smartlink ititle="Upload Files" booticon="icon-cloud-upload" ifile="upload.php" content_id=$subtree[ix].content_id}
+		{smartlink ititle="Edit Gallery" booticon="icon-edit" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=edit}
 		{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$subtree[ix].structure_id action=insert}
-		{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
+		{smartlink ititle="Remove Gallery" booticon="icon-trash" ifile="view.php" content_id=$subtree[ix].content_id action=remove}
 	</div>
 {/if}
 

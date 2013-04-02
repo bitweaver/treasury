@@ -10,16 +10,16 @@
 			<a href="{$smarty.const.TREASURY_PKG_URL}treasury_rss.php?version={$gBitSystem->getConfig('rssfeed_default_version',0)}&amp;gallery_content_id={$gContent->mContentId}">{biticon ipackage="rss" iname="rss-16x16" iexplain="RSS feed"}</a>
 		{/if}
 		{if $gContent->hasUserPermission( 'p_treasury_upload_item' )}
-			{smartlink ititle="Upload Files" ibiticon="icons/go-up" ifile="upload.php" content_id=$gContent->mContentId}
+			{smartlink ititle="Upload Files" booticon="icon-cloud-upload" ifile="upload.php" content_id=$gContent->mContentId}
 		{/if}
 		{if $gContent->hasUpdatePermission()}
-			{smartlink ititle="Edit Gallery" ibiticon="icons/accessories-text-editor" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
+			{smartlink ititle="Edit Gallery" booticon="icon-edit" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=edit}
 		{/if}
 		{if $gContent->hasUserPermission( 'p_treasury_create_gallery' )}
 			{smartlink ititle="Insert Gallery" ibiticon="icons/insert-object" ifile="edit_gallery.php" structure_id=$gContent->mStructureId action=insert}
 		{/if}
 		{if $gContent->hasAdminPermission()}
-			{smartlink ititle="Remove Gallery" ibiticon="icons/edit-delete" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
+			{smartlink ititle="Remove Gallery" booticon="icon-trash" ifile="edit_gallery.php" content_id=$gContent->mContentId action=remove_gallery}
 		{/if}
 	</div>
 
