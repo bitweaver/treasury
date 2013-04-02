@@ -7,7 +7,7 @@
 		{jstab title="Settings"}
 			{legend legend="Treasury Settings"}
 				{foreach from=$treasurySettings key=feature item=output}
-					<div class="row">
+					<div class="control-group">
 						{formlabel label=`$output.label` for=$feature}
 						{forminput}
 							{if $output.type == 'checkbox'}
@@ -24,7 +24,7 @@
 
 		{jstab title="Gallery Listing"}
 			{legend legend="Gallery Listing"}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Gallery Thumbnail Size"}
 					{forminput}
 						{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_view_thumb" selected=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
@@ -32,7 +32,7 @@
 					{/forminput}
 				</div>
 
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Gallery List Thumbnail Size"}
 					{forminput}
 						{html_options values=$imageSizes options=$imageSizes name="treasury_gallery_list_thumb" selected=$gBitSystem->getConfig('treasury_gallery_list_thumb')}
@@ -41,7 +41,7 @@
 				</div>
 
 				{foreach from=$galleryListing key=feature item=output}
-					<div class="row">
+					<div class="control-group">
 						{formlabel label=`$output.label` for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
@@ -54,7 +54,7 @@
 
 		{jstab title="Item Listing"}
 			{legend legend="Item Listing"}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Item List Thumbnail Size"}
 					{forminput}
 						{html_options values=$imageSizes options=$imageSizes name="treasury_item_list_thumb" selected=$gBitSystem->getConfig('treasury_item_list_thumb')}
@@ -63,7 +63,7 @@
 				</div>
 
 				{foreach from=$itemListing key=feature item=output}
-					<div class="row">
+					<div class="control-group">
 						{formlabel label=`$output.label` for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
@@ -76,7 +76,7 @@
 
 		{jstab title="Item Viewing"}
 			{legend legend="Item Viewing"}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Item List Thumbnail Size"}
 					{forminput}
 						{html_options values=$imageSizes options=$imageSizes name="treasury_item_view_thumb" selected=$gBitSystem->getConfig('treasury_item_view_thumb')}
@@ -85,7 +85,7 @@
 				</div>
 
 				{foreach from=$itemViewing key=feature item=output}
-					<div class="row">
+					<div class="control-group">
 						{formlabel label=`$output.label` for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
@@ -97,7 +97,7 @@
 		{/jstab}
 	{/jstabs}
 
-	<div class="row submit">
+	<div class="control-group submit">
 		<input type="submit" name="treasury_settings" value="{tr}Change preferences{/tr}" />
 	</div>
 {/form}

@@ -13,7 +13,7 @@
 					<input type="hidden" name="content_id" value="{$gContent->mContentId}" />
 					<input type="hidden" name="refresh" value="1" />
 
-					<div class="row">
+					<div class="control-group">
 						{formlabel label="File title" for=title}
 						{forminput}
 							<input type="text" size="40" id="title" value="{$gContent->mInfo.title|escape}" name="title" />
@@ -24,7 +24,7 @@
 
 					{include file=$gLibertySystem->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 
-					<div class="row">
+					<div class="control-group">
 						{formfeedback warning="{tr}Uploading a new file will replace the currently existing one.{/tr}"}
 						{formlabel label="Replace File" for="fileupload"}
 						{forminput}
@@ -37,7 +37,7 @@
 						{/forminput}
 					</div>
 
-					<div class="row">
+					<div class="control-group">
 						{formlabel label="Thumbnail Maintenance" for="icon"}
 						{forminput}
 							<input type="file" id="icon" name="icon" />
@@ -49,7 +49,7 @@
 						{/forminput}
 					</div>
 
-					<div class="row">
+					<div class="control-group">
 						{formlabel label="Add File to these Galleries"}
 						{forminput}
 							{foreach from=$galleryList item=gallery}
@@ -65,7 +65,7 @@
 					{/capture}
 
 					{if $options}
-						<div class="row">
+						<div class="control-group">
 							{formlabel label="File Processing Options" for=""}
 							{forminput}
 								{foreach from=$gLibertySystem->mPlugins item=plugin}
@@ -77,7 +77,7 @@
 
 					{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
-					<div class="row submit">
+					<div class="control-group submit">
 						<input type="submit" name="update_file" value="{tr}Update File{/tr}" />
 					</div>
 				{/jstab}

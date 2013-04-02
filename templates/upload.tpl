@@ -33,7 +33,7 @@
 								{include file="bitpackage:liberty/edit_format.tpl"}
 								{include file="bitpackage:kernel/upload_slot_inc.tpl"}
 							{else}
-								<div class="row">
+								<div class="control-group">
 									{formlabel label="Select File(s)"}
 									{forminput}
 										<input type="file" name="file0" id="fileupload" />
@@ -41,7 +41,7 @@
 									{/forminput}
 								</div>
 
-								<div class="row">
+								<div class="control-group">
 									{formlabel label="Selected File(s)" for=""}
 									{forminput}
 										<div id="fileslist"></div>
@@ -57,14 +57,14 @@
 
 							{if $gBitSystem->isFeatureActive( 'treasury_file_import_path' ) && $gBitUser->hasPermission( 'p_treasury_import_item' )}
 								<h2>{tr}Import File{/tr}</h2>
-								<div class="row">
+								<div class="control-group">
 									{formlabel label="Import File Title" for="import_title"}
 									{forminput}
 										<input type="text" name="import[title]" id="import_title" size="40" />
 									{/forminput}
 								</div>
 
-								<div class="row">
+								<div class="control-group">
 									{formlabel label="Import file" for="ajax_input"}
 									{forminput}
 										<input type="text" name="import[file]" id="ajax_input" size="40" />
@@ -72,7 +72,7 @@
 									{/forminput}
 								</div>
 
-								<div class="row">
+								<div class="control-group">
 									{formlabel label="Description" for="import_edit"}
 									{forminput}
 										<textarea rows="2" cols="40" name="import[edit]" id="import_edit"></textarea>
@@ -83,7 +83,7 @@
 								<hr />
 							{/if}
 
-							<div class="row">
+							<div class="control-group">
 								{formlabel label="Add File(s) to these Galleries"}
 								{forminput}
 									{foreach from=$galleryList item=gallery}
@@ -111,7 +111,7 @@
 				{/jstabs}
 			</div> <!-- end #uploadblock -->
 
-			<div class="row submit">
+			<div class="control-group submit">
 				<noscript><p class="highlight">{tr}Please don't press the save button more than once!<br />Depending on what you are uploading and the system, this can take a few minutes.{/tr}</p></noscript>
 				<input type="submit" id="submitbutton" value="{tr}Upload File(s){/tr}" {if $submitClick}onclick="{$submitClick}"{/if}/>
 			</div>

@@ -1,6 +1,6 @@
 {strip}
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_thumb' )}
-	<div class="row" style="text-align:center;">
+	<div class="control-group" style="text-align:center;">
 		<a href="{$gContent->mInfo.download_url}">
 			<img src="{$gContent->mInfo.thumbnail_url.small}{$refresh}" alt="{$gContent->getTitle()}" title="{$gContent->getTitle()}" />
 			<br />{$gContent->getTitle()|escape}
@@ -14,7 +14,7 @@
 	</p>
 {/if}
 
-<div class="row">
+<div class="control-group">
 	{formlabel label="Note" for=""}
 	{forminput}
 		Please visit the <a href="/wiki/Style+Uploads">Style Uploads</a> page to get information on how to download the styles and install them.
@@ -22,7 +22,7 @@
 </div>
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_name' )}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Filename" for=""}
 		{forminput}
 			<a href="{$gContent->mInfo.download_url}">{$gContent->mInfo.filename|escape}</a>
@@ -32,7 +32,7 @@
 {/if}
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_size' )}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Filesize" for=""}
 		{forminput}
 			{$gContent->mInfo.file_size|display_bytes}
@@ -40,7 +40,7 @@
 	</div>
 
 	{*
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Download Calculator" for=""}
 		{forminput}
 			{$gContent->mInfo.file_size|display_bytes}
@@ -50,7 +50,7 @@
 {/if}
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_date' ) || $gBitSystem->isFeatureActive( 'treasury_item_view_creator' )}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="First Uploaded" for=""}
 		{forminput}
 			{if $gBitSystem->isFeatureActive( 'treasury_item_view_date' )}
@@ -63,7 +63,7 @@
 	</div>
 
 	{if $gBitSystem->isFeatureActive( 'treasury_item_view_date' ) and $gContent->mInfo.created != $gContent->mInfo.last_modified}
-		<div class="row">
+		<div class="control-group">
 			{formlabel label="Last Modified" for=""}
 			{forminput}
 				{$gContent->mInfo.last_modified|bit_long_datetime}<br />
@@ -73,7 +73,7 @@
 {/if}
 
 {if $gBitSystem->isFeatureActive( 'treasury_item_view_hits' )}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Downloads" for=""}
 		{forminput}
 			{$gContent->mInfo.hits|default:"{tr}none{/tr}"}

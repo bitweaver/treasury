@@ -1,6 +1,6 @@
 {strip}
 {if $gBitUser->hasPermission( 'p_liberty_attach_attachments' ) && $gBitSystem->isFeatureActive( 'mime_import_file_import_path' )}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Import file" for="ajax_input"}
 		{forminput}
 			<input type="input" id="ajax_input" name="mimeplugin[{$smarty.const.PLUGIN_MIME_GUID_IMPORT}][import_path]" size="40" />
