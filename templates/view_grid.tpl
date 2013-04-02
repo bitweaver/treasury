@@ -203,7 +203,7 @@
 									<a href="{$item->mInfo.download_url}">{biticon ipackage="icons" iname="emblem-downloads" iexplain="Download File"}</a>
 								{/if}
 								{if $gBitUser->hasPermission( 'p_treasury_view_item' )}
-									<a href="{$item->mInfo.display_url}">{biticon ipackage="icons" iname="document-open" iexplain="View File"}</a>
+									<a href="{$item->mInfo.display_url}">{booticon iname="icon-folder-open"  ipackage="icons"  iexplain="View File"}</a>
 								{/if}
 								{if $gContent->isOwner( $item->mInfo ) || $gBitUser->isAdmin()}
 									<a href="{$smarty.const.TREASURY_PKG_URL}edit_item.php?content_id={$item->mInfo.content_id}&amp;action=edit">{booticon iname="icon-edit" ipackage="icons" iexplain="Edit File"}</a>
