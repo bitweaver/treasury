@@ -31,7 +31,7 @@
 							<input type="file" name="file" id="fileupload" />
 							{formhelp note="Upload a new file to replace the current one."}
 							{if $gContent->mInfo.source_file}
-								<input type="submit" name="reprocess_upload" value="{tr}Re-process uploaded File{/tr}" />
+								<input type="submit" class="btn" name="reprocess_upload" value="{tr}Re-process uploaded File{/tr}" />
 								{formhelp note="This will process the already uploaded file as if you're uploading it for the first time."}
 							{/if}
 						{/forminput}
@@ -43,7 +43,7 @@
 							<input type="file" id="icon" name="icon" />
 							{formhelp note="Upload an image that represents this file. The image will be scaled automatically."}
 							{if !$gContent->mInfo.thumbnail_is_mime}
-								<input type="submit" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
+								<input type="submit" class="btn" name="delete_thumbnails" value="{tr}Delete Thumbnail{/tr}" />
 								{formhelp note="This will remove the current thumbnail."}
 							{/if}
 						{/forminput}
@@ -78,7 +78,7 @@
 					{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 					<div class="control-group submit">
-						<input type="submit" name="update_file" value="{tr}Update File{/tr}" />
+						<input type="submit" class="btn" name="update_file" value="{tr}Update File{/tr}" />
 					</div>
 				{/jstab}
 
