@@ -38,5 +38,4 @@
 	</label>
 {/if}
 
-{biticon ipackage=liberty iname=spacer iforce=icon}
 {/strip}
