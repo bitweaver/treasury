@@ -52,7 +52,7 @@ if( !$gBitUser->hasPermission( 'p_treasury_view_item' ) ) {
 	// set the rss link
 	$rss->link = TREASURY_PKG_URI;
 
-	require_once $gBitSmarty->_get_plugin_filepath( 'modifier', 'display_bytes' );
+	$gBitSmarty->loadPlugin( 'smarty_modifier_display_bytes' );
 	// get all the data ready for the feed creator
 	foreach( $feeds as $feed ) {
 		$item = new FeedItem();

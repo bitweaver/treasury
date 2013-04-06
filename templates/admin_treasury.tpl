@@ -8,14 +8,14 @@
 			{legend legend="Treasury Settings"}
 				{foreach from=$treasurySettings key=feature item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$feature}
+						{formlabel label=$output.label for=$feature}
 						{forminput}
 							{if $output.type == 'checkbox'}
 								{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
 							{else}
 								<input type='text' name="{$feature}" id="{$feature}" size="{if $output.type == 'text'}40{else}5{/if}" value="{$gBitSystem->getConfig($feature)|escape}" /> {$output.unit}
 							{/if}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -42,10 +42,10 @@
 
 				{foreach from=$galleryListing key=feature item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$feature}
+						{formlabel label=$output.label for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -64,10 +64,10 @@
 
 				{foreach from=$itemListing key=feature item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$feature}
+						{formlabel label=$output.label for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}
@@ -86,10 +86,10 @@
 
 				{foreach from=$itemViewing key=feature item=output}
 					<div class="control-group">
-						{formlabel label=`$output.label` for=$feature}
+						{formlabel label=$output.label for=$feature}
 						{forminput}
 							{html_checkboxes name="$feature" values="y" checked=$gBitSystem->getConfig($feature) labels=false id=$feature}
-							{formhelp note=`$output.note` page=`$output.page`}
+							{formhelp note=$output.note page=$output.page}
 						{/forminput}
 					</div>
 				{/foreach}

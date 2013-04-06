@@ -39,7 +39,7 @@ function data_file( $pData, $pParams ) {
 
 	if( @BitBase::verifyId( $pParams['id'] ) && $gBitSystem->isPackageActive( 'treasury' )) {
 		require_once( TREASURY_PKG_PATH.'TreasuryItem.php' );
-		require_once $gBitSmarty->_get_plugin_filepath( 'modifier', 'display_bytes' );
+		$gBitSmarty->loadPlugin( 'smarty_modifier_display_bytes' );
 
 		$item = new TreasuryItem();
 		$item->mContentId = $item->getContentIdFromAttachmentId( $pParams['id'] );
