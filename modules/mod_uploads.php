@@ -71,6 +71,6 @@ if( empty( $moduleParams['title'] ) && $items ) {
 
 $_template->tpl_vars['modItems'] = new Smarty_variable( $items );
 $_template->tpl_vars['module_params'] = new Smarty_variable( $module_params );
-$_template->tpl_vars['maxlen'] = new Smarty_variable( isset( $module_params["maxlen"] );
-$_template->tpl_vars['maxlendesc'] = new Smarty_variable( isset( $module_params["maxlendesc"] );
+$_template->tpl_vars['maxlen'] = new Smarty_variable( isset( $module_params["maxlen"] ) );
+$_template->tpl_vars['maxlendesc'] = new Smarty_variable( isset( $module_params["maxlendesc"] ) );
 ?>
