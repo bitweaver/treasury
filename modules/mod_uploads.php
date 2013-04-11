@@ -66,11 +66,11 @@ if( empty( $moduleParams['title'] ) && $items ) {
 	}
 
 	$listHash['sort_mode'] = $sort_mode;
-	$gBitSmarty->assign( 'moduleTitle', $moduleTitle );
+	$_template->tpl_vars['moduleTitle'] = new Smarty_variable( $moduleTitle );
 }
 
-$gBitSmarty->assign( 'modItems', $items );
-$gBitSmarty->assign( 'module_params', $module_params );
-$gBitSmarty->assign( 'maxlen', isset( $module_params["maxlen"] ) ? $module_params["maxlen"] : 0 );
-$gBitSmarty->assign( 'maxlendesc', isset( $module_params["maxlendesc"] ) ? $module_params["maxlendesc"] : 0 );
+$_template->tpl_vars['modItems'] = new Smarty_variable( $items );
+$_template->tpl_vars['module_params'] = new Smarty_variable( $module_params );
+$_template->tpl_vars['maxlen'] = new Smarty_variable( isset( $module_params["maxlen"] );
+$_template->tpl_vars['maxlendesc'] = new Smarty_variable( isset( $module_params["maxlendesc"] );
 ?>
