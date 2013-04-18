@@ -1,5 +1,5 @@
 {strip}
-<a class="dropdown-toggle" data-toggle="dropdown" href="#"> {tr}{$packageMenuTitle}{/tr} <b class="caret"></b></a>
+{if $packageMenuTitle}<a class="dropdown-toggle" data-toggle="dropdown" href="#"> {tr}{$packageMenuTitle}{/tr} <b class="caret"></b></a>{/if}
 <ul class="{$packageMenuClass}">
 	{if $gBitUser->hasPermission( 'p_treasury_create_gallery' )}
 		<li><a class="item" href="{$smarty.const.TREASURY_PKG_URL}edit_gallery.php">{booticon iname="icon-file" iexplain="Create Gallery" ilocation=menu}</a></li>
