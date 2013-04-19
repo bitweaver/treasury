@@ -20,7 +20,7 @@
 						{/forminput}
 					</div>
 
-					{textarea label="Description"}{$gContent->mInfo.data}{/textarea}
+					{textarea label="Description" edit=$gContent->mInfo.data}
 
 					{include file=$gLibertySystem->getMimeTemplate('edit',$gContent->mInfo.attachment_plugin_guid) attachment=$gContent->mInfo}
 

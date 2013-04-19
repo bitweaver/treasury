@@ -38,7 +38,7 @@
 							{/forminput}
 						</div>
 
-						{textarea label="Description"}{$galInfo.data}{/textarea}
+						{textarea label="Description" edit=$galInfo.data}
 
 						<div class="control-group">
 							{formlabel label="File Comments" for="treasury-comments"}
