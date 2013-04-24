@@ -115,7 +115,7 @@
 					</table>
 				{else}
 				{assign var=thumbsize value=$gContent->getPreference('item_list_thumb_size',$gBitSystem->getConfig('treasury_item_list_thumb'))}
-				<table class="data">
+				<table class="table data">
 					<caption>{tr}List of files{/tr} <span class="total">[ {$listInfo.total_records|default:0} ]</span></caption>
 					<tr>
 						{if $thumbsize}
