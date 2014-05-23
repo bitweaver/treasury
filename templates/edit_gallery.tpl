@@ -92,7 +92,7 @@
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 						<div class="control-group submit">
-							<input type="submit" class="btn" name="treasury_store" value="{tr}Save Gallery{/tr}" />
+							<input type="submit" class="btn btn-default" name="treasury_store" value="{tr}Save Gallery{/tr}" />
 						</div>
 					{/legend}
 				{/jstab}

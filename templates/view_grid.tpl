@@ -231,7 +231,7 @@
 						</select>
 
 						<noscript>
-							<div><input type="submit" class="btn" name="submit" value="Process Selected Files" /></div>
+							<div><input type="submit" class="btn btn-default" name="submit" value="Process Selected Files" /></div>
 						</noscript>
 					</div>
 				{/if}
