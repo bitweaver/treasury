@@ -9,7 +9,7 @@
 		{form legend="Import specific settings"}
 			{formfeedback hash=$feedback}
 			{foreach from=$settings key=feature item=output}
-				<div class="control-group">
+				<div class="form-group">
 					{formlabel label=$output.label for=$feature}
 					{forminput}
 						{if $output.type == 'checkbox'}
@@ -22,7 +22,7 @@
 				</div>
 			{/foreach}
 
-			<div class="control-group submit">
+			<div class="form-group submit">
 				<input type="submit" class="btn btn-default" name="settings_store" value="{tr}Change preferences{/tr}" />
 			</div>
 		{/form}

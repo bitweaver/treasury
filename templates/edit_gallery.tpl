@@ -17,7 +17,7 @@
 							<input type="hidden" name="action" value="{$smarty.request.action}" />
 
 							{if !$galInfo.structure_id || $galInfo.structure_id != $galInfo.root_structure_id}
-								<div class="control-group">
+								<div class="form-group">
 									{formlabel label="Parent" for="treasury-parent"}
 									{forminput}
 										{if $galInfo.content_id}
@@ -31,7 +31,7 @@
 							{/if}
 						{/if}
 
-						<div class="control-group">
+						<div class="form-group">
 							{formlabel label="Title" for="treasury-title"}
 							{forminput}
 								<input type="text" size="50" id="treasury-title" name="title" value="{$galInfo.title|escape}" />
@@ -40,7 +40,7 @@
 
 						{textarea label="Description" edit=$galInfo.data}
 
-						<div class="control-group">
+						<div class="form-group">
 							<label class="checkbox">
 								<input type="checkbox" id="treasury-comments" name="preferences[allow_comments]" value="y" {if $gContent->getPreference('allow_comments')}checked="checked" {/if}/>File Comments
 								{formhelp note="Allow users to leave comments to files in this gallery."}
@@ -48,7 +48,7 @@
 						</div>
 
 						{* not yet implemented - xing
-						<div class="control-group">
+						<div class="form-group">
 							<label class="checkbox">
 								<input type="checkbox" id="treasury-is_private" name="is_private" value="y" {if $galInfo.is_private}checked="checked" {/if}/>Private Gallery
 								{formhelp note="Checking this box will only allow you to upload files to this gallery. Other users can only view and downloaded the files."}
@@ -57,7 +57,7 @@
 						*}
 
 						{if $gBitSystem->isFeatureActive( 'treasury_item_list_thumb_custom' )}
-							<div class="control-group">
+							<div class="form-group">
 								{formlabel label="File Thumbnail Size" for="item_list_thumb_size"}
 								{forminput}
 									{html_options values=$imageSizes options=$imageSizes name="preferences[item_list_thumb_size]" id="item_list_thumb_size" selected=$gContent->getPreference('item_list_thumb_size')|default:$gBitSystem->getConfig('treasury_item_list_thumb')}
@@ -69,7 +69,7 @@
 						{if $gBitSystem->isFeatureActive( 'treasury_gallery_list_thumb' ) || $gBitSystem->isFeatureActive( 'treasury_gallery_view_thumb' )}
 							{assign var=galThumb value=$gBitSystem->getConfig('treasury_gallery_view_thumb')}
 							{if $galInfo.thumbnail_url}
-								<div class="control-group">
+								<div class="form-group">
 									{formlabel label="Gallery Thumbnail" for=""}
 									{forminput}
 										<img alt="Gallery Thumbnail" src="{$galInfo.thumbnail_url.$galThumb}{$refresh}" />
@@ -80,7 +80,7 @@
 								{formfeedback warning="Uploading a new image will replace the one displayed above."}
 							{/if}
 
-							<div class="control-group">
+							<div class="form-group">
 								{formlabel label="Gallery Image" for="icon"}
 								{forminput}
 									<input type="file" name="icon" id="icon" />
@@ -91,7 +91,7 @@
 
 						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
-						<div class="control-group submit">
+						<div class="form-group submit">
 							<input type="submit" class="btn btn-default" name="treasury_store" value="{tr}Save Gallery{/tr}" />
 						</div>
 					{/legend}
