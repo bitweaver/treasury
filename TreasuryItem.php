@@ -90,7 +90,7 @@ class TreasuryItem extends TreasuryBase {
 			if( $aux = $this->mDb->getRow( $query, $bindVars ) ) {
 				$this->mContentId            = $aux['content_id'];
 				$this->mInfo                 = $aux;
-				$this->mInfo['title']        = $this->getTitle( $aux );
+				$this->mInfo['title']        = $this->getTitleFromHash( $aux );
 				$this->mInfo['display_url']  = $this->getDisplayUrl();
 
 				// LibertyMime will load the attachment details
