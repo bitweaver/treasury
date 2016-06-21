@@ -20,5 +20,5 @@ if( !@BitBase::verifyId( $_REQUEST['content_id'] ) ) {
 	$gContent->load( $_REQUEST );
 }
 
-$gBitSmarty->assign_by_ref( 'gContent', $gContent );
+$gBitSmarty->assignByRef( 'gContent', $gContent );
 ?>

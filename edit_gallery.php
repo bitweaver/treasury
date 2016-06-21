@@ -41,7 +41,7 @@ if( !empty( $gContent->mStructureId ) ) {
 }
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
-	$gBitSmarty->assign_by_ref( 'galInfo', $gContent->mInfo );
+	$gBitSmarty->assignByRef( 'galInfo', $gContent->mInfo );
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) ) {

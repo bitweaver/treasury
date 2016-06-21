@@ -46,7 +46,7 @@ $gContent->invokeServices( 'content_display_function', $displayHash );
 
 $galleryDisplayPath = $gContent->getDisplayPath( $gContent->getGalleryPath( $gGallery->mStructureId ) );
 $gBitSmarty->assign( 'galleryDisplayPath', $galleryDisplayPath );
-$gBitSmarty->assign_by_ref( 'gGallery', $gGallery );
+$gBitSmarty->assignByRef( 'gGallery', $gGallery );
 
 if( is_object( $gGallery ) && $gContent->isCommentable() ) {
 	$commentsParentId = $gContent->mContentId;
