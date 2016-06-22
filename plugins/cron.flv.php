@@ -92,7 +92,7 @@ if( extension_loaded( 'ffmpeg' )) {
 // can take quite some time before it is done
 ini_set( "max_execution_time", "1800" );
 
-global $gBitSystem, $gBitUser, $gShellScript;
+global $gBitSystem, $gBitDb, $gBitUser, $gShellScript;
 
 // this will avoid $_SERVER related errors
 $gShellScript = TRUE;
@@ -113,7 +113,7 @@ if( empty( $argc ) && !$gBitUser->isAdmin() ) {
 	$gBitSystem->fatalError( tra( 'You cannot run the video converter' ));
 }
 
-$gBitSystem->mDb->StartTrans();
+$gBitDb->StartTrans();
 
 $processLimit = ( !empty( $argv[1] )) ? $argv[1] : ( !empty( $_REQUEST['videos'] ) ? $_REQUEST['videos'] : 3 );
 $query = "
@@ -131,7 +131,7 @@ while( !$result->EOF ) {
 	$result->MoveNext();
 }
 
-$gBitSystem->mDb->CompleteTrans();
+$gBitDb->CompleteTrans();
 
 $log   = array();
 $total = date( 'U' );
