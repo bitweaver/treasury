@@ -97,7 +97,7 @@ class TreasuryItem extends TreasuryBase {
 				LibertyMime::load( NULL, $pPluginParams );
 
 				// parse the data after parent load so we have our html prefs
-				$this->mInfo['parsed_data'] = $this->parseData();
+				$this->parseData();
 
 				// copy mStorage to mInfo for easy access
 				if( !empty( $this->mStorage ) && count( $this->mStorage ) > 0 ) {

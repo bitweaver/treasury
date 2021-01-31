@@ -105,7 +105,7 @@ class TreasuryGallery extends TreasuryBase {
 				LibertyContent::load();
 
 				// parse the data after parent load so we have our html prefs
-				$this->mInfo['parsed_data'] = $this->parseData();
+				$this->parseData();
 			}
 		}
 		return( count( $this->mInfo ) );
@@ -252,7 +252,7 @@ class TreasuryGallery extends TreasuryBase {
 				$parseHash['content_id']   = $aux['content_id'];
 				$parseHash['user_id']      = $aux['user_id'];
 				$parseHash['data']         = $aux['data'];
-				$aux['parsed_data']        = $this->parseData( $parseHash );
+				$aux['parsed_data']        = self::parseDataHash( $parseHash );
 
 				// sucky additional query to fetch item number without subselect
 				if( $gBitDbType == 'mysql' || $gBitDbType == 'mysqli' ) {
