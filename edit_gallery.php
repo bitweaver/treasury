@@ -16,7 +16,7 @@ require_once( '../kernel/setup_inc.php' );
 $gBitSystem->verifyPackage( 'treasury' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
-require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
+require_once( TREASURY_PKG_INCLUDE_PATH.'gallery_lookup_inc.php');
 
 if( $gContent->isValid() ){
 	$gContent->verifyUpdatePermission();
@@ -31,7 +31,7 @@ if( !empty( $gContent->mStructureId ) ) {
 
 	// this interferes with the deletion
 	$verifyStructurePermission = 'p_treasury_update_gallery';
-	include_once( LIBERTY_PKG_PATH.'edit_structure_inc.php' );
+	include_once( LIBERTY_PKG_INCLUDE_PATH.'edit_structure_inc.php' );
 
 	// get all the nodes in this structure
 	foreach( $rootTree as $node ) {

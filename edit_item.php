@@ -16,7 +16,7 @@ require_once( '../kernel/setup_inc.php' );
 $gBitSystem->verifyPackage( 'treasury' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
-require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
+require_once( TREASURY_PKG_INCLUDE_PATH.'item_lookup_inc.php');
 
 // we don't create new items here so we're always dealing with valid content, only check edit perm
 $gContent->verifyUpdatePermission();

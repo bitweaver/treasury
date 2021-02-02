@@ -17,7 +17,7 @@ $gBitSystem->verifyPackage( 'treasury' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
-require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php' );
+require_once( TREASURY_PKG_INCLUDE_PATH.'gallery_lookup_inc.php' );
 
 $feedback = array();
 $gContent->verifyViewPermission();

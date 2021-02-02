@@ -17,7 +17,7 @@ $gBitSystem->verifyPackage( 'rss' );
 $gBitSystem->verifyFeature( 'treasury_rss' );
 
 require_once( TREASURY_PKG_PATH."TreasuryItem.php" );
-require_once( RSS_PKG_PATH."rss_inc.php" );
+require_once( RSS_PKG_INCLUDE_PATH.'rss_inc.php' );
 
 
 $rss->title       = $gBitSystem->getConfig( 'treasury_rss_title', $gBitSystem->getConfig( 'site_title' ).' - '.tra( 'File Galleries' ) );

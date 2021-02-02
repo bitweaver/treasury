@@ -16,7 +16,7 @@ require_once( '../kernel/setup_inc.php' );
 $gBitSystem->verifyPackage( 'treasury' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
-require_once( TREASURY_PKG_PATH.'item_lookup_inc.php');
+require_once( TREASURY_PKG_INCLUDE_PATH.'item_lookup_inc.php');
 
 if( !$gContent->isValid() ) {
 	$gBitSystem->setHttpStatus( 404 );
@@ -55,7 +55,7 @@ if( is_object( $gGallery ) && $gContent->isCommentable() ) {
 	$comments_object_var = TREASURYITEM_CONTENT_TYPE_GUID;
 	$comments_return_url = $gContent->getDisplayUrl();
 	$gBitSmarty->assign( 'item_display_comments', TRUE );
-	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
+	include_once( LIBERTY_PKG_INCLUDE_PATH.'comments_inc.php' );
 }
 
 $gContent->addHit();

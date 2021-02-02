@@ -17,8 +17,8 @@ $gBitSystem->verifyPackage( 'treasury' );
 
 require_once( TREASURY_PKG_PATH.'TreasuryGallery.php');
 require_once( TREASURY_PKG_PATH.'TreasuryItem.php');
-require_once( TREASURY_PKG_PATH.'gallery_lookup_inc.php');
-require_once( LIBERTY_PKG_PATH.'calculate_max_upload_inc.php' );
+require_once( TREASURY_PKG_INCLUDE_PATH.'gallery_lookup_inc.php');
+require_once( LIBERTY_PKG_INCLUDE_PATH.'calculate_max_upload_inc.php' );
 
 // turn the max_file_size value into megabytes
 $feedback = array();
@@ -64,7 +64,7 @@ $gBitSmarty->assign( 'feedback', !empty( $feedback ) ? $feedback : NULL );
 // get the ajax file browser working
 if( $gBitSystem->isFeatureActive( 'treasury_file_import_path' ) && $gBitUser->hasPermission( 'p_treasury_import_item' )) {
 	//$_REQUEST['ajax_path_conf'] = 'treasury_file_import_path';
-	require_once( KERNEL_PKG_PATH.'ajax_file_browser_inc.php' );
+	require_once( KERNEL_PKG_INCLUDE_PATH.'ajax_file_browser_inc.php' );
 }
 
 $gBitSystem->display( 'bitpackage:treasury/upload.tpl', tra( 'Upload File' ) , array( 'display_mode' => 'upload' ));

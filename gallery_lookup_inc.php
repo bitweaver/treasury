@@ -23,5 +23,4 @@ if( @BitBase::verifyId( $_REQUEST['structure_id'] ) ) {
 	$gContent = new TreasuryGallery();
 }
 
-$gBitSmarty->assigByRef( 'gContent', $gContent );
-?>
+$gBitSmarty->assign_by_ref( 'gContent', $gContent );

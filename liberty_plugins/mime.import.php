@@ -51,7 +51,7 @@ $gLibertySystem->registerPlugin( PLUGIN_MIME_GUID_IMPORT, $pluginParams );
  * @return void
  */
 function mime_import_upload() {
-	require_once( KERNEL_PKG_PATH.'ajax_file_browser_inc.php' );
+	require_once( KERNEL_PKG_INCLUDE_PATH.'ajax_file_browser_inc.php' );
 }
 
 /**

@@ -429,7 +429,7 @@ class TreasuryGallery extends TreasuryBase {
 			$this->mDb->StartTrans();
 
 			// get all items that are part of the sub tree
-			require_once( LIBERTY_PKG_PATH.'LibertyStructure.php' );
+			require_once( LIBERTY_PKG_CLASS_PATH.'LibertyStructure.php' );
 			$struct = new LibertyStructure();
 			$tree = $struct->getSubTree( $this->mStructureId );
 
