@@ -32,12 +32,6 @@ if( !empty( $gContent->mStructureId ) ) {
 	// this interferes with the deletion
 	$verifyStructurePermission = 'p_treasury_update_gallery';
 	include_once( LIBERTY_PKG_INCLUDE_PATH.'edit_structure_inc.php' );
-
-	// get all the nodes in this structure
-	foreach( $rootTree as $node ) {
-		$galleryStructure[$node['structure_id']] = str_repeat( '-', $node['level'] ).' '.$node['title'];
-	}
-	$gBitSmarty->assign( 'galleryStructure', $galleryStructure );
 }
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
