@@ -10,7 +10,7 @@
  */
 // ensure that we use absolute URLs everywhere
 $_REQUEST['uri_mode'] = TRUE;
-require_once( "../kernel/setup_inc.php" );
+require_once( "../kernel/includes/setup_inc.php" );
 
 $gBitSystem->verifyPackage( 'treasury' );
 $gBitSystem->verifyPackage( 'rss' );
