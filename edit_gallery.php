@@ -31,7 +31,7 @@ if( !empty( $gContent->mStructureId ) ) {
 
 	// this interferes with the deletion
 	$verifyStructurePermission = 'p_treasury_update_gallery';
-	include_once( LIBERTY_PKG_INCLUDE_PATH.'edit_structure_inc.php' );
+	include_once( LIBERTY_PKG_INCLUDE_PATH.'structure_edit_inc.php' );
 }
 
 if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
@@ -39,7 +39,7 @@ if( !empty( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
 }
 
 if( !empty( $_REQUEST['treasury_store'] ) ) {
-	// $rootStructure is created in edit_structure_inc.php
+	// $rootStructure is created in structure_edit_inc.php
 	$_REQUEST['root_structure_id'] = !empty( $rootStructure->mStructureId ) ?  $rootStructure->mStructureId : NULL;
 	$galleryStore = new TreasuryGallery( NULL, !empty( $_REQUEST['gallery_content_id'] ) ? $_REQUEST['gallery_content_id'] : NULL );
 	$galleryStore->load();

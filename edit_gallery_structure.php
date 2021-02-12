@@ -21,7 +21,7 @@ require_once( TREASURY_PKG_INCLUDE_PATH.'gallery_lookup_inc.php' );
 $gContent->verifyUpdatePermission();
 
 $verifyStructurePermission = 'p_treasury_update_gallery';
-require_once( LIBERTY_PKG_INCLUDE_PATH.'edit_structure_inc.php' );
+require_once( LIBERTY_PKG_INCLUDE_PATH.'structure_edit_inc.php' );
 
 // we need to load some javascript and css for this page
 $gBitThemes->loadCss( UTIL_PKG_PATH.'javascript/libs/mygosu/DynamicTree.css' );
